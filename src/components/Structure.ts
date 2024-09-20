@@ -41,24 +41,25 @@ export enum AbbrPair {
     Assistant = "ac",
     Teacher = "вик",
     Senior_teacher = "ст.вик",
-    Docent = "доц",  
-    Professor = "проф"
+    Docent = "доц",
+    Professor = "проф",
+    Unknown = "невідомо"
 };
 
 
 
 class Pair {
-    private name: string;
+    private name: string | string[];
     private type: PairType | PairType[];
     private format: PairFormat | PairFormat[];
 
-    constructor(name: string, type: PairType | PairType[], format: PairFormat | PairFormat[]) {
+    constructor(name: string | string[], type: PairType | PairType[], format: PairFormat | PairFormat[]) {
         this.name = name;
         this.type = type;
         this.format = format;
     }
 
-    public getName(): string {
+    public getName(): string | string[] {
         return this.name;
     }
 
@@ -71,29 +72,26 @@ class Pair {
     }
 }
 
+type Teacher = [ string | string[], AbbrPair | AbbrPair[]];
+
 export class GroupPair extends Pair {
-    private teacher: string | string[];
-    private position: AbbrPair | AbbrPair[];
+    private teacher: Teacher;
 
-    constructor(name: string, teacher: string | string[], position: AbbrPair| AbbrPair[], type: PairType | PairType[], format: PairFormat | PairFormat[]) {
-        super(name, type, format); 
+    constructor(name: string | string[], teacher: Teacher, type: PairType | PairType[], format: PairFormat | PairFormat[]) {
+        super(name, type, format);
         this.teacher = teacher;
-        this.position = position;
     }
 
-    public getTeacher(): string | string[] {
+    public getTeacher(): Teacher {
         return this.teacher;
-    }
-    public getPosition(): AbbrPair| AbbrPair[]{
-        return this.position;
     }
 }
 
 export class TeacherPair extends Pair {
     private group: string | string[];
 
-    constructor(name: string, group: string | string[], type: PairType | PairType[], format: PairFormat | PairFormat[]) {
-        super(name, type, format); 
+    constructor(name: string | string[], group: string | string[], type: PairType | PairType[], format: PairFormat | PairFormat[]) {
+        super(name, type, format);
         this.group = group;
     }
 

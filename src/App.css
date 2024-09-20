@@ -5,13 +5,12 @@
 }
 .heading{
     text-transform: uppercase;
-    font-size: 45px;
-    margin: 35px 0;
+    font-size: 40.5px;
+    margin: 31.5px 0;
     padding: 0;
     color:white;
     text-align: center;
     z-index: 1;
-    white-space: nowrap
 }
 .Content{
     margin-top: 0;

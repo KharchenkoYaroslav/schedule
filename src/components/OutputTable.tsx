@@ -40,6 +40,12 @@ const OutputTable: React.FC<Props> = ({ find, setFind, setIsValueFound, groupsLi
             return '';
         }
     };
+    const formatSubject = (subject: string | string[]): string => {
+        if (!Array.isArray(subject)) return subject;
+        else {
+            return  `${subject.join(', ')}`;
+        }
+    };
 
     const handleTeacherClick = (teacherName: string) => {
         const teacher = teachersList.find(t => t.name === teacherName);
@@ -61,21 +67,29 @@ const OutputTable: React.FC<Props> = ({ find, setFind, setIsValueFound, groupsLi
         }
     };
 
-    const renderTeachers = (teachers: string | string[], position: AbbrPair | AbbrPair[]) => {
-        if (Array.isArray(teachers)) {
-            return teachers.map((teacher, index) => {
-                const pos = Array.isArray(position) ? position[index] : position;
-                return (
-                    <div key={index} className='group_teacher'>
-                        <a href="#" onClick={() => handleTeacherClick(teacher)}>{pos}. {teacher}</a>
-                    </div>
-                );
-            });
+    const renderTeachers = (teachers: string | string[], positions: AbbrPair | AbbrPair[]) => {
+        if (Array.isArray(teachers) && Array.isArray(positions)) {
+            return teachers.map((teacher, index) => (
+                <div key={index} className='group_teacher'>
+                    <a href="#" onClick={() => handleTeacherClick(teacher)}>{positions[index]}. {teacher}</a>
+                </div>
+            ));
+        } else if (Array.isArray(teachers)) {
+            return teachers.map((teacher, index) => (
+                <div key={index} className='group_teacher'>
+                    <a href="#" onClick={() => handleTeacherClick(teacher)}>{positions}. {teacher}</a>
+                </div>
+            ));
+        } else if (Array.isArray(positions)) {
+            return positions.map((position, index) => (
+                <div key={index} className='group_teacher'>
+                    <a href="#" onClick={() => handleTeacherClick(teachers)}>{position}. {teachers}</a>
+                </div>
+            ));
         } else {
-            const pos = Array.isArray(position) ? position[0] : position;
             return (
                 <div className='group_teacher'>
-                    <a href="#" onClick={() => handleTeacherClick(teachers)}>{pos}. {teachers}</a>
+                    <a href="#" onClick={() => handleTeacherClick(teachers)}>{positions}. {teachers}</a>
                 </div>
             );
         }
@@ -101,7 +115,7 @@ const OutputTable: React.FC<Props> = ({ find, setFind, setIsValueFound, groupsLi
         if (!week) {
             return <h3>Розклад на тиждень {weekNumber} не знайдено</h3>;
         }
-
+    
         return (
             <div className="table-container">
                 <h3>Тиждень {weekNumber}</h3>
@@ -122,9 +136,9 @@ const OutputTable: React.FC<Props> = ({ find, setFind, setIsValueFound, groupsLi
                                         <td key={day}>
                                             {pair && (
                                                 <>
-                                                    <div className='subject'>{pair.getName()}</div>
+                                                    <div className='subject'>{formatSubject(pair.getName())}</div>
                                                     {pair instanceof GroupPair ? (
-                                                        renderTeachers(pair.getTeacher(), pair.getPosition())
+                                                        renderTeachers(pair.getTeacher()[0], pair.getTeacher()[1])
                                                     ) : (
                                                         renderGroups(pair.getGroup())
                                                     )}
