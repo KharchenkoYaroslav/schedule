@@ -9,41 +9,41 @@
 .input__box {
     width: 100%;
     font-family: "Montserrat Alternates";
-    border-radius: 45px;
-    padding: 18px 27px;
-    font-size: 22.5px;
+    border-radius: 50px;
+    padding: 20px 30px;
+    font-size: 25px;
     border: none;
     transition: 0.2s;
-    box-shadow: inset 0 0 4.5px black;
+    box-shadow: inset 0 0 5px black;
 }
 
 .input__box:focus {
-    box-shadow: 0 0 0.9px 10000px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0 10px 10000px rgba(0, 0, 0, 0.5);
     outline: none;
 }
 
 .back_to_start {
     position: absolute;
-    width: 90px;
-    height: 45px;
-    margin-top: 9px;
-    border-radius: 45px;
-    right: -18px;
+    width: 100px;
+    height: 50px;
+    margin-top: 10px;
+    border-radius: 50px;
+    right: -20px;
     border: 0;
-    font-size: 18px;
-    padding: 0 5.4px 2.7px 0;
+    font-size: 20px;
+    padding: 0 6px 3px 0;
     background-color: DodgerBlue;
     color: white;
     transition: 0.2s all;
-    box-shadow: 0 0 0.9px black;
+    box-shadow: 0 0 10px black;
 }
 
 #back_icon {
-    margin-right: -4.5px;
+    margin-right: -5px;
     display: inline-block;
     vertical-align: baseline;
     position: relative;
-    top: 0.225em; 
+    top: 0.25em; 
 }
 
 .back_to_start:hover {
@@ -52,7 +52,7 @@
 
 .back_to_start:active {
     transform: scale(0.8);
-    box-shadow: 0 0 4.5px black;
+    box-shadow: 0 0 5px black;
 }
 
 .buttons-container {
@@ -62,21 +62,21 @@
 }
 
 .text_icon {
-    margin-left: 5.4px;
+    margin-left: 6px;
     display: inline-block;
     vertical-align: baseline;
     position: relative;
-    top: 0.162em; 
+    top: 0.18em; 
 }
 
 .to_feild {
     background-color: white;
-    border-radius: 45px;
-    padding: 18px 27px;
-    font-size: 22.5px;
+    border-radius: 50px;
+    padding: 20px 30px;
+    font-size: 25px;
     border: none;
     transition: 0.2s;
-    box-shadow: inset 0 0 1.8px black;
+    box-shadow: inset 0 0 2px black;
     transition: 0.2s all;
     font-family: "Montserrat Alternates";
 }
@@ -89,28 +89,28 @@
 
 .to_feild:active {
     transform: scale(0.8);
-    box-shadow: 0 0 4.5px white;
+    box-shadow: 0 0 5px white;
 }
 
 .suggestions {
     overflow-y: auto;
     border: 1px solid #ccc;
-    border-radius: 36px;
+    border-radius: 40px;
     background-color: white;
-    margin-top: 18px;
+    margin-top: 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
 .suggestion {
-    padding: 9px 18px;
-    font-size: 22.5px;
+    padding: 10px 20px;
+    font-size: 25px;
     cursor: pointer;
     text-align: center;
 }
 .suggestion:last-child{
-    padding-bottom: 10.8px;
+    padding-bottom: 12px;
 }
 
 .suggestion:hover {
@@ -120,12 +120,12 @@
 .restart {
     background-color: DodgerBlue;
     color: white;
-    border-radius: 45px;
-    padding: 5.5px 13.5px 7.2px 13.5px;
-    font-size: 18px;
+    border-radius: 50px;
+    padding: 6px 15px 8px 15px;
+    font-size: 20px;
     border: none;
     transition: 0.2s;
-    box-shadow: inset 0 0 1.8px white;
+    box-shadow: inset 0 0 2px white;
     transition: 0.2s all;
     font-family: "Montserrat Alternates";
 }
@@ -138,7 +138,7 @@
 
 .restart:active {
     transform: scale(0.8);
-    box-shadow: 0 0 4.5px white;
+    box-shadow: 0 0 5px white;
 }
 
 .output {
@@ -158,17 +158,17 @@
 .output h2 {
     margin: 0;
     color: white;
-    font-size: 37.8px;
-    margin-bottom: 9px;
+    font-size: 42px;
+    margin-bottom: 10px;
 }
 .output h3 {
-    margin-top: 18px;
+    margin-top: 20px;
     color: white;
-    font-size: 25.2px;
+    font-size: 28px;
 }
 
 .output table {
-    margin-bottom: 27px;
+    margin-bottom: 30px;
     border-collapse: collapse;
     table-layout: fixed;
 }
@@ -176,7 +176,7 @@
 .output th,
 .output td {
     border: 1px solid DarkSlateGray;
-    padding: 4.5px;
+    padding: 5px;
     text-align: center;
     word-wrap: break-word;
     background-color: AliceBlue;
@@ -189,27 +189,27 @@
 .output th:first-child,
 .output td:first-child {
     font-weight: bold; 
-    width: 45px;
+    width: 50px;
 }
 .output table div{
-    padding-left: 4.5px;  
+    padding-left: 5px;  
     text-align: left;
 }
 .subject{
-    font-size: 13.5px;
+    font-size: 15px;
     background-color: DarkSlateGray;
     color: white;
-    padding: 4.5px;
-    border-radius: 9px;
+    padding: 5px;
+    border-radius: 10px;
     border: 3px solid rgb(107, 139, 139);
 }
 .group_teacher{
-    font-size: 12.15px;
+    font-size: 13.5px;
     font-style: italic;
     font-weight: bold;
 }
 .type_format{
-    font-size: 12.6px;
+    font-size: 14px;
 }
 .output table a{
     color: black;
