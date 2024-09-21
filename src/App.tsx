@@ -25,6 +25,7 @@ const App: React.FC = () => {
             setIsValueFound(true);
         }
     };
+
     const groupsList: GroupSchedule[] = [
         {
             groupName: "ТВ-32",
@@ -39,14 +40,14 @@ const App: React.FC = () => {
             week_2: [
                 { dayOfWeek: Weekday.Monday, pairs: [new GroupPair("Фізичні основи кібер-фізичних систем", ["Салюк О. Ю", AbbrPair.Professor], PairType.Lecture, PairFormat.Online), new GroupPair("Бази даних", ["Дацюк О. А", AbbrPair.Senior_teacher], PairType.Lecture, PairFormat.Online), new GroupPair("Компоненти програмної інженерії. Частина 2. Моделювання програмного забезпечення. Аналіз вимог до програмного забезпечення", ["Гагарін О. О", AbbrPair.Docent], PairType.Lecture, PairFormat.Online), null, null, null] },
                 { dayOfWeek: Weekday.Tuesday, pairs: [null, new GroupPair("Теорія ймовірностей", ["Свинчук О. В", AbbrPair.Docent], PairType.Lecture, PairFormat.Online), new GroupPair("Об'єктно-орієнтований аналіз та конструювання програмних систем", ["Сарибога Г. В", AbbrPair.Senior_teacher], PairType.Lecture, PairFormat.Online), null, null, null] },
-                { dayOfWeek: Weekday.Wednesday, pairs: [new GroupPair(["Логіка", "Logic", "Стилі в образотворчому мистецтві", "Єдиноборства", "Ігрові види спорту", "Циклічні види спорту"], [["Сторожик М. І", "Казаков М. А", "Оляніна С. В"], [AbbrPair.Teacher, AbbrPair.Teacher, AbbrPair.Professor]], [PairType.Practice, PairType.Lecture], PairFormat.Online), new GroupPair("Складно-координаційні види спорту", ["", AbbrPair.Unknown], PairType.Practice, PairFormat.Online), new GroupPair("Дизайн презентації для професійної діяльності", ["Парненко В. С", AbbrPair.Assistant],PairType.Practice,PairFormat.Online), new GroupPair(["Стилі в образотворчому мистецтві", "Основи підприємницької діяльності"], [["Оляніна С. В","Щепіна Т. Г"], [AbbrPair.Professor, AbbrPair.Docent]],PairType.Practice,PairFormat.Online), new GroupPair("Практичний курс іноземної мови. Частина 2", ["Кондрашова А. В", AbbrPair.Teacher], PairType.Practice, PairFormat.Online), null] },
+                { dayOfWeek: Weekday.Wednesday, pairs: [new GroupPair(["Логіка", "Logic", "Стилі в образотворчому мистецтві", "Єдиноборства", "Ігрові види спорту", "Циклічні види спорту"], [["Сторожик М. І", "Казаков М. А", "Оляніна С. В"], [AbbrPair.Teacher, AbbrPair.Teacher, AbbrPair.Professor]], [PairType.Practice, PairType.Lecture], PairFormat.Online), new GroupPair("Складно-координаційні види спорту", ["", AbbrPair.Unknown], PairType.Practice, PairFormat.Online), new GroupPair("Дизайн презентації для професійної діяльності", ["Парненко В. С", AbbrPair.Assistant], PairType.Practice, PairFormat.Online), new GroupPair(["Стилі в образотворчому мистецтві", "Основи підприємницької діяльності"], [["Оляніна С. В", "Щепіна Т. Г"], [AbbrPair.Professor, AbbrPair.Docent]], PairType.Practice, PairFormat.Online), new GroupPair("Практичний курс іноземної мови. Частина 2", ["Кондрашова А. В", AbbrPair.Teacher], PairType.Practice, PairFormat.Online), null] },
                 { dayOfWeek: Weekday.Thursday, pairs: [new GroupPair("Фізичні основи кібер-фізичних систем", ["Пальцун С. В", AbbrPair.Senior_teacher], PairType.Practice, PairFormat.Online), new GroupPair("Об'єктно-орієнтований аналіз та конструювання програмних систем", ["Сарибога Г. В", AbbrPair.Senior_teacher], PairType.Practice, PairFormat.Online), null, null, null, null] },
-                { dayOfWeek: Weekday.Friday, pairs: [ new GroupPair("Бази даних", ["Дацюк О. А", AbbrPair.Senior_teacher], PairType.Practice, PairFormat.Online), new GroupPair("Теорія ймовірностей", ["Свинчук О. В", AbbrPair.Docent], PairType.Practice, PairFormat.Online), new GroupPair("Бази даних", ["Дацюк О. А", AbbrPair.Senior_teacher], PairType.Laboratory, PairFormat.Online), null, null, null] },
+                { dayOfWeek: Weekday.Friday, pairs: [new GroupPair("Бази даних", ["Дацюк О. А", AbbrPair.Senior_teacher], PairType.Practice, PairFormat.Online), new GroupPair("Теорія ймовірностей", ["Свинчук О. В", AbbrPair.Docent], PairType.Practice, PairFormat.Online), new GroupPair("Бази даних", ["Дацюк О. А", AbbrPair.Senior_teacher], PairType.Laboratory, PairFormat.Online), null, null, null] },
                 { dayOfWeek: Weekday.Saturday, pairs: [null, null, null, null, null, null] }
             ]
         },
     ];
-new TeacherPair("", "ТВ-32", PairType.Practice, PairFormat.Online)
+    new TeacherPair("", "ТВ-32", PairType.Practice, PairFormat.Online)
 
     const teachersList: TeacherSchedule[] = [
         {
@@ -71,7 +72,7 @@ new TeacherPair("", "ТВ-32", PairType.Practice, PairFormat.Online)
         {
             name: "Дацюк О. А",
             week_1: [
-                { dayOfWeek: Weekday.Monday, pairs: [null,new TeacherPair("Бази даних", "ТВ-32", PairType.Lecture, PairFormat.Online), null, null, null, null] },
+                { dayOfWeek: Weekday.Monday, pairs: [null, new TeacherPair("Бази даних", "ТВ-32", PairType.Lecture, PairFormat.Online), null, null, null, null] },
                 { dayOfWeek: Weekday.Tuesday, pairs: [null, null, null, null, null, null] },
                 { dayOfWeek: Weekday.Wednesday, pairs: [null, null, null, null, null, null] },
                 { dayOfWeek: Weekday.Thursday, pairs: [null, null, null, null, null, null] },
@@ -214,7 +215,7 @@ new TeacherPair("", "ТВ-32", PairType.Practice, PairFormat.Online)
             week_2: [
                 { dayOfWeek: Weekday.Monday, pairs: [null, null, null, null, null, null] },
                 { dayOfWeek: Weekday.Tuesday, pairs: [null, null, null, null, null, null] },
-                { dayOfWeek: Weekday.Wednesday, pairs: [null, null , new TeacherPair("Дизайн презентації для професійної діяльності", "ТВ-32", PairType.Practice, PairFormat.Online), null, null, null] },
+                { dayOfWeek: Weekday.Wednesday, pairs: [null, null, new TeacherPair("Дизайн презентації для професійної діяльності", "ТВ-32", PairType.Practice, PairFormat.Online), null, null, null] },
                 { dayOfWeek: Weekday.Thursday, pairs: [null, null, null, null, null, null] },
                 { dayOfWeek: Weekday.Friday, pairs: [null, null, null, null, null, null] },
                 { dayOfWeek: Weekday.Saturday, pairs: [null, null, null, null, null, null] }
@@ -299,28 +300,26 @@ new TeacherPair("", "ТВ-32", PairType.Practice, PairFormat.Online)
     ];
 
     return (
-        <div className="App">
-            <div className='Content' style={{ transform: `scale(${scale})`, transition: '0.2s', transformOrigin: 'top left', width: `${100 / scale}%` }}>
-                <span className="heading">Розклад занять у ВНЗ</span>
-                {!isValueFound && (
-                    <InputField
-                        find={find}
-                        setFind={setFind}
-                        groupsList={groupsList.map(group => group.groupName)}
-                        teachersList={teachersList.map(teacher => teacher.name)}
-                        onValueFound={handleValueFound}
-                    />
-                )}
-                {isValueFound && (
-                    <OutputTable
-                        find={find}
-                        setFind={setFind}
-                        setIsValueFound={setIsValueFound}
-                        groupsList={groupsList}
-                        teachersList={teachersList}
-                    />
-                )}
-            </div>
+        <div className="App" style={{ transform: `scale(${scale})`, transition: '0.2s', transformOrigin: 'top left', width: `${100 / scale}%`, height: '100vh'}}>
+            <span className="heading">Розклад занять у ВНЗ</span>
+            {!isValueFound && (
+                <InputField
+                    find={find}
+                    setFind={setFind}
+                    groupsList={groupsList.map(group => group.groupName)}
+                    teachersList={teachersList.map(teacher => teacher.name)}
+                    onValueFound={handleValueFound}
+                />
+            )}
+            {isValueFound && (
+                <OutputTable
+                    find={find}
+                    setFind={setFind}
+                    setIsValueFound={setIsValueFound}
+                    groupsList={groupsList}
+                    teachersList={teachersList}
+                />
+            )}
         </div>
     );
 }
