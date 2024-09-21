@@ -18,8 +18,11 @@
 }
 
 .input__box:focus {
-    box-shadow: 0 0 10px 10000px rgba(0, 0, 0, 0.5);
     outline: none;
+}
+
+body:focus-within {
+    background-color:  hsl(219, 59%, 30%); /* Колір фону при фокусі на елементі */
 }
 
 .back_to_start {
