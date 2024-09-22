@@ -9,7 +9,7 @@ import {
     GroupSchedule, 
     TeacherSchedule,
     AbbrPair
-} from './structure1';
+} from './structure';
 
 interface Props {
     find: string;

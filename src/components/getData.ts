@@ -1,4 +1,4 @@
-import { AbbrPair, GroupPair, GroupSchedule, PairFormat, PairType, TeacherPair, TeacherSchedule, Weekday } from './structure1';
+import { AbbrPair, GroupPair, GroupSchedule, PairFormat, PairType, TeacherPair, TeacherSchedule, Weekday } from './structure';
 
 const getDataGroups = () => {
     const groupsList: GroupSchedule[] = [

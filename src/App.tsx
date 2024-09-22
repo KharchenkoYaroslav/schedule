@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
-import InputField from './components/inputField1';
-import OutputTable from './components/outputTable1';
+import InputField from './components/inputField';
+import OutputTable from './components/outputTable';
 import { getDataGroups, getDataTeachers } from './components/getData';
 import {
     GroupSchedule,
     TeacherSchedule
-} from './components/structure1';
+} from './components/structure';
 import useWindowResize from './components/useWindowResize';
 
 const App: React.FC = () => {
