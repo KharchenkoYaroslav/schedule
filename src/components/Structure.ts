@@ -107,7 +107,7 @@ export interface Day {
     dayOfWeek: Weekday;
 }
 
-export type Week = [Day | null, Day | null, Day | null, Day | null, Day | null, Day | null];
+export type Week = Array<Day>;
 
 interface Schedule {
     week_1: Week | null;
