@@ -68,7 +68,6 @@ const getDataTeachers = () => {
             week_2: [
                 { dayOfWeek: Weekday.Monday, pairs: [null, new TeacherPair("Теорія ймовірностей", "ТВ-32", PairType.Lecture, PairFormat.Online), null, null, null, null] },
                 { dayOfWeek: Weekday.Friday, pairs: [null, new TeacherPair("Теорія ймовірностей", "ТВ-32", PairType.Practice, PairFormat.Online), null, null, null, null] },
-                
             ]
         },
         {
