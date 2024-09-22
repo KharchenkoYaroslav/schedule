@@ -21,11 +21,7 @@ const useWindowResize = () => {
             window.removeEventListener('resize', handleResize);
         };
     }, []);
-
     
-    
-    
-
     return scale;
 };
 
