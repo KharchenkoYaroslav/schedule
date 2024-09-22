@@ -11,6 +11,7 @@ body {
 * {
     scrollbar-color: snow rgba(0,0,0,0); /* Колір смуги прокрутки та фону */
     scrollbar-gutter:round; /* Закруглені кути для смуги прокрутки */
+    
 }
 
 
@@ -24,6 +25,7 @@ body {
 }
 
 .heading {
+    white-space: nowrap;
     text-transform: uppercase;
     font-size: 45px;
     margin: 35px 0;

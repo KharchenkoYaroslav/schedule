@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState} from 'react';
 import './App.css';
 import InputField from './components/InputField';
 import OutputTable from './components/OutputTable';
@@ -6,7 +6,6 @@ import {
     Weekday,
     PairType,
     PairFormat,
-    WeekNumbers,
     GroupPair,
     TeacherPair,
     GroupSchedule,
@@ -19,12 +18,14 @@ const App: React.FC = () => {
     const [find, setFind] = useState<string>("");
     const [isValueFound, setIsValueFound] = useState<boolean>(false);
     const scale = useWindowResize();
+    
 
-    const handleValueFound = (value: string) => {
+    
+    function handleValueFound(value: string) {
         if (groupsList.some(group => group.groupName === value) || teachersList.some(teacher => teacher.name === value)) {
             setIsValueFound(true);
         }
-    };
+    }
 
     const groupsList: GroupSchedule[] = [
         {

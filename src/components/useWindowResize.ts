@@ -22,6 +22,10 @@ const useWindowResize = () => {
         };
     }, []);
 
+    
+    
+    
+
     return scale;
 };
 
