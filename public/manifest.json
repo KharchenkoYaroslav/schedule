@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Schedule",
+  "name": "The schedule of classes at the university",
   "icons": [
     {
       "src": "schedule.png",

@@ -23,23 +23,19 @@ const InputField = ({ find, setFind, groupsList, teachersList, onValueFound }: P
 
     useLayoutEffect(() => {
         const handleFocus = () => {
-            console.log('Input focused');
             document.body.style.backgroundColor = 'hsl(219, 59%, 30%)';
         };
 
         const handleBlur = () => {
-            console.log('Input blurred');
             document.body.style.backgroundColor = '';
         };
 
         const inputElement = inputRef.current;
         if (inputElement) {
-            console.log('Adding event listeners');
             inputElement.addEventListener('focus', handleFocus);
             inputElement.addEventListener('blur', handleBlur);
 
             return () => {
-                console.log('Removing event listeners');
                 inputElement.removeEventListener('focus', handleFocus);
                 inputElement.removeEventListener('blur', handleBlur);
             };
@@ -88,7 +84,7 @@ const InputField = ({ find, setFind, groupsList, teachersList, onValueFound }: P
             {isInputVisible && (
                 <>
                     <input
-                        ref={inputRef} 
+                        ref={inputRef}
                         type="text"
                         placeholder={isStudent ? 'Введіть назву групи' : 'Введіть своє прізвище'}
                         className='input__box'
