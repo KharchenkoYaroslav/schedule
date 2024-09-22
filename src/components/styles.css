@@ -201,7 +201,6 @@
     color: black;
 }
 
-/* Медіа-запити для визначення підтримки :hover */
 @media (hover: hover) {
     .back_to_start:hover {
         background-color: DeepSkyBlue;
