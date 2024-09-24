@@ -111,14 +111,14 @@ const OutputTable: React.FC<Props> = ({ find, setFind, setIsValueFound, groupsLi
         }
     };
 
-    const renderTable = (week: Week | null, weekNumber: string) => {
+    const renderTable = (week: Week | null, weekName: string) => {
         if (!week) {
-            return <h3>Розклад на тиждень {weekNumber} не знайдено</h3>;
+            return <h3>Розклад на тиждень {weekName} не знайдено</h3>;
         }
     
         return (
             <div className="table-container">
-                <h3>Тиждень {weekNumber}</h3>
+                <h3>{weekName}</h3>
                 <table>
                     <thead>
                         <tr>
@@ -158,6 +158,16 @@ const OutputTable: React.FC<Props> = ({ find, setFind, setIsValueFound, groupsLi
         );
     };
 
+    const getCurrentWeek = () => {
+        const today = new Date();
+        const startOfWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() - today.getDay());
+        const weekNumber = Math.floor((startOfWeek.getDate() - 1) / 7) + 1;
+    
+        return weekNumber % 2 === 1 ? 1 : 2;
+    };
+
+    const currentWeek = getCurrentWeek();
+
     return (
         <div className="output">
             <h2>{find}</h2>
@@ -165,9 +175,18 @@ const OutputTable: React.FC<Props> = ({ find, setFind, setIsValueFound, groupsLi
                 Заново<span className='text_icon'><MdOutlineSettingsBackupRestore /></span>
             </button>
             <div className="tables">
-                {renderTable(schedule.week_1, "1")}
-                {renderTable(schedule.week_2, "2")}
-            </div> 
+            {currentWeek === 1 ? (
+                <>
+                    {renderTable(schedule.week_1, "Цей тиждень")}
+                    {renderTable(schedule.week_2, "Наступний тиждень")}
+                </>
+            ) : (
+                <>
+                    {renderTable(schedule.week_2, "Цей тиждень")}
+                    {renderTable(schedule.week_1, "Наступний тиждень")}
+                </>
+            )}
+        </div>
         </div>
     );
 };
