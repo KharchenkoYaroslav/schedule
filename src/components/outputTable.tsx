@@ -158,12 +158,24 @@ const OutputTable: React.FC<Props> = ({ find, setFind, setIsValueFound, groupsLi
         );
     };
 
-    const getCurrentWeek = () => {
-        const today = new Date();
-        const startOfWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() - today.getDay());
-        const weekNumber = Math.floor((startOfWeek.getDate() - 1) / 7) + 1;
+    const getCurrentWeek = (): number => {
+        const startDate: Date = new Date('2024-10-06'); 
+        const today: Date = new Date(); 
     
-        return weekNumber % 2 === 1 ? 1 : 2;
+        const dayOfWeekToday: number = today.getDay();
+        const diffToday: number = today.getDate() - dayOfWeekToday + (dayOfWeekToday === 0 ? -6 : 1); 
+        const startOfCurrentWeek: Date = new Date(today.setDate(diffToday));
+    
+        const dayOfWeekStart: number = startDate.getDay();
+        const diffStart: number = startDate.getDate() - dayOfWeekStart + (dayOfWeekStart === 0 ? -6 : 1); 
+        const startOfStartWeek: Date = new Date(startDate.setDate(diffStart));
+
+        const diffInTime: number = startOfCurrentWeek.getTime() - startOfStartWeek.getTime();
+        const diffInWeeks: number = Math.floor(diffInTime / (1000 * 60 * 60 * 24 * 7));
+    
+        const weekNumber: number = (diffInWeeks % 2) + 1;
+    
+        return weekNumber;
     };
 
     const currentWeek = getCurrentWeek();
