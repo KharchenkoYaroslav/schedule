@@ -52,11 +52,15 @@ class Pair {
     private name: string | string[];
     private type: PairType | PairType[];
     private format: PairFormat | PairFormat[];
+    private building: number | null;
+    private audience: number | null;
 
-    constructor(name: string | string[], type: PairType | PairType[], format: PairFormat | PairFormat[]) {
+    constructor(name: string | string[], type: PairType | PairType[], format: PairFormat | PairFormat[], building: number | null, audience: number | null) {
         this.name = name;
         this.type = type;
         this.format = format;
+        this.building = building;
+        this.audience = audience;
     }
 
     public getName(): string | string[] {
@@ -70,15 +74,23 @@ class Pair {
     public getFormat(): PairFormat | PairFormat[] {
         return this.format;
     }
+
+    public getBuilding(): number | null {
+        return this.building;
+    }
+
+    public getAudience(): number | null {
+        return this.audience;
+    }
 }
 
-type Teacher = [ string | string[], AbbrPair | AbbrPair[]];
+export type Teacher = [ string | string[], AbbrPair | AbbrPair[]];
 
 export class GroupPair extends Pair {
     private teacher: Teacher;
 
-    constructor(name: string | string[], teacher: Teacher, type: PairType | PairType[], format: PairFormat | PairFormat[]) {
-        super(name, type, format);
+    constructor(name: string | string[], teacher: Teacher, type: PairType | PairType[], format: PairFormat | PairFormat[], building: number | null, audience: number | null) {
+        super(name, type, format, building, audience);
         this.teacher = teacher;
     }
 
@@ -90,8 +102,8 @@ export class GroupPair extends Pair {
 export class TeacherPair extends Pair {
     private group: string | string[];
 
-    constructor(name: string | string[], group: string | string[], type: PairType | PairType[], format: PairFormat | PairFormat[]) {
-        super(name, type, format);
+    constructor(name: string | string[], group: string | string[], type: PairType | PairType[], format: PairFormat | PairFormat[], building: number | null, audience: number | null) {
+        super(name, type, format, building, audience);
         this.group = group;
     }
 

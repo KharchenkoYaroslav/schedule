@@ -186,11 +186,14 @@
 }
 .group_teacher{
     font-size: 13.5px;
-    font-style: italic;
     font-weight: bold;
 }
 .type_format{
     font-size: 14px;
+}
+.place{
+    font-size: 13px;
+    font-style: italic;
 }
 .output table a{
     color: black;

@@ -1,155 +1,139 @@
-import { AbbrPair, GroupPair, GroupSchedule, PairFormat, PairType, TeacherPair, TeacherSchedule, Weekday } from './structure';
+import axios from 'axios';
+import { AbbrPair, GroupPair, GroupSchedule, PairFormat, PairType, Teacher, TeacherPair, TeacherSchedule, Week, Weekday } from './structure';
 
-const getDataGroups = () => {
-    const groupsList: GroupSchedule[] = [
-        {
-            groupName: "ТВ-32",
-            week_1: [
-                { dayOfWeek: Weekday.Monday, pairs: [new GroupPair("Фізичні основи кібер-фізичних систем", ["Салюк О. Ю", AbbrPair.Professor], PairType.Lecture, PairFormat.Online), new GroupPair("Бази даних", ["Дацюк О. А", AbbrPair.Senior_teacher], PairType.Lecture, PairFormat.Online), new GroupPair("Компоненти програмної інженерії. Частина 2. Моделювання програмного забезпечення. Аналіз вимог до програмного забезпечення", ["Гагарін О. О", AbbrPair.Docent], PairType.Lecture, PairFormat.Online), null, null, null] },
-                { dayOfWeek: Weekday.Tuesday, pairs: [null, new GroupPair("Теорія ймовірностей", ["Свинчук О. В", AbbrPair.Docent], PairType.Lecture, PairFormat.Online), new GroupPair("Об'єктно-орієнтований аналіз та конструювання програмних систем", ["Сарибога Г. В", AbbrPair.Senior_teacher], PairType.Lecture, PairFormat.Online), null, null, null] },
-                { dayOfWeek: Weekday.Wednesday, pairs: [new GroupPair(["Логіка", "Logic", "Основи підприємницької діяльності", "Єдиноборства", "Ігрові види спорту", "Циклічні види спорту"], [["Потіщук О. О", "Казаков М. А", "Щепіна Т. Г"], [AbbrPair.Teacher, AbbrPair.Teacher, AbbrPair.Docent]], [PairType.Lecture, PairType.Practice], PairFormat.Online), new GroupPair(["Дизайн презентації для професійної діяльності", "Складно-координаційні види спорту"], ["Парненко В. С", AbbrPair.Assistant], PairType.Lecture, PairFormat.Online), null, null, new GroupPair("Практичний курс іноземної мови. Частина 2", ["Кондрашова А. В", AbbrPair.Teacher], PairType.Practice, PairFormat.Online), null] },
-                { dayOfWeek: Weekday.Thursday, pairs: [new GroupPair("Фізичні основи кібер-фізичних систем", ["Пальцун С. В", AbbrPair.Senior_teacher], PairType.Practice, PairFormat.Online), new GroupPair("Об'єктно-орієнтований аналіз та конструювання програмних систем", ["Сарибога Г. В", AbbrPair.Senior_teacher], PairType.Practice, PairFormat.Online), null, null, null, null] },
-                { dayOfWeek: Weekday.Friday, pairs: [new GroupPair("Компоненти програмної інженерії. Частина 2. Моделювання програмного забезпечення. Аналіз вимог до програмного забезпечення", ["Гагарін О. О", AbbrPair.Docent], PairType.Practice, PairFormat.Online), new GroupPair("Теорія ймовірностей", ["Свинчук О. В", AbbrPair.Docent], PairType.Practice, PairFormat.Online), new GroupPair("Бази даних", ["Дацюк О. А", AbbrPair.Senior_teacher], PairType.Laboratory, PairFormat.Online), null, null, null] }
-            ],
-            week_2: [
-                { dayOfWeek: Weekday.Monday, pairs: [new GroupPair("Фізичні основи кібер-фізичних систем", ["Салюк О. Ю", AbbrPair.Professor], PairType.Lecture, PairFormat.Online), new GroupPair("Бази даних", ["Дацюк О. А", AbbrPair.Senior_teacher], PairType.Lecture, PairFormat.Online), new GroupPair("Компоненти програмної інженерії. Частина 2. Моделювання програмного забезпечення. Аналіз вимог до програмного забезпечення", ["Гагарін О. О", AbbrPair.Docent], PairType.Lecture, PairFormat.Online), null, null, null] },
-                { dayOfWeek: Weekday.Tuesday, pairs: [null, new GroupPair("Теорія ймовірностей", ["Свинчук О. В", AbbrPair.Docent], PairType.Lecture, PairFormat.Online), new GroupPair("Об'єктно-орієнтований аналіз та конструювання програмних систем", ["Сарибога Г. В", AbbrPair.Senior_teacher], PairType.Lecture, PairFormat.Online), null, null, null] },
-                { dayOfWeek: Weekday.Wednesday, pairs: [new GroupPair(["Логіка", "Logic", "Стилі в образотворчому мистецтві", "Єдиноборства", "Ігрові види спорту", "Циклічні види спорту"], [["Сторожик М. І", "Казаков М. А", "Оляніна С. В"], [AbbrPair.Teacher, AbbrPair.Teacher, AbbrPair.Professor]], [PairType.Practice, PairType.Lecture], PairFormat.Online), new GroupPair("Складно-координаційні види спорту", ["", AbbrPair.Unknown], PairType.Practice, PairFormat.Online), new GroupPair("Дизайн презентації для професійної діяльності", ["Парненко В. С", AbbrPair.Assistant], PairType.Practice, PairFormat.Online), new GroupPair(["Стилі в образотворчому мистецтві", "Основи підприємницької діяльності"], [["Оляніна С. В", "Щепіна Т. Г"], [AbbrPair.Professor, AbbrPair.Docent]], PairType.Practice, PairFormat.Online), new GroupPair("Практичний курс іноземної мови. Частина 2", ["Кондрашова А. В", AbbrPair.Teacher], PairType.Practice, PairFormat.Online), null] },
-                { dayOfWeek: Weekday.Thursday, pairs: [new GroupPair("Фізичні основи кібер-фізичних систем", ["Пальцун С. В", AbbrPair.Senior_teacher], PairType.Practice, PairFormat.Online), new GroupPair("Об'єктно-орієнтований аналіз та конструювання програмних систем", ["Сарибога Г. В", AbbrPair.Senior_teacher], PairType.Practice, PairFormat.Online), null, null, null, null] },
-                { dayOfWeek: Weekday.Friday, pairs: [new GroupPair("Бази даних", ["Дацюк О. А", AbbrPair.Senior_teacher], PairType.Practice, PairFormat.Online), new GroupPair("Теорія ймовірностей", ["Свинчук О. В", AbbrPair.Docent], PairType.Practice, PairFormat.Online), new GroupPair("Бази даних", ["Дацюк О. А", AbbrPair.Senior_teacher], PairType.Laboratory, PairFormat.Online), null, null, null] },               
-            ]
-        },
-    ];
-    return groupsList;
+async function FetchGroupList() {
+    try {
+        const response = await axios.get(`http://localhost:5000/api/groupsList`);
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching group list:', error);
+        throw error;
+    }
 }
 
-const getDataTeachers = () => {
-    const teachersList: TeacherSchedule[] = [
-        {
-            name: "Салюк О. Ю",
-            week_1: [
-                { dayOfWeek: Weekday.Monday, pairs: [new TeacherPair("Фізичні основи кібер-фізичних систем", "ТВ-32", PairType.Lecture, PairFormat.Online), null, null, null, null, null] },
-            ],
-            week_2: [
-                { dayOfWeek: Weekday.Monday, pairs: [new TeacherPair("Фізичні основи кібер-фізичних систем", "ТВ-32", PairType.Lecture, PairFormat.Online), null, null, null, null, null] },
-            ]
-        },
-        {
-            name: "Дацюк О. А",
-            week_1: [
-                { dayOfWeek: Weekday.Monday, pairs: [null, new TeacherPair("Бази даних", "ТВ-32", PairType.Lecture, PairFormat.Online), null, null, null, null] },
-                { dayOfWeek: Weekday.Friday, pairs: [null, null, new TeacherPair("Бази даних", "ТВ-32", PairType.Laboratory, PairFormat.Online), null, null, null] },
-                
-            ],
-            week_2: [
-                { dayOfWeek: Weekday.Monday, pairs: [null, new TeacherPair("Бази даних", "ТВ-32", PairType.Lecture, PairFormat.Online), null, null, null, null] },
-                { dayOfWeek: Weekday.Friday, pairs: [new TeacherPair("Бази даних", "ТВ-32", PairType.Practice, PairFormat.Online), null, new TeacherPair("Бази даних", "ТВ-32", PairType.Laboratory, PairFormat.Online), null, null, null] },
-                
-            ]
-        },
-        {
-            name: "Гагарін О. О",
-            week_1: [
-                { dayOfWeek: Weekday.Monday, pairs: [null, null, new TeacherPair("Компоненти програмної інженерії. Частина 2. Моделювання програмного забезпечення. Аналіз вимог до програмного забезпечення", "ТВ-32", PairType.Lecture, PairFormat.Online), null, null, null] },
-                { dayOfWeek: Weekday.Friday, pairs: [new TeacherPair("Компоненти програмної інженерії. Частина 2. Моделювання програмного забезпечення. Аналіз вимог до програмного забезпечення", "ТВ-32", PairType.Practice, PairFormat.Online), null, null, null, null, null] },
-                
-            ],
-            week_2: [
-                { dayOfWeek: Weekday.Monday, pairs: [null, null, new TeacherPair("Компоненти програмної інженерії. Частина 2. Моделювання програмного забезпечення. Аналіз вимог до програмного забезпечення", "ТВ-32", PairType.Lecture, PairFormat.Online), null, null, null] },                
-            ]
-        },
-        {
-            name: "Свинчук О. В",
-            week_1: [
-                { dayOfWeek: Weekday.Tuesday, pairs: [null, new TeacherPair("Теорія ймовірностей", "ТВ-32", PairType.Lecture, PairFormat.Online), null, null, null, null] },
-                { dayOfWeek: Weekday.Friday, pairs: [null, new TeacherPair("Теорія ймовірностей", "ТВ-32", PairType.Practice, PairFormat.Online), null, null, null, null] },
-                
-            ],
-            week_2: [
-                { dayOfWeek: Weekday.Monday, pairs: [null, new TeacherPair("Теорія ймовірностей", "ТВ-32", PairType.Lecture, PairFormat.Online), null, null, null, null] },
-                { dayOfWeek: Weekday.Friday, pairs: [null, new TeacherPair("Теорія ймовірностей", "ТВ-32", PairType.Practice, PairFormat.Online), null, null, null, null] },
-            ]
-        },
-        {
-            name: "Сарибога Г. В",
-            week_1: [
-                { dayOfWeek: Weekday.Tuesday, pairs: [null, null, new TeacherPair("Об'єктно-орієнтований аналіз та конструювання програмних систем", "ТВ-32", PairType.Lecture, PairFormat.Online), null, null, null] },
-                { dayOfWeek: Weekday.Thursday, pairs: [null, new TeacherPair("Об'єктно-орієнтований аналіз та конструювання програмних систем", "ТВ-32", PairType.Practice, PairFormat.Online), null, null, null, null] },                
-            ],
-            week_2: [
-                { dayOfWeek: Weekday.Monday, pairs: [null, null, new TeacherPair("Об'єктно-орієнтований аналіз та конструювання програмних систем", "ТВ-32", PairType.Lecture, PairFormat.Online), null, null, null] },
-                { dayOfWeek: Weekday.Thursday, pairs: [null, new TeacherPair("Об'єктно-орієнтований аналіз та конструювання програмних систем", "ТВ-32", PairType.Practice, PairFormat.Online), null, null, null, null] },                
-            ]
-        },
-        {
-            name: "Потіщук О. О",
-            week_1: [
-                { dayOfWeek: Weekday.Wednesday, pairs: [new TeacherPair("Логіка", "ТВ-32", PairType.Lecture, PairFormat.Online), null, null, null, null, null] },                
-            ],
-            week_2: null,
-        },
-        {
-            name: "Казаков М. А",
-            week_1: [
-                { dayOfWeek: Weekday.Wednesday, pairs: [new TeacherPair("Logic", "ТВ-32", PairType.Lecture, PairFormat.Online), null, null, null, null, null] },                
-            ],
-            week_2: [
-                { dayOfWeek: Weekday.Wednesday, pairs: [new TeacherPair("Logic", "ТВ-32", PairType.Practice, PairFormat.Online), null, null, null, null, null] },                
-            ]
-        },
-        {
-            name: "Щепіна Т. Г",
-            week_1: [
-                { dayOfWeek: Weekday.Wednesday, pairs: [new TeacherPair("Основи підприємницької діяльності", "ТВ-32", PairType.Lecture, PairFormat.Online), null, null, null, null, null] },                
-            ],
-            week_2: [
-                { dayOfWeek: Weekday.Wednesday, pairs: [null, null, null, new TeacherPair("Основи підприємницької діяльності", "ТВ-32", PairType.Practice, PairFormat.Online), null, null] },                
-            ]
-        },
-        {
-            name: "Парненко В. С",
-            week_1: [
-                { dayOfWeek: Weekday.Wednesday, pairs: [null, new TeacherPair("Дизайн презентації для професійної діяльності", "ТВ-32", PairType.Lecture, PairFormat.Online), null, null, null, null] },
-            ],
-            week_2: [
-                { dayOfWeek: Weekday.Wednesday, pairs: [null, null, new TeacherPair("Дизайн презентації для професійної діяльності", "ТВ-32", PairType.Practice, PairFormat.Online), null, null, null] },            
-            ]
-        },
-        {
-            name: "Кондрашова А. В",
-            week_1: [
-                { dayOfWeek: Weekday.Wednesday, pairs: [null, null, null, null, new TeacherPair("Практичний курс іноземної мови. Частина 2", "ТВ-32", PairType.Practice, PairFormat.Online), null] },
-            ],
-            week_2: [
-                { dayOfWeek: Weekday.Wednesday, pairs: [null, null, null, null, new TeacherPair("Практичний курс іноземної мови. Частина 2", "ТВ-32", PairType.Practice, PairFormat.Online), null] },               
-            ]
-        },
-        {
-            name: "Пальцун С. В",
-            week_1: [
-                { dayOfWeek: Weekday.Thursday, pairs: [new TeacherPair("Фізичні основи кібер-фізичних систем", "ТВ-32", PairType.Practice, PairFormat.Online), null, null, null, null, null] },
-            ],
-            week_2: [
-                { dayOfWeek: Weekday.Thursday, pairs: [new TeacherPair("Фізичні основи кібер-фізичних систем", "ТВ-32", PairType.Practice, PairFormat.Online), null, null, null, null, null] },
-            ]
-        },
-        {
-            name: "Сторожик М. І",
-            week_1: null,
-            week_2: [
-                { dayOfWeek: Weekday.Wednesday, pairs: [new TeacherPair("Логіка", "ТВ-32", PairType.Practice, PairFormat.Online), null, null, null, null, null] },    
-            ]
-        },
-        {
-            name: "Оляніна С. В",
-            week_1: [ 
-            ],
-            week_2: [
-                { dayOfWeek: Weekday.Wednesday, pairs: [new TeacherPair("Стилі в образотворчому мистецтві", "ТВ-32", PairType.Lecture, PairFormat.Online), null, null, new TeacherPair("Стилі в образотворчому мистецтві", "ТВ-32", PairType.Practice, PairFormat.Online), null, null] },
-            ]
-        },
-    ];
-    return teachersList;
+async function FetchTeacherList() {
+    try {
+        const response = await axios.get(`http://localhost:5000/api/teachersList`);
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching teacher list:', error);
+        throw error;
+    }
 }
 
-export { getDataGroups, getDataTeachers };
+const cur_semester = () => {
+    const now = new Date();
+    const month = now.getMonth() + 1;
+
+    if (month >= 9 || month <= 1) {
+        return 1;
+    } else {
+        return 2;
+    }
+};
+
+async function FetchScheduleForGroup(groupName: string): Promise<GroupSchedule | null> {
+    try {
+        const response = await axios.get(`http://localhost:5000/api/getGroup?groupName=${groupName}&semester=${cur_semester()}`);
+
+        if (!response.data || response.data.length === 0) {
+            return null;
+        }
+
+        const schedule: GroupSchedule = {
+            groupName,
+            week_1: Array(6).fill(null).map(() => ({
+                pairs: Array(6).fill(null),
+                dayOfWeek: Weekday.Monday
+            })) as Week,
+            week_2: Array(6).fill(null).map(() => ({
+                pairs: Array(6).fill(null),
+                dayOfWeek: Weekday.Monday
+            })) as Week
+        };
+
+        response.data.forEach((item: any) => {
+            const weekNumber = item.week_number === '1' ? 'week_1' : 'week_2';
+            const dayOfWeek = Weekday[item.day_number as keyof typeof Weekday];
+            const pairNumber = parseInt(item.pair_number, 10) - 1;
+
+            const teachersWithPost = JSON.parse(item.teachers_with_post);
+            const teachers: Teacher = [
+                teachersWithPost.map((teacher: string) => Object.keys(teacher)[0]),
+                teachersWithPost.map((teacher: AbbrPair) => AbbrPair[Object.values(teacher)[0] as keyof typeof AbbrPair])
+            ];
+
+            const groupPair = new GroupPair(
+                item.subject_name,
+                teachers,
+                PairType[item.lesson_type as keyof typeof PairType],
+                PairFormat[item.visit_format as keyof typeof PairFormat],
+                item.building,
+                item.audience_number
+            );
+
+            const dayIndex = Object.values(Weekday).indexOf(dayOfWeek);
+            if (schedule[weekNumber] && schedule[weekNumber]![dayIndex]) {
+                schedule[weekNumber]![dayIndex]!.pairs[pairNumber] = groupPair;
+                schedule[weekNumber]![dayIndex]!.dayOfWeek = dayOfWeek;
+            }
+        });
+
+        return schedule;
+    } catch (error) {
+        console.error('Error fetching group schedule:', error);
+        throw error;
+    }
+}
+
+async function FetchScheduleForTeacher(teacherName: string): Promise<TeacherSchedule | null> {
+    try {
+        const response = await axios.get(`http://localhost:5000/api/getTeacher?teacherName=${teacherName}&semester=${cur_semester()}`);
+
+        if (!response.data || response.data.length === 0) {
+            return null;
+        }
+
+        const schedule: TeacherSchedule = {
+            name: teacherName,
+            week_1: Array(6).fill(null).map(() => ({
+                pairs: Array(6).fill(null),
+                dayOfWeek: Weekday.Monday
+            })) as Week,
+            week_2: Array(6).fill(null).map(() => ({
+                pairs: Array(6).fill(null),
+                dayOfWeek: Weekday.Monday
+            })) as Week
+        };
+
+        response.data.forEach((item: any) => {
+            const weekNumber = item.week_number === '1' ? 'week_1' : 'week_2';
+            const dayOfWeek = Weekday[item.day_number as keyof typeof Weekday];
+            const pairNumber = parseInt(item.pair_number, 10) - 1;
+
+            const groupsList = JSON.parse(item.groups_list);
+
+            const teacherPair = new TeacherPair(
+                item.subject_name,
+                groupsList,
+                PairType[item.lesson_type as keyof typeof PairType],
+                PairFormat[item.visit_format as keyof typeof PairFormat],
+                item.building,
+                item.audience_number
+            );
+
+            const dayIndex = Object.values(Weekday).indexOf(dayOfWeek);
+            if (schedule[weekNumber] && schedule[weekNumber]![dayIndex]) {
+                schedule[weekNumber]![dayIndex]!.pairs[pairNumber] = teacherPair;
+                schedule[weekNumber]![dayIndex]!.dayOfWeek = dayOfWeek;
+            }
+        });
+
+        return schedule;
+    } catch (error) {
+        console.error('Error fetching teacher schedule:', error);
+        throw error;
+    }
+}
+
+export { FetchGroupList, FetchTeacherList, FetchScheduleForGroup, FetchScheduleForTeacher };

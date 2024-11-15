@@ -2,24 +2,21 @@ import React, { useState, useEffect } from 'react';
 import './App.css';
 import InputField from './components/inputField';
 import OutputTable from './components/outputTable';
-import { getDataGroups, getDataTeachers } from './components/getData';
-import {
-    GroupSchedule,
-    TeacherSchedule
-} from './components/structure';
+import { FetchGroupList, FetchTeacherList } from './components/getData';
 import useWindowResize from './components/useWindowResize';
+import useLocalStorage from './components/useLocalStorage';
 
 const App: React.FC = () => {
-    const [find, setFind] = useState<string>("");
-    const [isValueFound, setIsValueFound] = useState<boolean>(false);
-    const [groupsList, setGroupsList] = useState<GroupSchedule[]>([]);
-    const [teachersList, setTeachersList] = useState<TeacherSchedule[]>([]);
+    const [find, setFind] = useLocalStorage<string>("find", "");
+    const [isValueFound, setIsValueFound] = useLocalStorage<boolean>("isValueFound", false);
+    const [groupsList, setGroupsList] = useLocalStorage<{ group_code: string }[]>("groupsList", []);
+    const [teachersList, setTeachersList] = useLocalStorage<{ full_name: string }[]>("teachersList", []);
     const scale = useWindowResize();
 
     useEffect(() => {
         const fetchData = async () => {
-            const groups = getDataGroups();
-            const teachers = getDataTeachers();
+            const groups = await FetchGroupList();
+            const teachers = await FetchTeacherList();
             setGroupsList(groups);
             setTeachersList(teachers);
         };
@@ -27,8 +24,10 @@ const App: React.FC = () => {
     }, []);
 
     function handleValueFound(value: string) {
-        if (groupsList.some(group => group.groupName === value) || teachersList.some(teacher => teacher.name === value)) {
+        if (groupsList.some(group => group.group_code === value) || teachersList.some(teacher => teacher.full_name === value)) {
             setIsValueFound(true);
+        } else {
+            setIsValueFound(false);
         }
     }
 
@@ -39,8 +38,8 @@ const App: React.FC = () => {
                 <InputField
                     find={find}
                     setFind={setFind}
-                    groupsList={groupsList.map(group => group.groupName)}
-                    teachersList={teachersList.map(teacher => teacher.name)}
+                    groupsList={groupsList.map(group => group.group_code)}
+                    teachersList={teachersList.map(teacher => teacher.full_name)}
                     onValueFound={handleValueFound}
                 />
             )}
@@ -49,10 +48,9 @@ const App: React.FC = () => {
                     find={find}
                     setFind={setFind}
                     setIsValueFound={setIsValueFound}
-                    groupsList={groupsList}
-                    teachersList={teachersList}
                 />
             )}
+            
         </div>
     );
 }

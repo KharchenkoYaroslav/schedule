@@ -1,30 +1,54 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './styles.css';
 import { MdOutlineSettingsBackupRestore } from 'react-icons/md';
-import { 
-    Weekday, 
-    PairTime, 
-    GroupPair, 
-    Week, 
-    GroupSchedule, 
+import {
+    Weekday,
+    PairTime,
+    GroupPair,
+    Week,
+    GroupSchedule,
     TeacherSchedule,
-    AbbrPair
+    AbbrPair,
 } from './structure';
+import { FetchScheduleForGroup, FetchScheduleForTeacher } from './getData';
 
 interface Props {
     find: string;
     setFind: React.Dispatch<React.SetStateAction<string>>;
     setIsValueFound: React.Dispatch<React.SetStateAction<boolean>>;
-    groupsList: GroupSchedule[];
-    teachersList: TeacherSchedule[];
 }
 
-const OutputTable: React.FC<Props> = ({ find, setFind, setIsValueFound, groupsList, teachersList }) => {
-    const schedule = groupsList.find(group => group.groupName === find) || teachersList.find(teacher => teacher.name === find);
+const OutputTable: React.FC<Props> = ({ find, setFind, setIsValueFound }) => {
 
-    if (!schedule) {
-        return <h3>Розклад не знайдено</h3>;
-    }
+    const [schedule, setSchedule] = useState<GroupSchedule | TeacherSchedule | null>(null);
+    const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const groupSchedule = await FetchScheduleForGroup(find);
+                if (groupSchedule) {
+                    setSchedule(groupSchedule);
+                    return;
+                }
+
+                const teacherSchedule = await FetchScheduleForTeacher(find);
+                if (teacherSchedule) {
+                    setSchedule(teacherSchedule);
+                    return;
+                }
+
+                setError("Розклад не знайдено");
+            } catch (err) {
+                setError("Помилка при отриманні розкладу");
+            }
+        };
+
+        fetchData();
+
+    }, [find]);
+
+
 
     const formatTypeAndFormat = (types: string | string[], formats: string | string[]): string => {
         if (!Array.isArray(types)) types = [types];
@@ -40,15 +64,16 @@ const OutputTable: React.FC<Props> = ({ find, setFind, setIsValueFound, groupsLi
             return '';
         }
     };
+
     const formatSubject = (subject: string | string[]): string => {
         if (!Array.isArray(subject)) return subject;
         else {
-            return  `${subject.join(', ')}`;
+            return `${subject.join(', ')}`;
         }
     };
 
-    const handleTeacherClick = (teacherName: string) => {
-        const teacher = teachersList.find(t => t.name === teacherName);
+    const handleTeacherClick = async (teacherName: string) => {
+        const teacher = await FetchScheduleForTeacher(teacherName);
         if (teacher) {
             setFind(teacherName);
             setIsValueFound(true);
@@ -57,8 +82,8 @@ const OutputTable: React.FC<Props> = ({ find, setFind, setIsValueFound, groupsLi
         }
     };
 
-    const handleGroupClick = (groupName: string) => {
-        const group = groupsList.find(g => g.groupName === groupName);
+    const handleGroupClick = async (groupName: string) => {
+        const group = await FetchScheduleForGroup(groupName);
         if (group) {
             setFind(groupName);
             setIsValueFound(true);
@@ -69,27 +94,47 @@ const OutputTable: React.FC<Props> = ({ find, setFind, setIsValueFound, groupsLi
 
     const renderTeachers = (teachers: string | string[], positions: AbbrPair | AbbrPair[]) => {
         if (Array.isArray(teachers) && Array.isArray(positions)) {
-            return teachers.map((teacher, index) => (
-                <div key={index} className='group_teacher'>
-                    <a href="#" onClick={() => handleTeacherClick(teacher)}>{positions[index]}. {teacher}</a>
-                </div>
+            const links = teachers.map((teacher, index) => (
+                <a key={index} href="#" onClick={() => handleTeacherClick(teacher)}>
+                    {positions[index]}. {teacher}
+                </a>
             ));
+            return <div className='group_teacher'>{links.map((link, i) => (
+                <span key={i}>
+                    {link}
+                    {i < links.length - 1 ? ', ' : ''}
+                </span>
+            ))}</div>;
         } else if (Array.isArray(teachers)) {
-            return teachers.map((teacher, index) => (
-                <div key={index} className='group_teacher'>
-                    <a href="#" onClick={() => handleTeacherClick(teacher)}>{positions}. {teacher}</a>
-                </div>
+            const links = teachers.map((teacher, index) => (
+                <a key={index} href="#" onClick={() => handleTeacherClick(teacher)}>
+                    {positions}. {teacher}
+                </a>
             ));
+            return <div className='group_teacher'>{links.map((link, i) => (
+                <span key={i}>
+                    {link}
+                    {i < links.length - 1 ? ', ' : ''}
+                </span>
+            ))}</div>;
         } else if (Array.isArray(positions)) {
-            return positions.map((position, index) => (
-                <div key={index} className='group_teacher'>
-                    <a href="#" onClick={() => handleTeacherClick(teachers)}>{position}. {teachers}</a>
-                </div>
+            const links = positions.map((position, index) => (
+                <a key={index} href="#" onClick={() => handleTeacherClick(teachers)}>
+                    {position}. {teachers}
+                </a>
             ));
+            return <div className='group_teacher'>{links.map((link, i) => (
+                <span key={i}>
+                    {link}
+                    {i < links.length - 1 ? ', ' : ''}
+                </span>
+            ))}</div>;
         } else {
             return (
                 <div className='group_teacher'>
-                    <a href="#" onClick={() => handleTeacherClick(teachers)}>{positions}. {teachers}</a>
+                    <a href="#" onClick={() => handleTeacherClick(teachers)}>
+                        {positions}. {teachers}
+                    </a>
                 </div>
             );
         }
@@ -97,15 +142,23 @@ const OutputTable: React.FC<Props> = ({ find, setFind, setIsValueFound, groupsLi
 
     const renderGroups = (groups: string | string[]) => {
         if (Array.isArray(groups)) {
-            return groups.map((group, index) => (
-                <div key={index} className='group_teacher'>
-                    <a href="#" onClick={() => handleGroupClick(group)}>{group}</a>
-                </div>
+            const links = groups.map((group, index) => (
+                <a key={index} href="#" onClick={() => handleGroupClick(group)}>
+                    {group}
+                </a>
             ));
+            return <div className='group_teacher'>{links.map((link, i) => (
+                <span key={i}>
+                    {link}
+                    {i < links.length - 1 ? ', ' : ''}
+                </span>
+            ))}</div>;
         } else {
             return (
                 <div className='group_teacher'>
-                    <a href="#" onClick={() => handleGroupClick(groups)}>{groups}</a>
+                    <a href="#" onClick={() => handleGroupClick(groups)}>
+                        {groups}
+                    </a>
                 </div>
             );
         }
@@ -115,7 +168,7 @@ const OutputTable: React.FC<Props> = ({ find, setFind, setIsValueFound, groupsLi
         if (!week) {
             return <h3>Розклад на тиждень {weekName} не знайдено</h3>;
         }
-    
+
         return (
             <div className="table-container">
                 <h3>{weekName}</h3>
@@ -129,7 +182,7 @@ const OutputTable: React.FC<Props> = ({ find, setFind, setIsValueFound, groupsLi
                     <tbody>
                         {[...Array(6)].map((_, pairIndex) => (
                             <tr key={pairIndex}>
-                                <td>{pairIndex + 1} <br/> {PairTime[pairIndex + 1]}</td>
+                                <td>{pairIndex + 1} <br /> {PairTime[pairIndex + 1]}</td>
                                 {Object.values(Weekday).map(day => {
                                     const pair = week.find(d => d?.dayOfWeek === day)?.pairs[pairIndex];
                                     return (
@@ -145,6 +198,11 @@ const OutputTable: React.FC<Props> = ({ find, setFind, setIsValueFound, groupsLi
                                                     <div className='type_format'>
                                                         {formatTypeAndFormat(pair.getType(), pair.getFormat())}
                                                     </div>
+                                                    {pair.getBuilding() !== null && pair.getAudience() !== null && (
+                                                        <div className='place'>
+                                                            {`Аудиторія: ${pair.getBuilding()}, корпус: ${pair.getAudience()}`}
+                                                        </div>
+                                                    )}
                                                 </>
                                             )}
                                         </td>
@@ -159,48 +217,60 @@ const OutputTable: React.FC<Props> = ({ find, setFind, setIsValueFound, groupsLi
     };
 
     const getCurrentWeek = (): number => {
-        const startDate: Date = new Date('2024-10-06'); 
-        const today: Date = new Date(); 
-    
+        const startDate: Date = new Date('2024-10-06');
+        const today: Date = new Date();
+
         const dayOfWeekToday: number = today.getDay();
-        const diffToday: number = today.getDate() - dayOfWeekToday + (dayOfWeekToday === 0 ? -6 : 1); 
+        const diffToday: number = today.getDate() - dayOfWeekToday + (dayOfWeekToday === 0 ? -6 : 1);
         const startOfCurrentWeek: Date = new Date(today.setDate(diffToday));
-    
+
         const dayOfWeekStart: number = startDate.getDay();
-        const diffStart: number = startDate.getDate() - dayOfWeekStart + (dayOfWeekStart === 0 ? -6 : 1); 
+        const diffStart: number = startDate.getDate() - dayOfWeekStart + (dayOfWeekStart === 0 ? -6 : 1);
         const startOfStartWeek: Date = new Date(startDate.setDate(diffStart));
 
         const diffInTime: number = startOfCurrentWeek.getTime() - startOfStartWeek.getTime();
         const diffInWeeks: number = Math.floor(diffInTime / (1000 * 60 * 60 * 24 * 7));
-    
+
         const weekNumber: number = (diffInWeeks % 2) + 1;
-    
+
         return weekNumber;
     };
 
     const currentWeek = getCurrentWeek();
 
+    if (error) {
+        return <h3>{error}</h3>;
+    }
+
+    if (!schedule) {
+        return <h3>Завантаження...</h3>;
+    }
+
     return (
         <div className="output">
             <h2>{find}</h2>
-            <button className='restart' type="button" onClick={(e) => window.location.reload()}>
-                Заново<span className='text_icon'><MdOutlineSettingsBackupRestore /></span>
+            <button className='restart' type="button" onClick={() => {
+                setIsValueFound(false);
+                setFind("");
+            }}>
+                Вибрати інший розклад<span className='text_icon'><MdOutlineSettingsBackupRestore /></span>
             </button>
             <div className="tables">
-            {currentWeek === 1 ? (
-                <>
-                    {renderTable(schedule.week_1, "Цей тиждень")}
-                    {renderTable(schedule.week_2, "Наступний тиждень")}
-                </>
-            ) : (
-                <>
-                    {renderTable(schedule.week_2, "Цей тиждень")}
-                    {renderTable(schedule.week_1, "Наступний тиждень")}
-                </>
-            )}
-        </div>
+                {currentWeek === 1 ? (
+                    <>
+                        {renderTable(schedule.week_1, "Цей тиждень")}
+                        {renderTable(schedule.week_2, "Наступний тиждень")}
+                    </>
+                ) : (
+                    <>
+                        {renderTable(schedule.week_2, "Цей тиждень")}
+                        {renderTable(schedule.week_1, "Наступний тиждень")}
+                    </>
+                )}
+            </div>
         </div>
     );
 };
+
 
 export default OutputTable;
