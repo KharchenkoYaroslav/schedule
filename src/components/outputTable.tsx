@@ -243,7 +243,7 @@ const OutputTable: React.FC<Props> = ({ find, setFind, setIsValueFound }) => {
     }
 
     if (!schedule) {
-        return <h3>Завантаження...</h3>;
+        return <h3 id='loading'>Завантаження...</h3>;
     }
 
     return (
