@@ -239,11 +239,11 @@ const OutputTable: React.FC<Props> = ({ find, setFind, setIsValueFound }) => {
     const currentWeek = getCurrentWeek();
 
     if (error) {
-        return <h3>{error}</h3>;
+        return <h3 className='message'>{error}</h3>;
     }
 
     if (!schedule) {
-        return <h3 id='loading'>Завантаження...</h3>;
+        return <h3 className='message'>Завантаження...</h3>;
     }
 
     return (
