@@ -34,7 +34,7 @@ const cur_semester = () => {
 
 async function FetchScheduleForGroup(groupName: string): Promise<GroupSchedule | null> {
     try {
-        const response = await axios.get(`https://schedule-server-cr74qmswe-kharchenkoyaroslavs-projects.vercel.app/api/getGroup?groupName=${groupName}&semester=${cur_semester()}`);
+        const response = await axios.get(`https://schedule-server-cr74qmswe-kharchenkoyaroslavs-projects.vercel.app/api/getGroup?groupName=%D0%A2%D0%92-31&semester=1`);
 
         if (!response.data || response.data.length === 0) {
             return null;
@@ -88,7 +88,8 @@ async function FetchScheduleForGroup(groupName: string): Promise<GroupSchedule |
 
 async function FetchScheduleForTeacher(teacherName: string): Promise<TeacherSchedule | null> {
     try {
-        const response = await axios.get(`https://schedule-server-cr74qmswe-kharchenkoyaroslavs-projects.vercel.app/api/getTeacher?teacherName=${teacherName}&semester=${cur_semester()}`);
+        
+        const response = await axios.get(`https://schedule-server-cr74qmswe-kharchenkoyaroslavs-projects.vercel.app/api/getTeacher?teacherName=%D1%82%D0%B5%D1%81%D1%82&semester=1`);
 
         if (!response.data || response.data.length === 0) {
             return null;
