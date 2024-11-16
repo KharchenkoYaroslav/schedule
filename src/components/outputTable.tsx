@@ -94,8 +94,8 @@ const OutputTable: React.FC<Props> = ({ find, setFind, setIsValueFound }) => {
     const transform_name = (fullName: string): string => {
         const words = fullName.split(' ');
     
-        if (words.length < 3) {
-            throw new Error("Повне ім'я повинно містити принаймні три слова.");
+        if (words.length != 3) {
+            return fullName;
         }
     
         const firstWord = words[0];
