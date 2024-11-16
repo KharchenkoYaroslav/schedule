@@ -65,8 +65,6 @@ const OutputTable: React.FC<Props> = ({ find, isStudent, setFind, setIsValueFoun
         fetchData();
     }, [find, schedule, isStudent]);
 
-
-
     const formatTypeAndFormat = (types: string | string[], formats: string | string[]): string => {
         if (!Array.isArray(types)) types = [types];
         if (!Array.isArray(formats)) formats = [formats];
