@@ -25,6 +25,7 @@ const OutputTable: React.FC<Props> = ({ find, setFind, setIsValueFound }) => {
 
     useEffect(() => {
         const fetchData = async () => {
+            try {
                 const groupSchedule = await FetchScheduleForGroup(find);
                 if (groupSchedule) {
                     setSchedule(groupSchedule);
@@ -38,6 +39,9 @@ const OutputTable: React.FC<Props> = ({ find, setFind, setIsValueFound }) => {
                 }
 
                 setError("Розклад не знайдено");
+            } catch (err) {
+                setError("Помилка при отриманні розкладу");
+            }
         };
 
         fetchData();
