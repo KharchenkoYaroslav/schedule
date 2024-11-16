@@ -258,7 +258,7 @@ const OutputTable: React.FC<Props> = ({ find, isStudent,setIsStudent, setFind, s
             setTimeout(() => {
                 setIsValueFound(false);
                 setFind("");
-            }, 5000);
+            }, 1500);
         }
     }, [error]);
 
