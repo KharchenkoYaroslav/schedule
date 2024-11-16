@@ -11,7 +11,6 @@ import {
     AbbrPair,
 } from './structure';
 import { FetchScheduleForGroup, FetchScheduleForTeacher } from './getData';
-import useLocalStorage from './useLocalStorage';
 
 interface Props {
     find: string;
@@ -22,48 +21,39 @@ interface Props {
 
 const OutputTable: React.FC<Props> = ({ find, isStudent, setFind, setIsValueFound }) => {
 
-    const [schedule, setSchedule] = useLocalStorage<GroupSchedule | TeacherSchedule | null>("schedule", null);
+    const [schedule, setSchedule] = useState<GroupSchedule | TeacherSchedule | null>(null);
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                // Перевірка, чи дані в localStorage відповідають поточним параметрам find та isStudent
-                const storedFind = localStorage.getItem("lastFind");
-                const storedIsStudent = localStorage.getItem("lastIsStudent");
 
-                if (storedFind !== find || storedIsStudent !== JSON.stringify(isStudent)) {
-                    setSchedule(null);
-                }
-
-                if (!schedule) {
-                    if (isStudent) {
-                        const groupSchedule = await FetchScheduleForGroup(find);
-                        if (groupSchedule) {
-                            setSchedule(groupSchedule);
-                            localStorage.setItem("lastFind", find);
-                            localStorage.setItem("lastIsStudent", JSON.stringify(isStudent));
-                            return;
-                        }
-                    } else {
-                        const teacherSchedule = await FetchScheduleForTeacher(find);
-                        if (teacherSchedule) {
-                            setSchedule(teacherSchedule);
-                            localStorage.setItem("lastFind", find);
-                            localStorage.setItem("lastIsStudent", JSON.stringify(isStudent));
-                            return;
-                        }
+                if (isStudent) {
+                    const groupSchedule = await FetchScheduleForGroup(find);
+                    if (groupSchedule) {
+                        setSchedule(groupSchedule);
+                        return;
                     }
-
-                    setError("Розклад не знайдено");
                 }
+                else {
+                    const teacherSchedule = await FetchScheduleForTeacher(find);
+                    if (teacherSchedule) {
+                        setSchedule(teacherSchedule);
+                        return;
+                    }
+                }
+
+                setError("Розклад не знайдено");
             } catch (err) {
                 setError("Помилка при отриманні розкладу");
             }
         };
 
         fetchData();
-    }, [find, schedule, isStudent]);
+
+    }, [find]);
+
+
 
     const formatTypeAndFormat = (types: string | string[], formats: string | string[]): string => {
         if (!Array.isArray(types)) types = [types];
@@ -275,7 +265,6 @@ const OutputTable: React.FC<Props> = ({ find, isStudent, setFind, setIsValueFoun
             setTimeout(() => {
                 setIsValueFound(false);
                 setFind("");
-                setSchedule(null);
             }, 5000);
         }
     }, [error]);
@@ -294,8 +283,6 @@ const OutputTable: React.FC<Props> = ({ find, isStudent, setFind, setIsValueFoun
             <button className='restart' type="button" onClick={() => {
                 setIsValueFound(false);
                 setFind("");
-                setSchedule(null);
-                localStorage.removeItem("schedule");
             }}>
                 Вибрати інший розклад<span className='text_icon'><MdOutlineSettingsBackupRestore /></span>
             </button>
@@ -315,5 +302,6 @@ const OutputTable: React.FC<Props> = ({ find, isStudent, setFind, setIsValueFoun
         </div>
     );
 };
+
 
 export default OutputTable;
