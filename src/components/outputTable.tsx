@@ -91,12 +91,26 @@ const OutputTable: React.FC<Props> = ({ find, setFind, setIsValueFound }) => {
             alert("Розклад не знайдено");
         }
     };
+    const transform_name = (fullName: string): string => {
+        const words = fullName.split(' ');
+    
+        if (words.length < 3) {
+            throw new Error("Повне ім'я повинно містити принаймні три слова.");
+        }
+    
+        const firstWord = words[0];
+    
+        const secondInitial = words[1][0] + '.';
+    
+        const thirdInitial = words[2][0] + '.';
+        return `${firstWord} ${secondInitial}${thirdInitial}`;
+    }
 
     const renderTeachers = (teachers: string | string[], positions: AbbrPair | AbbrPair[]) => {
         if (Array.isArray(teachers) && Array.isArray(positions)) {
             const links = teachers.map((teacher, index) => (
                 <a key={index} className='nowrap' href="#" onClick={() => handleTeacherClick(teacher)}>
-                    {positions[index]}. {teacher}
+                    {positions[index]}. {transform_name(teacher)}
                 </a>
             ));
             return <div className='group_teacher'>{links.map((link, i) => (
@@ -108,7 +122,7 @@ const OutputTable: React.FC<Props> = ({ find, setFind, setIsValueFound }) => {
         } else if (Array.isArray(teachers)) {
             const links = teachers.map((teacher, index) => (
                 <a key={index} className='nowrap' href="#" onClick={() => handleTeacherClick(teacher)}>
-                    {positions}. {teacher}
+                    {positions}. {transform_name(teacher)}
                 </a>
             ));
             return <div className='group_teacher'>{links.map((link, i) => (
@@ -120,7 +134,7 @@ const OutputTable: React.FC<Props> = ({ find, setFind, setIsValueFound }) => {
         } else if (Array.isArray(positions)) {
             const links = positions.map((position, index) => (
                 <a key={index} className='nowrap' href="#" onClick={() => handleTeacherClick(teachers)}>
-                    {position}. {teachers}
+                    {position}. {transform_name(teachers)}
                 </a>
             ));
             return <div className='group_teacher'>{links.map((link, i) => (
@@ -133,7 +147,7 @@ const OutputTable: React.FC<Props> = ({ find, setFind, setIsValueFound }) => {
             return (
                 <div className='group_teacher'>
                     <a href="#" className='nowrap' onClick={() => handleTeacherClick(teachers)}>
-                        {positions}. {teachers}
+                        {positions}. {transform_name(teachers)}
                     </a>
                 </div>
             );

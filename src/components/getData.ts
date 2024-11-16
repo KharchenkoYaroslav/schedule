@@ -32,6 +32,7 @@ const cur_semester = () => {
     }
 };
 
+
 async function FetchScheduleForGroup(groupName: string): Promise<GroupSchedule | null> {
     try {
         const response = await axios.get(`https://schedule-server-rho.vercel.app/api/getGroup?groupName=${groupName}&semester=${cur_semester()}`);
