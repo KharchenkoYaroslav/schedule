@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useLayoutEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import './styles.css';
 import { IoChevronBack } from 'react-icons/io5';
 import { PiStudent } from 'react-icons/pi';
@@ -7,21 +7,22 @@ import { LiaChalkboardTeacherSolid } from 'react-icons/lia';
 interface Props {
     find: string;
     setFind: React.Dispatch<React.SetStateAction<string>>;
+    isStudent: boolean;
+    setIsStudent: React.Dispatch<React.SetStateAction<boolean>>;
     groupsList: string[];
     teachersList: string[];
     onValueFound: (value: string) => void;
 }
 
-const InputField = ({ find, setFind, groupsList, teachersList, onValueFound }: Props) => {
+const InputField = ({ find, setFind, isStudent , setIsStudent, groupsList, teachersList, onValueFound }: Props) => {
     const [isInputVisible, setIsInputVisible] = useState(false);
-    const [isStudent, setStudent] = useState(true);
     const [suggestions, setSuggestions] = useState<string[]>([]);
     const [isInputFocused, setIsInputFocused] = useState(false);
     const suggestionRef = useRef<HTMLDivElement | null>(null);
 
     const inputRef = useRef<HTMLInputElement>(null);
 
-    useLayoutEffect(() => {
+    useEffect(() => {
         const handleFocus = () => {
             document.body.style.backgroundColor = 'hsl(219, 59%, 30%)';
         };
@@ -44,7 +45,7 @@ const InputField = ({ find, setFind, groupsList, teachersList, onValueFound }: P
 
     const toTrueInput = (event: React.MouseEvent<HTMLButtonElement>, isStudent: boolean) => {
         event.preventDefault();
-        setStudent(isStudent);
+        setIsStudent(isStudent);
         setIsInputVisible(true);
     };
 

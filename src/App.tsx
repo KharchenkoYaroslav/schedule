@@ -9,6 +9,7 @@ import useLocalStorage from './components/useLocalStorage';
 const App: React.FC = () => {
     const [find, setFind] = useLocalStorage<string>("find", "");
     const [isValueFound, setIsValueFound] = useLocalStorage<boolean>("isValueFound", false);
+    const [isStudent, setIsStudent] = useLocalStorage<boolean>("isStudent", false);
     const [groupsList, setGroupsList] = useLocalStorage<{ group_code: string }[]>("groupsList", []);
     const [teachersList, setTeachersList] = useLocalStorage<{ full_name: string }[]>("teachersList", []);
     const scale = useWindowResize();
@@ -24,11 +25,8 @@ const App: React.FC = () => {
     }, []);
 
     function handleValueFound(value: string) {
-        if (groupsList.some(group => group.group_code === value) || teachersList.some(teacher => teacher.full_name === value)) {
-            setIsValueFound(true);
-        } else {
-            setIsValueFound(false);
-        }
+        const found = groupsList.some(group => group.group_code === value) || teachersList.some(teacher => teacher.full_name === value);
+        setIsValueFound(found);
     }
 
     return (
@@ -38,14 +36,17 @@ const App: React.FC = () => {
                 <InputField
                     find={find}
                     setFind={setFind}
+                    isStudent={isStudent}
+                    setIsStudent={setIsStudent}
                     groupsList={groupsList.map(group => group.group_code)}
                     teachersList={teachersList.map(teacher => teacher.full_name)}
-                    onValueFound={handleValueFound}
+                    onValueFound={handleValueFound}                   
                 />
             )}
             {isValueFound && (
                 <OutputTable
                     find={find}
+                    isStudent={isStudent}
                     setFind={setFind}
                     setIsValueFound={setIsValueFound}
                 />

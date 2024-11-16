@@ -14,11 +14,12 @@ import { FetchScheduleForGroup, FetchScheduleForTeacher } from './getData';
 
 interface Props {
     find: string;
+    isStudent: boolean;
     setFind: React.Dispatch<React.SetStateAction<string>>;
     setIsValueFound: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const OutputTable: React.FC<Props> = ({ find, setFind, setIsValueFound }) => {
+const OutputTable: React.FC<Props> = ({ find, isStudent, setFind, setIsValueFound }) => {
 
     const [schedule, setSchedule] = useState<GroupSchedule | TeacherSchedule | null>(null);
     const [error, setError] = useState<string | null>(null);
@@ -26,16 +27,20 @@ const OutputTable: React.FC<Props> = ({ find, setFind, setIsValueFound }) => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const groupSchedule = await FetchScheduleForGroup(find);
-                if (groupSchedule) {
-                    setSchedule(groupSchedule);
-                    return;
-                }
 
-                const teacherSchedule = await FetchScheduleForTeacher(find);
-                if (teacherSchedule) {
-                    setSchedule(teacherSchedule);
-                    return;
+                if (isStudent) {
+                    const groupSchedule = await FetchScheduleForGroup(find);
+                    if (groupSchedule) {
+                        setSchedule(groupSchedule);
+                        return;
+                    }
+                }
+                else {
+                    const teacherSchedule = await FetchScheduleForTeacher(find);
+                    if (teacherSchedule) {
+                        setSchedule(teacherSchedule);
+                        return;
+                    }
                 }
 
                 setError("Розклад не знайдено");
@@ -91,18 +96,18 @@ const OutputTable: React.FC<Props> = ({ find, setFind, setIsValueFound }) => {
             alert("Розклад не знайдено");
         }
     };
-    
+
     const transform_name = (fullName: string): string => {
         const words = fullName.split(' ');
-    
+
         if (words.length != 3) {
             return fullName;
         }
-    
+
         const firstWord = words[0];
-    
+
         const secondInitial = words[1][0] + '.';
-    
+
         const thirdInitial = words[2][0] + '.';
         return `${firstWord} ${secondInitial}${thirdInitial}`;
     }
