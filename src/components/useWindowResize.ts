@@ -1,32 +1,19 @@
-import { useLayoutEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useMediaQuery } from 'react-responsive';
 
 const useWindowResize = () => {
     const [scale, setScale] = useState<number>(1);
 
-    useLayoutEffect(() => {
-        const handleResize = () => {
-            const currentWidth = window.innerWidth;
-            if (currentWidth < 1100) {
-                const newScale = currentWidth / 1100;
-                setScale(newScale);
-            } else {
-                setScale(1);
-            }
-        };
+    const isMobile = useMediaQuery({ maxWidth: 1100 });
 
-        const handleOrientationChange = () => {
-            setTimeout(handleResize, 100); // Додаємо невелику затримку
-        };
-
-        window.addEventListener('resize', handleResize);
-        window.addEventListener('orientationchange', handleOrientationChange);
-        handleResize(); // Викликаємо обробник при монтуванні
-
-        return () => {
-            window.removeEventListener('resize', handleResize);
-            window.removeEventListener('orientationchange', handleOrientationChange);
-        };
-    }, []);
+    useEffect(() => {
+        if (isMobile) {
+            const newScale = window.innerWidth / 1100;
+            setScale(newScale);
+        } else {
+            setScale(1);
+        }
+    }, [isMobile]);
     
     return scale;
 };
