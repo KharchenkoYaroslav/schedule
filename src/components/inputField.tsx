@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import './styles.css';
 import { IoChevronBack } from 'react-icons/io5';
 import { PiStudent } from 'react-icons/pi';
@@ -14,12 +14,11 @@ interface Props {
     onValueFound: (value: string) => void;
 }
 
-const InputField = ({ find, setFind, isStudent , setIsStudent, groupsList, teachersList, onValueFound }: Props) => {
+const InputField = ({ find, setFind, isStudent, setIsStudent, groupsList, teachersList, onValueFound }: Props) => {
     const [isInputVisible, setIsInputVisible] = useState(false);
     const [suggestions, setSuggestions] = useState<string[]>([]);
     const [isInputFocused, setIsInputFocused] = useState(false);
     const suggestionRef = useRef<HTMLDivElement | null>(null);
-
     const inputRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
@@ -43,42 +42,48 @@ const InputField = ({ find, setFind, isStudent , setIsStudent, groupsList, teach
         }
     }, [inputRef, isInputVisible]);
 
-    const toTrueInput = (event: React.MouseEvent<HTMLButtonElement>, isStudent: boolean) => {
+    useEffect(() => {
+        setSuggestions(isStudent ? groupsList : teachersList);
+    }, [isStudent, groupsList, teachersList]);
+
+    const toTrueInput = useCallback((event: React.MouseEvent<HTMLButtonElement>, isStudent: boolean) => {
         event.preventDefault();
         setIsStudent(isStudent);
         setIsInputVisible(true);
-    };
+    }, [setIsStudent, setIsInputVisible]);
 
-    const toFalseInput = (event: React.MouseEvent<HTMLButtonElement>) => {
+    const toFalseInput = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
         event.preventDefault();
         setIsInputVisible(false);
-    };
+        setSuggestions([]);
+        setFind("");
+    }, [setIsInputVisible, setSuggestions, setFind]);
 
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
         setFind(value);
         const filteredList = (isStudent ? groupsList : teachersList).filter(item =>
             item.toLowerCase().includes(value.toLowerCase())
         );
         setSuggestions(filteredList);
-    };
+    }, [setFind, isStudent, groupsList, teachersList, setSuggestions]);
 
-    const handleSuggestionClick = (suggestion: string) => {
+    const handleSuggestionClick = useCallback((suggestion: string) => {
         setFind(suggestion);
         setSuggestions([]);
         setIsInputFocused(false);
         onValueFound(suggestion);
-    };
+    }, [setFind, setSuggestions, setIsInputFocused, onValueFound]);
 
-    const handleInputFocus = () => {
+    const handleInputFocus = useCallback(() => {
         setIsInputFocused(true);
-    };
+    }, [setIsInputFocused]);
 
-    const handleInputBlur = () => {
+    const handleInputBlur = useCallback(() => {
         setTimeout(() => {
             setIsInputFocused(false);
         }, 200);
-    };
+    }, [setIsInputFocused]);
 
     return (
         <form className='input' action="" onSubmit={(e) => e.preventDefault()}>
