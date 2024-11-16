@@ -46,6 +46,7 @@ const App: React.FC = () => {
                 <OutputTable
                     find={find}
                     isStudent={isStudent}
+                    setIsStudent={setIsStudent}
                     setFind={setFind}
                     setIsValueFound={setIsValueFound}
                 />

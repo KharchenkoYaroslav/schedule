@@ -15,11 +15,12 @@ import { FetchScheduleForGroup, FetchScheduleForTeacher } from './getData';
 interface Props {
     find: string;
     isStudent: boolean;
+    setIsStudent: React.Dispatch<React.SetStateAction<boolean>>;
     setFind: React.Dispatch<React.SetStateAction<string>>;
     setIsValueFound: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const OutputTable: React.FC<Props> = ({ find, isStudent, setFind, setIsValueFound }) => {
+const OutputTable: React.FC<Props> = ({ find, isStudent,setIsStudent, setFind, setIsValueFound }) => {
 
     const [schedule, setSchedule] = useState<GroupSchedule | TeacherSchedule | null>(null);
     const [error, setError] = useState<string | null>(null);
@@ -78,23 +79,15 @@ const OutputTable: React.FC<Props> = ({ find, isStudent, setFind, setIsValueFoun
     };
 
     const handleTeacherClick = async (teacherName: string) => {
-        const teacher = await FetchScheduleForTeacher(teacherName);
-        if (teacher) {
             setFind(teacherName);
             setIsValueFound(true);
-        } else {
-            alert("Розклад не знайдено");
-        }
+            setIsStudent(false);
     };
 
     const handleGroupClick = async (groupName: string) => {
-        const group = await FetchScheduleForGroup(groupName);
-        if (group) {
             setFind(groupName);
             setIsValueFound(true);
-        } else {
-            alert("Розклад не знайдено");
-        }
+            setIsStudent(true);
     };
 
     const transform_name = (fullName: string): string => {
