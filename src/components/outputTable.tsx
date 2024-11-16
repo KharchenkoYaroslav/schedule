@@ -25,20 +25,29 @@ const OutputTable: React.FC<Props> = ({ find, isStudent, setFind, setIsValueFoun
     const [schedule, setSchedule] = useLocalStorage<GroupSchedule | TeacherSchedule | null>("schedule", null);
     const [error, setError] = useState<string | null>(null);
 
-    
     useEffect(() => {
         const fetchData = async () => {
             try {
+                // Очищення локального сховища при зміні find або isStudent
+                if (find !== localStorage.getItem("lastFind") || isStudent !== JSON.parse(localStorage.getItem("lastIsStudent") || "false")) {
+                    setSchedule(null);
+                    localStorage.removeItem("schedule");
+                }
+
                 if (isStudent) {
                     const groupSchedule = await FetchScheduleForGroup(find);
                     if (groupSchedule) {
                         setSchedule(groupSchedule);
+                        localStorage.setItem("lastFind", find);
+                        localStorage.setItem("lastIsStudent", JSON.stringify(isStudent));
                         return;
                     }
                 } else {
                     const teacherSchedule = await FetchScheduleForTeacher(find);
                     if (teacherSchedule) {
                         setSchedule(teacherSchedule);
+                        localStorage.setItem("lastFind", find);
+                        localStorage.setItem("lastIsStudent", JSON.stringify(isStudent));
                         return;
                     }
                 }
@@ -286,6 +295,7 @@ const OutputTable: React.FC<Props> = ({ find, isStudent, setFind, setIsValueFoun
                 setIsValueFound(false);
                 setFind("");
                 setSchedule(null);
+                localStorage.removeItem("schedule");
             }}>
                 Вибрати інший розклад<span className='text_icon'><MdOutlineSettingsBackupRestore /></span>
             </button>
@@ -305,6 +315,5 @@ const OutputTable: React.FC<Props> = ({ find, isStudent, setFind, setIsValueFoun
         </div>
     );
 };
-
 
 export default OutputTable;
