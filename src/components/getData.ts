@@ -3,7 +3,7 @@ import { AbbrPair, GroupPair, GroupSchedule, PairFormat, PairType, Teacher, Teac
 
 async function FetchGroupList() {
     try {
-        const response = await axios.get(`http://localhost:5000/api/groupsList`);
+        const response = await axios.get(`https://schedule-server-cr74qmswe-kharchenkoyaroslavs-projects.vercel.app/api/groupsList`);
         return response.data;
     } catch (error) {
         console.error('Error fetching group list:', error);
@@ -13,7 +13,7 @@ async function FetchGroupList() {
 
 async function FetchTeacherList() {
     try {
-        const response = await axios.get(`http://localhost:5000/api/teachersList`);
+        const response = await axios.get(`https://schedule-server-cr74qmswe-kharchenkoyaroslavs-projects.vercel.app/api/teachersList`);
         return response.data;
     } catch (error) {
         console.error('Error fetching teacher list:', error);
@@ -34,7 +34,7 @@ const cur_semester = () => {
 
 async function FetchScheduleForGroup(groupName: string): Promise<GroupSchedule | null> {
     try {
-        const response = await axios.get(`http://localhost:5000/api/getGroup?groupName=${groupName}&semester=${cur_semester()}`);
+        const response = await axios.get(`https://schedule-server-cr74qmswe-kharchenkoyaroslavs-projects.vercel.app/api/getGroup?groupName=${groupName}&semester=${cur_semester()}`);
 
         if (!response.data || response.data.length === 0) {
             return null;
@@ -88,7 +88,7 @@ async function FetchScheduleForGroup(groupName: string): Promise<GroupSchedule |
 
 async function FetchScheduleForTeacher(teacherName: string): Promise<TeacherSchedule | null> {
     try {
-        const response = await axios.get(`http://localhost:5000/api/getTeacher?teacherName=${teacherName}&semester=${cur_semester()}`);
+        const response = await axios.get(`https://schedule-server-cr74qmswe-kharchenkoyaroslavs-projects.vercel.app/api/getTeacher?teacherName=${teacherName}&semester=${cur_semester()}`);
 
         if (!response.data || response.data.length === 0) {
             return null;
