@@ -100,7 +100,7 @@ const OutputTable: React.FC<Props> = ({ find, setFind, setIsValueFound }) => {
                 </a>
             ));
             return <div className='group_teacher'>{links.map((link, i) => (
-                <span key={i}>
+                <span className='nowrap' key={i}>
                     {link}
                     {i < links.length - 1 ? ', ' : ''}
                 </span>
@@ -112,7 +112,7 @@ const OutputTable: React.FC<Props> = ({ find, setFind, setIsValueFound }) => {
                 </a>
             ));
             return <div className='group_teacher'>{links.map((link, i) => (
-                <span key={i}>
+                <span className='nowrap' key={i}>
                     {link}
                     {i < links.length - 1 ? ', ' : ''}
                 </span>
@@ -124,17 +124,19 @@ const OutputTable: React.FC<Props> = ({ find, setFind, setIsValueFound }) => {
                 </a>
             ));
             return <div className='group_teacher'>{links.map((link, i) => (
-                <span key={i}>
+                <span className='nowrap' key={i}>
                     {link}
                     {i < links.length - 1 ? ', ' : ''}
                 </span>
             ))}</div>;
         } else {
             return (
-                <div className='group_teacher'>
-                    <a href="#" onClick={() => handleTeacherClick(teachers)}>
-                        {positions}. {teachers}
-                    </a>
+                <div  className='group_teacher'>
+                    <span className='nowrap'>
+                        <a href="#" onClick={() => handleTeacherClick(teachers)}>
+                            {positions}. {teachers}
+                        </a>
+                    </span>
                 </div>
             );
         }
@@ -200,7 +202,9 @@ const OutputTable: React.FC<Props> = ({ find, setFind, setIsValueFound }) => {
                                                     </div>
                                                     {pair.getBuilding() !== null && pair.getAudience() !== null && (
                                                         <div className='place'>
-                                                            {`Аудиторія: ${pair.getBuilding()}, корпус: ${pair.getAudience()}`}
+                                                            <span className='nowrap'>
+                                                                {`Аудиторія: ${pair.getBuilding()}, корпус: ${pair.getAudience()}`}
+                                                            </span>
                                                         </div>
                                                     )}
                                                 </>
