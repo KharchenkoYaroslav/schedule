@@ -28,39 +28,41 @@ const OutputTable: React.FC<Props> = ({ find, isStudent, setFind, setIsValueFoun
     useEffect(() => {
         const fetchData = async () => {
             try {
-                // Очищення локального сховища при зміні find або isStudent
-                if (find !== localStorage.getItem("lastFind") || isStudent !== JSON.parse(localStorage.getItem("lastIsStudent") || "false")) {
+                // Перевірка, чи дані в localStorage відповідають поточним параметрам find та isStudent
+                const storedFind = localStorage.getItem("lastFind");
+                const storedIsStudent = localStorage.getItem("lastIsStudent");
+
+                if (storedFind !== find || storedIsStudent !== JSON.stringify(isStudent)) {
                     setSchedule(null);
-                    localStorage.removeItem("schedule");
                 }
 
-                if (isStudent) {
-                    const groupSchedule = await FetchScheduleForGroup(find);
-                    if (groupSchedule) {
-                        setSchedule(groupSchedule);
-                        localStorage.setItem("lastFind", find);
-                        localStorage.setItem("lastIsStudent", JSON.stringify(isStudent));
-                        return;
+                if (!schedule) {
+                    if (isStudent) {
+                        const groupSchedule = await FetchScheduleForGroup(find);
+                        if (groupSchedule) {
+                            setSchedule(groupSchedule);
+                            localStorage.setItem("lastFind", find);
+                            localStorage.setItem("lastIsStudent", JSON.stringify(isStudent));
+                            return;
+                        }
+                    } else {
+                        const teacherSchedule = await FetchScheduleForTeacher(find);
+                        if (teacherSchedule) {
+                            setSchedule(teacherSchedule);
+                            localStorage.setItem("lastFind", find);
+                            localStorage.setItem("lastIsStudent", JSON.stringify(isStudent));
+                            return;
+                        }
                     }
-                } else {
-                    const teacherSchedule = await FetchScheduleForTeacher(find);
-                    if (teacherSchedule) {
-                        setSchedule(teacherSchedule);
-                        localStorage.setItem("lastFind", find);
-                        localStorage.setItem("lastIsStudent", JSON.stringify(isStudent));
-                        return;
-                    }
-                }
 
-                setError("Розклад не знайдено");
+                    setError("Розклад не знайдено");
+                }
             } catch (err) {
                 setError("Помилка при отриманні розкладу");
             }
         };
 
-        if (!schedule) {
-            fetchData();
-        }
+        fetchData();
     }, [find, schedule, isStudent]);
 
 
