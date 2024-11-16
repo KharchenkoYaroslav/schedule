@@ -58,11 +58,11 @@ async function FetchScheduleForGroup(groupName: string): Promise<GroupSchedule |
             const dayOfWeek = Weekday[item.day_number as keyof typeof Weekday];
             const pairNumber = parseInt(item.pair_number, 10) - 1;
 
-            // Видаляємо JSON.parse, оскільки teachers_with_post вже є об'єктом
+
             const teachersWithPost = item.teachers_with_post;
             const teachers: Teacher = [
-                teachersWithPost.map((teacher: any) => Object.keys(teacher)[0]),
-                teachersWithPost.map((teacher: any) => Object.values(teacher)[0])
+                teachersWithPost.map((teacher: string) => Object.keys(teacher)[0]),
+                teachersWithPost.map((teacher: AbbrPair) => AbbrPair[Object.values(teacher)[0] as keyof typeof AbbrPair])
             ];
 
             const groupPair = new GroupPair(
