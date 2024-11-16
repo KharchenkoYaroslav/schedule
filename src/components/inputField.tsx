@@ -42,15 +42,12 @@ const InputField = ({ find, setFind, isStudent, setIsStudent, groupsList, teache
         }
     }, [inputRef, isInputVisible]);
 
-    useEffect(() => {
-        setSuggestions(isStudent ? groupsList : teachersList);
-    }, [isStudent, groupsList, teachersList]);
-
     const toTrueInput = useCallback((event: React.MouseEvent<HTMLButtonElement>, isStudent: boolean) => {
         event.preventDefault();
         setIsStudent(isStudent);
         setIsInputVisible(true);
-    }, [setIsStudent, setIsInputVisible]);
+        setSuggestions(isStudent ? groupsList : teachersList);
+    }, [setIsStudent, setIsInputVisible, groupsList, teachersList]);
 
     const toFalseInput = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
         event.preventDefault();
