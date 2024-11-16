@@ -95,48 +95,46 @@ const OutputTable: React.FC<Props> = ({ find, setFind, setIsValueFound }) => {
     const renderTeachers = (teachers: string | string[], positions: AbbrPair | AbbrPair[]) => {
         if (Array.isArray(teachers) && Array.isArray(positions)) {
             const links = teachers.map((teacher, index) => (
-                <a key={index} href="#" onClick={() => handleTeacherClick(teacher)}>
+                <a key={index} className='nowrap' href="#" onClick={() => handleTeacherClick(teacher)}>
                     {positions[index]}. {teacher}
                 </a>
             ));
             return <div className='group_teacher'>{links.map((link, i) => (
-                <span className='nowrap' key={i}>
+                <span key={i}>
                     {link}
                     {i < links.length - 1 ? ', ' : ''}
                 </span>
             ))}</div>;
         } else if (Array.isArray(teachers)) {
             const links = teachers.map((teacher, index) => (
-                <a key={index} href="#" onClick={() => handleTeacherClick(teacher)}>
+                <a key={index} className='nowrap' href="#" onClick={() => handleTeacherClick(teacher)}>
                     {positions}. {teacher}
                 </a>
             ));
             return <div className='group_teacher'>{links.map((link, i) => (
-                <span className='nowrap' key={i}>
+                <span key={i}>
                     {link}
                     {i < links.length - 1 ? ', ' : ''}
                 </span>
             ))}</div>;
         } else if (Array.isArray(positions)) {
             const links = positions.map((position, index) => (
-                <a key={index} href="#" onClick={() => handleTeacherClick(teachers)}>
+                <a key={index} className='nowrap' href="#" onClick={() => handleTeacherClick(teachers)}>
                     {position}. {teachers}
                 </a>
             ));
             return <div className='group_teacher'>{links.map((link, i) => (
-                <span className='nowrap' key={i}>
+                <span key={i}>
                     {link}
                     {i < links.length - 1 ? ', ' : ''}
                 </span>
             ))}</div>;
         } else {
             return (
-                <div  className='group_teacher'>
-                    <span className='nowrap'>
-                        <a href="#" onClick={() => handleTeacherClick(teachers)}>
-                            {positions}. {teachers}
-                        </a>
-                    </span>
+                <div className='group_teacher'>
+                    <a href="#" className='nowrap' onClick={() => handleTeacherClick(teachers)}>
+                        {positions}. {teachers}
+                    </a>
                 </div>
             );
         }
@@ -201,7 +199,7 @@ const OutputTable: React.FC<Props> = ({ find, setFind, setIsValueFound }) => {
                                                         {formatTypeAndFormat(pair.getType(), pair.getFormat())}
                                                     </div>
                                                     {pair.getBuilding() !== null && pair.getAudience() !== null && (
-                                                        <div className='place'>
+                                                        <div className='place' >
                                                             <span className='nowrap'>
                                                                 {`Аудиторія: ${pair.getBuilding()}, корпус: ${pair.getAudience()}`}
                                                             </span>
@@ -247,7 +245,7 @@ const OutputTable: React.FC<Props> = ({ find, setFind, setIsValueFound }) => {
             setTimeout(() => {
                 setIsValueFound(false);
                 setFind("");
-            }, 5000); 
+            }, 5000);
         }
     }, [error]);
 
