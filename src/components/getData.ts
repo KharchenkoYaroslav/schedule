@@ -1,22 +1,12 @@
 import axios from 'axios';
 import { AbbrPair, GroupPair, GroupSchedule, PairFormat, PairType, Teacher, TeacherPair, TeacherSchedule, Week, Weekday } from './structure';
 
-async function FetchGroupList() {
+async function FetchCombinedList() {
     try {
-        const response = await axios.get(`https://schedule-server-rho.vercel.app/api/groupsList`);
+        const response = await axios.get(`https://schedule-server-rho.vercel.app/api/combinedList`);
         return response.data;
     } catch (error) {
-        console.error('Error fetching group list:', error);
-        throw error;
-    }
-}
-
-async function FetchTeacherList() {
-    try {
-        const response = await axios.get(`https://schedule-server-rho.vercel.app/api/teachersList`);
-        return response.data;
-    } catch (error) {
-        console.error('Error fetching teacher list:', error);
+        console.error('Error fetching combined list:', error);
         throw error;
     }
 }
@@ -139,4 +129,4 @@ async function FetchScheduleForTeacher(teacherName: string): Promise<TeacherSche
     }
 }
 
-export { FetchGroupList, FetchTeacherList, FetchScheduleForGroup, FetchScheduleForTeacher };
+export { FetchCombinedList, FetchScheduleForGroup, FetchScheduleForTeacher };

@@ -1,7 +1,7 @@
 import { useState, useEffect, Dispatch, SetStateAction } from 'react';
 
 function useLocalStorage<T>(key: string, initialValue: T): [T, Dispatch<SetStateAction<T>>] {
-  // Отримуємо стан з localStorage, якщо він є
+
   const [storedValue, setStoredValue] = useState<T>(() => {
     try {
       const item = localStorage.getItem(key);
@@ -12,7 +12,7 @@ function useLocalStorage<T>(key: string, initialValue: T): [T, Dispatch<SetState
     }
   });
 
-  // Зберігаємо стан в localStorage при його зміні
+
   useEffect(() => {
     try {
       localStorage.setItem(key, JSON.stringify(storedValue));

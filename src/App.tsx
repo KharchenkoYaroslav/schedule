@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './App.css';
 import InputField from './components/inputField';
 import OutputTable from './components/outputTable';
-import { FetchGroupList, FetchTeacherList } from './components/getData';
+import { FetchCombinedList } from './components/getData';
 import useWindowResize from './components/useWindowResize';
 import useLocalStorage from './components/useLocalStorage';
 
@@ -16,10 +16,9 @@ const App: React.FC = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const groups = await FetchGroupList();
-            const teachers = await FetchTeacherList();
-            setGroupsList(groups);
-            setTeachersList(teachers);
+            const data = await FetchCombinedList();
+            setGroupsList(data.groups);
+            setTeachersList(data.teachers);
         };
         fetchData();
     }, []);
