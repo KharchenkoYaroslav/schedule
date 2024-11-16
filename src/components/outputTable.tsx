@@ -91,6 +91,7 @@ const OutputTable: React.FC<Props> = ({ find, setFind, setIsValueFound }) => {
             alert("Розклад не знайдено");
         }
     };
+    
     const transform_name = (fullName: string): string => {
         const words = fullName.split(' ');
     
