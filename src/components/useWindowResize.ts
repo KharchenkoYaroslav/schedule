@@ -1,19 +1,34 @@
-import { useEffect, useState } from 'react';
-import { useMediaQuery } from 'react-responsive';
+import { useEffect, useState, useRef } from 'react';
 
 const useWindowResize = () => {
     const [scale, setScale] = useState<number>(1);
-
-    const isMobile = useMediaQuery({ maxWidth: 1100 });
+    const resizeObserverRef = useRef<ResizeObserver | null>(null);
 
     useEffect(() => {
-        if (isMobile) {
-            const newScale = window.innerWidth / 1100;
-            setScale(newScale);
-        } else {
-            setScale(1);
+        const handleResize = (entries: ResizeObserverEntry[]) => {
+            const currentWidth = entries[0].contentRect.width;
+            if (currentWidth < 1100) {
+                const newScale = currentWidth / 1100;
+                setScale(newScale);
+            } else {
+                setScale(1);
+            }
+        };
+
+        resizeObserverRef.current = new ResizeObserver(handleResize);
+
+        // Спостерігаємо за елементом, який містить ваші компоненти
+        const containerElement = document.getElementById('container');
+        if (containerElement) {
+            resizeObserverRef.current.observe(containerElement);
         }
-    }, [isMobile]);
+
+        return () => {
+            if (resizeObserverRef.current) {
+                resizeObserverRef.current.disconnect();
+            }
+        };
+    }, []);
     
     return scale;
 };
