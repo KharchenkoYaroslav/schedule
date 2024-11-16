@@ -25,38 +25,35 @@ const OutputTable: React.FC<Props> = ({ find, isStudent, setFind, setIsValueFoun
     const [schedule, setSchedule] = useLocalStorage<GroupSchedule | TeacherSchedule | null>("schedule", null);
     const [error, setError] = useState<string | null>(null);
 
-    if (!schedule) {
-        useEffect(() => {
-            const fetchData = async () => {
-                try {
-
-                    if (isStudent) {
-                        const groupSchedule = await FetchScheduleForGroup(find);
-                        if (groupSchedule) {
-                            setSchedule(groupSchedule);
-                            return;
-                        }
+    
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                if (isStudent) {
+                    const groupSchedule = await FetchScheduleForGroup(find);
+                    if (groupSchedule) {
+                        setSchedule(groupSchedule);
+                        return;
                     }
-                    else {
-                        const teacherSchedule = await FetchScheduleForTeacher(find);
-                        if (teacherSchedule) {
-                            setSchedule(teacherSchedule);
-                            return;
-                        }
+                } else {
+                    const teacherSchedule = await FetchScheduleForTeacher(find);
+                    if (teacherSchedule) {
+                        setSchedule(teacherSchedule);
+                        return;
                     }
-
-                    setError("Розклад не знайдено");
-                } catch (err) {
-                    setError("Помилка при отриманні розкладу");
                 }
-            };
 
+                setError("Розклад не знайдено");
+            } catch (err) {
+                setError("Помилка при отриманні розкладу");
+            }
+        };
+
+        if (!schedule) {
             fetchData();
+        }
+    }, [find, schedule, isStudent]);
 
-
-
-        }, [find]);
-    }
 
 
     const formatTypeAndFormat = (types: string | string[], formats: string | string[]): string => {
