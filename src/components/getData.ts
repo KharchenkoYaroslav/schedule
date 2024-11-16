@@ -58,15 +58,7 @@ async function FetchScheduleForGroup(groupName: string): Promise<GroupSchedule |
             const dayOfWeek = Weekday[item.day_number as keyof typeof Weekday];
             const pairNumber = parseInt(item.pair_number, 10) - 1;
 
-            let teachersWithPost;
-            try {
-                teachersWithPost = JSON.parse(item.teachers_with_post);
-            } catch (parseError) {
-                console.error('Error parsing teachers_with_post:', parseError);
-                console.error('Invalid JSON:', item.teachers_with_post);
-                return; // Skip this item if parsing fails
-            }
-
+            const teachersWithPost = JSON.parse(item.teachers_with_post);
             const teachers: Teacher = [
                 teachersWithPost.map((teacher: string) => Object.keys(teacher)[0]),
                 teachersWithPost.map((teacher: AbbrPair) => AbbrPair[Object.values(teacher)[0] as keyof typeof AbbrPair])
@@ -97,6 +89,7 @@ async function FetchScheduleForGroup(groupName: string): Promise<GroupSchedule |
 
 async function FetchScheduleForTeacher(teacherName: string): Promise<TeacherSchedule | null> {
     try {
+        
         const response = await axios.get(`https://schedule-server-rho.vercel.app/api/getTeacher?teacherName=${teacherName}&semester=${cur_semester()}`);
 
         if (!response.data || response.data.length === 0) {
@@ -120,14 +113,7 @@ async function FetchScheduleForTeacher(teacherName: string): Promise<TeacherSche
             const dayOfWeek = Weekday[item.day_number as keyof typeof Weekday];
             const pairNumber = parseInt(item.pair_number, 10) - 1;
 
-            let groupsList;
-            try {
-                groupsList = JSON.parse(item.groups_list);
-            } catch (parseError) {
-                console.error('Error parsing groups_list:', parseError);
-                console.error('Invalid JSON:', item.groups_list);
-                return; // Skip this item if parsing fails
-            }
+            const groupsList = JSON.parse(item.groups_list);
 
             const teacherPair = new TeacherPair(
                 item.subject_name,
