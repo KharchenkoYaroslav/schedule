@@ -1,12 +1,11 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 
 const useWindowResize = () => {
     const [scale, setScale] = useState<number>(1);
-    const resizeObserverRef = useRef<ResizeObserver | null>(null);
 
     useEffect(() => {
-        const handleResize = (entries: ResizeObserverEntry[]) => {
-            const currentWidth = entries[0].contentRect.width;
+        const handleResize = () => {
+            const currentWidth = window.innerWidth;
             if (currentWidth < 1100) {
                 const newScale = currentWidth / 1100;
                 setScale(newScale);
@@ -15,18 +14,17 @@ const useWindowResize = () => {
             }
         };
 
-        resizeObserverRef.current = new ResizeObserver(handleResize);
+        const handleOrientationChange = () => {
+            handleResize();
+        };
 
-        // Спостерігаємо за елементом, який містить ваші компоненти
-        const containerElement = document.getElementById('container');
-        if (containerElement) {
-            resizeObserverRef.current.observe(containerElement);
-        }
+        window.addEventListener('resize', handleResize);
+        window.addEventListener('orientationchange', handleOrientationChange);
+        handleResize(); 
 
         return () => {
-            if (resizeObserverRef.current) {
-                resizeObserverRef.current.disconnect();
-            }
+            window.removeEventListener('resize', handleResize);
+            window.removeEventListener('orientationchange', handleOrientationChange);
         };
     }, []);
     
