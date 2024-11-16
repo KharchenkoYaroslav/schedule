@@ -15,7 +15,7 @@ const useWindowResize = () => {
         };
 
         const handleOrientationChange = () => {
-            handleResize();
+            setTimeout(handleResize, 100); // Додаємо невелику затримку
         };
 
         window.addEventListener('resize', handleResize);
