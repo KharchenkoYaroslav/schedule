@@ -127,7 +127,9 @@
     font-size: 42px;
     margin-bottom: 10px;        
 }
-
+.nowrap{
+    white-space: nowrap;
+}
 .output {
     
     display: flex;
