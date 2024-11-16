@@ -3,7 +3,7 @@ import { AbbrPair, GroupPair, GroupSchedule, PairFormat, PairType, Teacher, Teac
 
 async function FetchGroupList() {
     try {
-        const response = await axios.get(`https://schedule-server-cr74qmswe-kharchenkoyaroslavs-projects.vercel.app/api/groupsList`);
+        const response = await axios.get(`https://schedule-server-rho.vercel.app/api/groupsList`);
         return response.data;
     } catch (error) {
         console.error('Error fetching group list:', error);
@@ -13,7 +13,7 @@ async function FetchGroupList() {
 
 async function FetchTeacherList() {
     try {
-        const response = await axios.get(`https://schedule-server-cr74qmswe-kharchenkoyaroslavs-projects.vercel.app/api/teachersList`);
+        const response = await axios.get(`https://schedule-server-rho.vercel.app/api/teachersList`);
         return response.data;
     } catch (error) {
         console.error('Error fetching teacher list:', error);
@@ -34,7 +34,7 @@ const cur_semester = () => {
 
 async function FetchScheduleForGroup(groupName: string): Promise<GroupSchedule | null> {
     try {
-        const response = await axios.get(`https://schedule-server-cr74qmswe-kharchenkoyaroslavs-projects.vercel.app/api/getGroup?groupName=%D0%A2%D0%92-31&semester=1`);
+        const response = await axios.get(`https://schedule-server-rho.vercel.app/api/getGroup?groupName=%D0%A2%D0%92-31&semester=1`);
 
         if (!response.data || response.data.length === 0) {
             return null;
@@ -89,7 +89,7 @@ async function FetchScheduleForGroup(groupName: string): Promise<GroupSchedule |
 async function FetchScheduleForTeacher(teacherName: string): Promise<TeacherSchedule | null> {
     try {
         
-        const response = await axios.get(`https://schedule-server-cr74qmswe-kharchenkoyaroslavs-projects.vercel.app/api/getTeacher?teacherName=%D1%82%D0%B5%D1%81%D1%82&semester=1`);
+        const response = await axios.get(`https://schedule-server-rho.vercel.app/api/getTeacher?teacherName=%D1%82%D0%B5%D1%81%D1%82&semester=1`);
 
         if (!response.data || response.data.length === 0) {
             return null;
