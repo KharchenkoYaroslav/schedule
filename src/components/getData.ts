@@ -34,7 +34,7 @@ const cur_semester = () => {
 
 async function FetchScheduleForGroup(groupName: string): Promise<GroupSchedule | null> {
     try {
-        const response = await axios.get(`https://schedule-server-cr74qmswe-kharchenkoyaroslavs-projects.vercel.app/api/getGroup?groupName=ТВ-31&semester=${cur_semester()}`);
+        const response = await axios.get(`https://schedule-server-cr74qmswe-kharchenkoyaroslavs-projects.vercel.app/api/getGroup?groupName=ТВ-31&semester=1`);
 
         if (!response.data || response.data.length === 0) {
             return null;
