@@ -238,6 +238,15 @@ const OutputTable: React.FC<Props> = ({ find, setFind, setIsValueFound }) => {
 
     const currentWeek = getCurrentWeek();
 
+    useEffect(() => {
+        if (error) {
+            setTimeout(() => {
+                setIsValueFound(false);
+                setFind("");
+            }, 5000); 
+        }
+    }, [error]);
+
     if (error) {
         return <h3 className='message'>{error}</h3>;
     }
