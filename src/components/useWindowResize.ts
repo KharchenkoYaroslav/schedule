@@ -14,11 +14,17 @@ const useWindowResize = () => {
             }
         };
 
+        const handleOrientationChange = () => {
+            handleResize();
+        };
+
         window.addEventListener('resize', handleResize);
-        handleResize(); 
+        window.addEventListener('orientationchange', handleOrientationChange);
+        handleResize(); // Викликаємо обробник при монтуванні
 
         return () => {
             window.removeEventListener('resize', handleResize);
+            window.removeEventListener('orientationchange', handleOrientationChange);
         };
     }, []);
     
