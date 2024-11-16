@@ -58,10 +58,11 @@ async function FetchScheduleForGroup(groupName: string): Promise<GroupSchedule |
             const dayOfWeek = Weekday[item.day_number as keyof typeof Weekday];
             const pairNumber = parseInt(item.pair_number, 10) - 1;
 
-            const teachersWithPost = JSON.parse(item.teachers_with_post);
+            // Видаляємо JSON.parse, оскільки teachers_with_post вже є об'єктом
+            const teachersWithPost = item.teachers_with_post;
             const teachers: Teacher = [
-                teachersWithPost.map((teacher: string) => Object.keys(teacher)[0]),
-                teachersWithPost.map((teacher: AbbrPair) => AbbrPair[Object.values(teacher)[0] as keyof typeof AbbrPair])
+                teachersWithPost.map((teacher: any) => Object.keys(teacher)[0]),
+                teachersWithPost.map((teacher: any) => Object.values(teacher)[0])
             ];
 
             const groupPair = new GroupPair(
@@ -89,7 +90,6 @@ async function FetchScheduleForGroup(groupName: string): Promise<GroupSchedule |
 
 async function FetchScheduleForTeacher(teacherName: string): Promise<TeacherSchedule | null> {
     try {
-        
         const response = await axios.get(`https://schedule-server-rho.vercel.app/api/getTeacher?teacherName=${teacherName}&semester=${cur_semester()}`);
 
         if (!response.data || response.data.length === 0) {
@@ -113,7 +113,8 @@ async function FetchScheduleForTeacher(teacherName: string): Promise<TeacherSche
             const dayOfWeek = Weekday[item.day_number as keyof typeof Weekday];
             const pairNumber = parseInt(item.pair_number, 10) - 1;
 
-            const groupsList = JSON.parse(item.groups_list);
+            // Видаляємо JSON.parse, оскільки groups_list вже є об'єктом
+            const groupsList = item.groups_list;
 
             const teacherPair = new TeacherPair(
                 item.subject_name,
