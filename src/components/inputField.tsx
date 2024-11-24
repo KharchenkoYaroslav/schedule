@@ -3,6 +3,7 @@ import './styles.css';
 import { IoChevronBack } from 'react-icons/io5';
 import { PiStudent } from 'react-icons/pi';
 import { LiaChalkboardTeacherSolid } from 'react-icons/lia';
+import { FaUserCog } from 'react-icons/fa'; // Іконка для адміністрації
 
 interface Props {
     find: string;
@@ -12,9 +13,10 @@ interface Props {
     groupsList: string[];
     teachersList: string[];
     onValueFound: (value: string) => void;
+    setIsAdmin: React.Dispatch<React.SetStateAction<boolean>>; // Додайте цей проп
 }
 
-const InputField = ({ find, setFind, isStudent, setIsStudent, groupsList, teachersList, onValueFound }: Props) => {
+const InputField = ({ find, setFind, isStudent, setIsStudent, groupsList, teachersList, onValueFound, setIsAdmin }: Props) => {
     const [isInputVisible, setIsInputVisible] = useState(false);
     const [suggestions, setSuggestions] = useState<string[]>([]);
     const [isInputFocused, setIsInputFocused] = useState(false);
@@ -121,6 +123,9 @@ const InputField = ({ find, setFind, isStudent, setIsStudent, groupsList, teache
                     </button>
                     <button className='to_feild' onClick={(e) => toTrueInput(e, false)}>
                         Я вчитель<span className='text_icon'><LiaChalkboardTeacherSolid /></span>
+                    </button>
+                    <button className='to_feild' onClick={() => setIsAdmin(true)}>
+                        Адміністрація<span className='text_icon'><FaUserCog /></span>
                     </button>
                 </div>
             )}

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './App.css';
 import InputField from './components/inputField';
 import OutputTable from './components/outputTable';
+import AdminPanel from './components/AdminPanel'; // Імпортуйте новий компонент
 import { FetchCombinedList } from './components/getData';
 import useWindowResize from './components/useWindowResize';
 import useLocalStorage from './components/useLocalStorage';
@@ -10,6 +11,7 @@ const App: React.FC = () => {
     const [find, setFind] = useLocalStorage<string>("find", "");
     const [isValueFound, setIsValueFound] = useLocalStorage<boolean>("isValueFound", false);
     const [isStudent, setIsStudent] = useLocalStorage<boolean>("isStudent", false);
+    const [isAdmin, setIsAdmin] = useLocalStorage<boolean>("isAdmin", false); // Додайте новий стан
     const [groupsList, setGroupsList] = useLocalStorage<{ group_code: string }[]>("groupsList", []);
     const [teachersList, setTeachersList] = useLocalStorage<{ full_name: string }[]>("teachersList", []);
     const scale = useWindowResize();
@@ -31,7 +33,7 @@ const App: React.FC = () => {
     return (
         <div className="App" style={{ transform: `scale(${scale})`, transition: '0.2s', transformOrigin: 'top left', width: `${100 / scale}%`, height: '100vh' }}>
             <span className="heading">Розклад занять у ВНЗ</span>
-            {!isValueFound && (
+            {!isValueFound && !isAdmin && (
                 <InputField
                     find={find}
                     setFind={setFind}
@@ -39,7 +41,8 @@ const App: React.FC = () => {
                     setIsStudent={setIsStudent}
                     groupsList={groupsList.map(group => group.group_code)}
                     teachersList={teachersList.map(teacher => teacher.full_name)}
-                    onValueFound={handleValueFound}                   
+                    onValueFound={handleValueFound}
+                    setIsAdmin={setIsAdmin} // Передайте новий проп
                 />
             )}
             {isValueFound && (
@@ -51,7 +54,9 @@ const App: React.FC = () => {
                     setIsValueFound={setIsValueFound}
                 />
             )}
-            
+            {isAdmin && (
+                <AdminPanel setIsAdmin={setIsAdmin} />
+            )}
         </div>
     );
 }
