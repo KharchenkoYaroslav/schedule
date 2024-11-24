@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
+import './styles.css';
+import { IoChevronBack } from 'react-icons/io5';
 
 interface Props {
     setIsAuthenticated: React.Dispatch<React.SetStateAction<boolean>>;
+    setIsAdmin: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const Authentication: React.FC<Props> = ({ setIsAuthenticated}) => {
+const Authentication: React.FC<Props> = ({ setIsAuthenticated, setIsAdmin }) => {
     const [login, setLogin] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
@@ -38,21 +41,29 @@ const Authentication: React.FC<Props> = ({ setIsAuthenticated}) => {
     };
 
     return (
-        <div className="authentication">
-            <input
-                type="text"
-                placeholder="Login"
-                value={login}
-                onChange={(e) => setLogin(e.target.value)}
-            />
-            <input
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-            />
-            <button onClick={handleLogin}>Login</button>
-            {error && <div className="error">{error}</div>}
+        <div className="authentication-container">
+            <form className="authentication-form" onSubmit={(e) => { e.preventDefault(); handleLogin(); }}>
+                <h1>Вхід</h1>
+                <input
+                    type="text"
+                    placeholder="Login"
+                    value={login}
+                    onChange={(e) => setLogin(e.target.value)}
+                    required
+                />
+                <input
+                    type="password"
+                    placeholder="Password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                />
+                <button className="login-button" type="submit">увійти</button>
+                {error && <div className="error">{error}</div>}
+                <button className="back-button" onClick={() => setIsAdmin(false)}>
+                    <span id="back_icon"><IoChevronBack /></span> назад
+                </button>
+            </form>
         </div>
     );
 };

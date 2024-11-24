@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { IoChevronBack } from 'react-icons/io5';
 import Authentication from './Authentication';
+import { IoChevronBack } from 'react-icons/io5';
 
 interface Props {
     setIsAdmin: React.Dispatch<React.SetStateAction<boolean>>;
@@ -17,12 +17,7 @@ const AdminPanel: React.FC<Props> = ({ setIsAdmin }) => {
     return (
         <div className="admin-panel">
             {!isAuthenticated ? (
-                <>
-                    <Authentication setIsAuthenticated={setIsAuthenticated} />
-                    <button onClick={() => setIsAdmin(false)}>
-                        <span id="back_icon"><IoChevronBack /></span> назад
-                    </button>
-                </>
+                    <Authentication setIsAuthenticated={setIsAuthenticated} setIsAdmin={setIsAdmin}/>
             ) : (
                 <>
                     <button onClick={handleLogout}>Logout</button>

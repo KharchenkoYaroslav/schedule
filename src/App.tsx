@@ -31,9 +31,11 @@ const App: React.FC = () => {
     }
 
     return (
-        <div className="App" style={{ transform: `scale(${scale})`, transition: '0.2s', transformOrigin: 'top left', width: `${100 / scale}%`, height: '100vh' }}>
-            <span className="heading">Розклад занять у ВНЗ</span>
-            {!isValueFound && !isAdmin && (
+        <div className="App" style={{ transform: `scale(${scale})`, transition: '0.2s', transformOrigin: 'top left', width: `${100 / scale}%`, height: '100vh' }}>            
+            {!isAdmin && (
+                <span className="heading">Розклад занять у ВНЗ</span>
+            )}
+            {!isValueFound && !isAdmin &&(
                 <InputField
                     find={find}
                     setFind={setFind}

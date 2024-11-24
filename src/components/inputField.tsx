@@ -3,7 +3,7 @@ import './styles.css';
 import { IoChevronBack } from 'react-icons/io5';
 import { PiStudent } from 'react-icons/pi';
 import { LiaChalkboardTeacherSolid } from 'react-icons/lia';
-import { FaUserCog } from 'react-icons/fa'; // Іконка для адміністрації
+import { GrUserAdmin } from "react-icons/gr";
 
 interface Props {
     find: string;
@@ -125,7 +125,7 @@ const InputField = ({ find, setFind, isStudent, setIsStudent, groupsList, teache
                         Я вчитель<span className='text_icon'><LiaChalkboardTeacherSolid /></span>
                     </button>
                     <button className='to_feild' onClick={() => setIsAdmin(true)}>
-                        Адміністрація<span className='text_icon'><FaUserCog /></span>
+                        Адміністрація<span className='text_icon'><GrUserAdmin /></span>
                     </button>
                 </div>
             )}
