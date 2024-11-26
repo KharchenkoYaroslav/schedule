@@ -1,16 +1,18 @@
 import React, { useState } from 'react';
 import './styles.css';
 import { IoChevronBack } from 'react-icons/io5';
+import useWindowResize from './useWindowResize';
 
 interface Props {
     setIsAuthenticated: React.Dispatch<React.SetStateAction<boolean>>;
     setIsAdmin: React.Dispatch<React.SetStateAction<boolean>>;
 }
-
+//style={{ transform: `scaleY(${scale})`, transformOrigin: 'top left' }}
 const Authentication: React.FC<Props> = ({ setIsAuthenticated, setIsAdmin }) => {
     const [login, setLogin] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const scale = useWindowResize();
 
     const handleLogin = async () => {
         try {
@@ -29,6 +31,7 @@ const Authentication: React.FC<Props> = ({ setIsAuthenticated, setIsAdmin }) => 
 
             const data = await response.json();
             localStorage.setItem('token', data.token);
+            localStorage.setItem('login', login); // Збереження логіну в localStorage
             setIsAuthenticated(true);
         } catch (err) {
             if (err instanceof Error) {
@@ -41,7 +44,7 @@ const Authentication: React.FC<Props> = ({ setIsAuthenticated, setIsAdmin }) => 
     };
 
     return (
-        <div className="authentication-container">
+        <div className="authentication-container" style={{ transform: `scaleY(${scale})`, transformOrigin: 'top left' }}>
             <form className="authentication-form" onSubmit={(e) => { e.preventDefault(); handleLogin(); }}>
                 <h1>Вхід</h1>
                 <input

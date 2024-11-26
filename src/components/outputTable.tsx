@@ -11,6 +11,7 @@ import {
     AbbrPair,
 } from './structure';
 import { FetchScheduleForGroup, FetchScheduleForTeacher } from './getData';
+import useWindowResize from './useWindowResize';
 
 interface Props {
     find: string;
@@ -24,6 +25,7 @@ const OutputTable: React.FC<Props> = ({ find, isStudent,setIsStudent, setFind, s
 
     const [schedule, setSchedule] = useState<GroupSchedule | TeacherSchedule | null>(null);
     const [error, setError] = useState<string | null>(null);
+    const scale = useWindowResize();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -271,7 +273,7 @@ const OutputTable: React.FC<Props> = ({ find, isStudent,setIsStudent, setFind, s
     }
 
     return (
-        <div className="output">
+        <div className="output" style={{ transform: `scaleY(${scale})`, transformOrigin: 'top left' }}>
             <h2>{find}</h2>
             <button className='restart' type="button" onClick={() => {
                 setIsValueFound(false);
@@ -279,7 +281,7 @@ const OutputTable: React.FC<Props> = ({ find, isStudent,setIsStudent, setFind, s
             }}>
                 Вибрати інший розклад<span className='text_icon'><MdOutlineSettingsBackupRestore /></span>
             </button>
-            <div className="tables">
+            <div className="tables" >
                 {currentWeek === 1 ? (
                     <>
                         {renderTable(schedule.week_1, "Цей тиждень")}

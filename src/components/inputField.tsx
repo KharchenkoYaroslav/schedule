@@ -4,6 +4,7 @@ import { IoChevronBack } from 'react-icons/io5';
 import { PiStudent } from 'react-icons/pi';
 import { LiaChalkboardTeacherSolid } from 'react-icons/lia';
 import { GrUserAdmin } from "react-icons/gr";
+import useWindowResize from './useWindowResize';
 
 interface Props {
     find: string;
@@ -22,6 +23,7 @@ const InputField = ({ find, setFind, isStudent, setIsStudent, groupsList, teache
     const [isInputFocused, setIsInputFocused] = useState(false);
     const suggestionRef = useRef<HTMLDivElement | null>(null);
     const inputRef = useRef<HTMLInputElement>(null);
+    const scale = useWindowResize();
 
     useEffect(() => {
         const handleFocus = () => {
@@ -85,7 +87,7 @@ const InputField = ({ find, setFind, isStudent, setIsStudent, groupsList, teache
     }, [setIsInputFocused]);
 
     return (
-        <form className='input' action="" onSubmit={(e) => e.preventDefault()}>
+        <form className='input' action="" onSubmit={(e) => e.preventDefault()} style={{ transform: `scaleY(${scale})`, transformOrigin: 'top left' }}>
             {isInputVisible && (
                 <>
                     <input
@@ -97,6 +99,7 @@ const InputField = ({ find, setFind, isStudent, setIsStudent, groupsList, teache
                         onChange={handleInputChange}
                         onFocus={handleInputFocus}
                         onBlur={handleInputBlur}
+                        
                     />
                     <button className='back_to_start' type="button" onClick={toFalseInput}>
                         <span id='back_icon'><IoChevronBack /></span> назад
@@ -118,13 +121,13 @@ const InputField = ({ find, setFind, isStudent, setIsStudent, groupsList, teache
             )}
             {!isInputVisible && (
                 <div className='buttons-container'>
-                    <button className='to_feild' onClick={(e) => toTrueInput(e, true)}>
+                    <button className='to_feild' onClick={(e) => toTrueInput(e, true)} >
                         Я студент<span className='text_icon'><PiStudent /></span>
                     </button>
-                    <button className='to_feild' onClick={(e) => toTrueInput(e, false)}>
+                    <button className='to_feild' onClick={(e) => toTrueInput(e, false)} >
                         Я вчитель<span className='text_icon'><LiaChalkboardTeacherSolid /></span>
                     </button>
-                    <button className='to_feild' onClick={() => setIsAdmin(true)}>
+                    <button className='to_feild' onClick={() => setIsAdmin(true)} >
                         Адміністрація<span className='text_icon'><GrUserAdmin /></span>
                     </button>
                 </div>

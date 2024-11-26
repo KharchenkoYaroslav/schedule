@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useLayoutEffect } from 'react';
 import './App.css';
 import InputField from './components/inputField';
 import OutputTable from './components/outputTable';
-import AdminPanel from './components/AdminPanel'; // Імпортуйте новий компонент
+import AdminPanel from './components/AdminPanel'; 
 import { FetchCombinedList } from './components/getData';
 import useWindowResize from './components/useWindowResize';
 import useLocalStorage from './components/useLocalStorage';
@@ -11,18 +11,19 @@ const App: React.FC = () => {
     const [find, setFind] = useLocalStorage<string>("find", "");
     const [isValueFound, setIsValueFound] = useLocalStorage<boolean>("isValueFound", false);
     const [isStudent, setIsStudent] = useLocalStorage<boolean>("isStudent", false);
-    const [isAdmin, setIsAdmin] = useLocalStorage<boolean>("isAdmin", false); // Додайте новий стан
+    const [isAdmin, setIsAdmin] = useLocalStorage<boolean>("isAdmin", false); 
     const [groupsList, setGroupsList] = useLocalStorage<{ group_code: string }[]>("groupsList", []);
     const [teachersList, setTeachersList] = useLocalStorage<{ full_name: string }[]>("teachersList", []);
     const scale = useWindowResize();
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         const fetchData = async () => {
             const data = await FetchCombinedList();
             setGroupsList(data.groups);
             setTeachersList(data.teachers);
         };
         fetchData();
+
     }, []);
 
     function handleValueFound(value: string) {
@@ -31,12 +32,12 @@ const App: React.FC = () => {
     }
 
     return (
-        <div className="App" style={{ transform: `scale(${scale})`, transition: '0.2s', transformOrigin: 'top left', width: `${100 / scale}%`, height: '100vh' }}>            
+        <div className="App" style={{ transform: `scaleX(${scale})`, transition: '0.2s', transformOrigin: 'top left', width: `${100 / scale}%`}}>            
             {!isAdmin && (
-                <span className="heading">Розклад занять у ВНЗ</span>
+                <span className="heading" style={{ transform: `scaleY(${scale})`, transformOrigin: 'top left' }}>Розклад занять у ВНЗ</span>
             )}
             {!isValueFound && !isAdmin &&(
-                <InputField
+                    <InputField
                     find={find}
                     setFind={setFind}
                     isStudent={isStudent}
@@ -44,8 +45,8 @@ const App: React.FC = () => {
                     groupsList={groupsList.map(group => group.group_code)}
                     teachersList={teachersList.map(teacher => teacher.full_name)}
                     onValueFound={handleValueFound}
-                    setIsAdmin={setIsAdmin} // Передайте новий проп
-                />
+                    setIsAdmin={setIsAdmin} 
+                />        
             )}
             {isValueFound && (
                 <OutputTable
