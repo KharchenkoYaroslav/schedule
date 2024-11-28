@@ -15,17 +15,9 @@ const AdminPanel: React.FC<Props> = ({ setIsAdmin }) => {
     const [adminName, setAdminName] = useState<string>('');
     const [activeSection, setActiveSection] = useState<string | null>(null);
     const [isBlurred, setIsBlurred] = useState<boolean>(false);
-    const handleResize = () => {
-        const currentWidth = window.innerWidth;
-        if (currentWidth < 900) {
-            const newScale = currentWidth / 900;
-            return newScale;
-        } else {
-            return 1;
-        }
-    };
+  
 
-    const scale = useWindowResize(handleResize);
+    const scale = useWindowResize();
 
     const [selectedSemester, setSelectedSemester] = useState<number>(parseInt(localStorage.getItem('selectedSemester') || '1'));
     const [selectedWeek, setSelectedWeek] = useState<number>(parseInt(localStorage.getItem('selectedWeek') || '1'));

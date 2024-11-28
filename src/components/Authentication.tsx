@@ -12,17 +12,9 @@ const Authentication: React.FC<Props> = ({ setIsAuthenticated, setIsAdmin }) => 
     const [login, setLogin] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
-    const handleResize = () => {
-        const currentWidth = window.innerWidth;
-        if (currentWidth < 900) {
-            const newScale = currentWidth / 900;
-            return newScale;
-        } else {
-            return 1;
-        }
-    };
 
-    const scale = useWindowResize(handleResize);
+
+    const scale = useWindowResize();
 
     const handleLogin = async () => {
         try {

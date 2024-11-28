@@ -24,17 +24,8 @@ const InputField = ({ find, setFind, isStudent, setIsStudent, groupsList, teache
     const [isInputFocused, setIsInputFocused] = useLocalStorage<boolean>("isInputFocused", false);
     const suggestionRef = useRef<HTMLDivElement | null>(null);
     const inputRef = useRef<HTMLInputElement>(null);
-    const handleResize = () => {
-        const currentWidth = window.innerWidth;
-        if (currentWidth < 900) {
-            const newScale = currentWidth / 900;
-            return newScale;
-        } else {
-            return 1;
-        }
-    };
 
-    const scale = useWindowResize(handleResize);
+    const scale = useWindowResize();
     
     useEffect(() => {
         const handleFocus = () => {

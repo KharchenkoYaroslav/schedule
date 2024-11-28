@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-const useWindowResize = (handleResize: () => void) => {
+const useWindowResize = () => {
     const [scale, setScale] = useState<number>(1);
 
     useEffect(() => {
@@ -26,7 +26,7 @@ const useWindowResize = (handleResize: () => void) => {
             window.removeEventListener('resize', handleResizeInternal);
             window.removeEventListener('orientationchange', handleOrientationChange);
         };
-    }, [handleResize]);
+    });
     
     return scale;
 };
