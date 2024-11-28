@@ -86,6 +86,7 @@ const InputField = ({ find, setFind, isStudent, setIsStudent, groupsList, teache
     };
 
     return (
+        
         <form className='input' action="" style={{ transform: `scaleY(${scale})`, transformOrigin: 'top left' }}>
             {isInputVisible && (
                 <>

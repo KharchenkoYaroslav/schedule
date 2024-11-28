@@ -17,7 +17,7 @@ const useWindowResize = () => {
 
         resizeObserverRef.current = new ResizeObserver(handleResize);
         resizeObserverRef.current.observe(document.documentElement);
-        
+
         handleResize();
 
         return () => {
@@ -26,6 +26,7 @@ const useWindowResize = () => {
             }
         };
     }, []);
+    console.log(scale)
     
     return scale;
 };
