@@ -131,10 +131,10 @@ const InputField = ({ find, setFind, isStudent, setIsStudent, groupsList, teache
             )}
             {!isInputVisible && (
                 <div className='buttons-container'>
-                    <button className='to_feild' onClick={(e) => toTrueInput(true)} >
+                    <button className='to_feild' onClick={() => toTrueInput(true)} >
                         Я студент<span className='text_icon'><PiStudent /></span>
                     </button>
-                    <button className='to_feild' onClick={(e) => toTrueInput(false)} >
+                    <button className='to_feild' onClick={() => toTrueInput(false)} >
                         Я вчитель<span className='text_icon'><LiaChalkboardTeacherSolid /></span>
                     </button>
                     <button className='to_feild' onClick={() => setIsAdmin(true)} >
