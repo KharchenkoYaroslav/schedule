@@ -34,18 +34,27 @@ const InputField = ({ find, setFind, isStudent, setIsStudent, groupsList, teache
             document.body.style.backgroundColor = '';
         };
 
-        
+        const inputElement = inputRef.current;
+        if (inputElement) {
+            inputElement.addEventListener('focus', handleFocus);
+            inputElement.addEventListener('blur', handleBlur);
+
+            return () => {
+                inputElement.removeEventListener('focus', handleFocus);
+                inputElement.removeEventListener('blur', handleBlur);
+            };
+        }
     }, [inputRef, isInputVisible]);
 
-    const toTrueInput = (event: React.MouseEvent<HTMLButtonElement>, isStudent: boolean) => {
-        event.preventDefault();
+    const toTrueInput = (isStudent: boolean) => {
+
         setIsStudent(isStudent);
         setIsInputVisible(true);
         setSuggestions(isStudent ? groupsList : teachersList);
     };
 
-    const toFalseInput = (event: React.MouseEvent<HTMLButtonElement>) => {
-        event.preventDefault();
+    const toFalseInput = () => {
+
         setIsInputVisible(false);
         setSuggestions([]);
         setFind("");
@@ -78,7 +87,7 @@ const InputField = ({ find, setFind, isStudent, setIsStudent, groupsList, teache
     };
 
     return (
-        <form className='input' action="" onSubmit={(e) => e.preventDefault()} style={{ transform: `scaleY(${scale})`, transformOrigin: 'top left' }}>
+        <form className='input' action="" style={{ transform: `scaleY(${scale})`, transformOrigin: 'top left' }}>
             {isInputVisible && (
                 <>
                     <input
@@ -112,10 +121,10 @@ const InputField = ({ find, setFind, isStudent, setIsStudent, groupsList, teache
             )}
             {!isInputVisible && (
                 <div className='buttons-container'>
-                    <button className='to_feild' onClick={(e) => toTrueInput(e, true)} >
+                    <button className='to_feild' onClick={(e) => toTrueInput(true)} >
                         Я студент<span className='text_icon'><PiStudent /></span>
                     </button>
-                    <button className='to_feild' onClick={(e) => toTrueInput(e, false)} >
+                    <button className='to_feild' onClick={(e) => toTrueInput(false)} >
                         Я вчитель<span className='text_icon'><LiaChalkboardTeacherSolid /></span>
                     </button>
                     <button className='to_feild' onClick={() => setIsAdmin(true)} >
