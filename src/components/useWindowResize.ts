@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useLayoutEffect, useState } from 'react';
 
 const useWindowResize = () => {
     const [scale, setScale] = useState<number>(1);
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         const handleResizeInternal = () => {
             const currentWidth = window.innerWidth;
             if (currentWidth < 900) {

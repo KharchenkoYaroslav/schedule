@@ -1,4 +1,4 @@
-import React, { useState, useLayoutEffect, useEffect } from 'react';
+import React, { useLayoutEffect} from 'react';
 import './App.css';
 import InputField from './components/inputField';
 import OutputTable from './components/outputTable';
@@ -30,10 +30,6 @@ const App: React.FC = () => {
         const found = groupsList.some(group => group.group_code === value) || teachersList.some(teacher => teacher.full_name === value);
         setIsValueFound(found);
     }
-
-    useEffect(() => {
-        console.log('isValueFound changed:', isValueFound);
-    }, [!isValueFound]);
 
     return (
         <div className="App" style={{ transform: `scaleX(${scale})`, transition: '0.2s', transformOrigin: 'top left', width: `${100 / scale}%`}}>            
