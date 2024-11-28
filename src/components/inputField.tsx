@@ -48,6 +48,10 @@ const InputField = ({ find, setFind, isStudent, setIsStudent, groupsList, teache
         }
     }, [inputRef, isInputVisible]);
 
+    useEffect(() => {
+        console.log('isInputVisible changed:', isInputVisible);
+    }, [isInputVisible]);
+
     const toTrueInput = (isStudent: boolean) => {
         setIsStudent(isStudent);
         setIsInputVisible(true);
@@ -90,49 +94,47 @@ const InputField = ({ find, setFind, isStudent, setIsStudent, groupsList, teache
         
         <form className='input' action="" style={{ transform: `scaleY(${scale})`, transformOrigin: 'top left' }}>
             {!isInputVisible && (
-                
                 <div className='buttons-container'>
-                <button className='to_feild' onClick={() => toTrueInput(true)} >
-                    Я студент{scale}<span className='text_icon'><PiStudent /></span>
-                </button>
-                <button className='to_feild' onClick={() => toTrueInput(false)} >
-                    Я вчитель<span className='text_icon'><LiaChalkboardTeacherSolid /></span>
-                </button>
-                <button className='to_feild' onClick={() => setIsAdmin(true)} >
-                    Адміністрація<span className='text_icon'><GrUserAdmin /></span>
-                </button>
-            </div>
+                    <button className='to_feild' onClick={() => toTrueInput(true)} >
+                        Я студент<span className='text_icon'><PiStudent /></span>
+                    </button>
+                    <button className='to_feild' onClick={() => toTrueInput(false)} >
+                        Я вчитель<span className='text_icon'><LiaChalkboardTeacherSolid /></span>
+                    </button>
+                    <button className='to_feild' onClick={() => setIsAdmin(true)} >
+                        Адміністрація<span className='text_icon'><GrUserAdmin /></span>
+                    </button>
+                </div>
             )}
             {isInputVisible && (
                 <>
-                <input
-                    ref={inputRef}
-                    type="text"
-                    placeholder={isStudent ? 'Введіть назву групи' : 'Введіть своє прізвище'}
-                    className='input__box'
-                    value={find}
-                    onChange={handleInputChange}
-                    onFocus={handleInputFocus}
-                    onBlur={handleInputBlur}
-                    
-                />
-                <button className='back_to_start' type="button" onClick={toFalseInput}>
-                    <span id='back_icon'><IoChevronBack /></span> назад
-                </button>
-                {isInputFocused && suggestions.length > 0 && (
-                    <div className="suggestions" ref={suggestionRef}>
-                        {suggestions.map((suggestion, index) => (
-                            <div
-                                key={index}
-                                className="suggestion"
-                                onClick={() => handleSuggestionClick(suggestion)}
-                            >
-                                {suggestion}
-                            </div>
-                        ))}
-                    </div>
-                )}
-            </>
+                    <input
+                        ref={inputRef}
+                        type="text"
+                        placeholder={isStudent ? 'Введіть назву групи' : 'Введіть своє прізвище'}
+                        className='input__box'
+                        value={find}
+                        onChange={handleInputChange}
+                        onFocus={handleInputFocus}
+                        onBlur={handleInputBlur}
+                    />
+                    <button className='back_to_start' type="button" onClick={toFalseInput}>
+                        <span id='back_icon'><IoChevronBack /></span> назад
+                    </button>
+                    {isInputFocused && suggestions.length > 0 && (
+                        <div className="suggestions" ref={suggestionRef}>
+                            {suggestions.map((suggestion, index) => (
+                                <div
+                                    key={index}
+                                    className="suggestion"
+                                    onClick={() => handleSuggestionClick(suggestion)}
+                                >
+                                    {suggestion}
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </>
             )}
         </form>
     );
