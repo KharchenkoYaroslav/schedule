@@ -2,9 +2,29 @@ import React, { useState, useEffect, useRef } from 'react';
 import Authentication from './Authentication';
 import { IoChevronBack, IoChevronForward, IoChevronDown, IoChevronUp, IoClose } from 'react-icons/io5';
 import useWindowResize from './useWindowResize';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 interface Props {
     setIsAdmin: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+interface Group {
+    group_code: string;
+    specialty_id: number;
+    number_of_students: number;
+}
+
+interface Teacher {
+    id: number;
+    full_name: string;
+    department: string;
+    post: string;
+}
+
+interface Specialty {
+    id: number;
+    specialty_name: string;
 }
 
 const AdminPanel: React.FC<Props> = ({ setIsAdmin }) => {
@@ -15,13 +35,20 @@ const AdminPanel: React.FC<Props> = ({ setIsAdmin }) => {
     const [adminName, setAdminName] = useState<string>('');
     const [activeSection, setActiveSection] = useState<string | null>(null);
     const [isBlurred, setIsBlurred] = useState<boolean>(false);
-  
-
-    const scale = useWindowResize();
-
+    const [groups, setGroups] = useState<Group[]>([]);
+    const [teachers, setTeachers] = useState<Teacher[]>([]);
+    const [specialties, setSpecialties] = useState<Specialty[]>([]);
+    const [selectedGroup, setSelectedGroup] = useState<string | null>(localStorage.getItem('selectedGroup') || null);
+    const [selectedTeacher, setSelectedTeacher] = useState<string | null>(localStorage.getItem('selectedTeacher') || null);
+    const [newGroup, setNewGroup] = useState<Group>({ group_code: '', specialty_id: 0, number_of_students: 0 });
+    const [newTeacher, setNewTeacher] = useState<Teacher>({ id: 0, full_name: '', department: '', post: 'Unknown' });
     const [selectedSemester, setSelectedSemester] = useState<number>(parseInt(localStorage.getItem('selectedSemester') || '1'));
     const [selectedWeek, setSelectedWeek] = useState<number>(parseInt(localStorage.getItem('selectedWeek') || '1'));
+    const [isGroupSelected, setIsGroupSelected] = useState<boolean>(true);
+    const [isEditingGroup, setIsEditingGroup] = useState<boolean>(false);
+    const [isEditingTeacher, setIsEditingTeacher] = useState<boolean>(false);
 
+    const scale = useWindowResize();
     const sectionWindowRef = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
@@ -55,6 +82,9 @@ const AdminPanel: React.FC<Props> = ({ setIsAdmin }) => {
             };
 
             fetchAdminName();
+            fetchGroups();
+            fetchTeachers();
+            fetchSpecialties();
         }
     }, [isAuthenticated]);
 
@@ -68,13 +98,13 @@ const AdminPanel: React.FC<Props> = ({ setIsAdmin }) => {
         const addClickListener = () => {
             setTimeout(() => {
                 document.addEventListener('click', handleDocumentClick);
-            }, 100); 
+            }, 100);
         };
 
         const removeClickListener = () => {
             setTimeout(() => {
                 document.removeEventListener('click', handleDocumentClick);
-            }, 100); 
+            }, 100);
         };
 
         if (activeSection) {
@@ -105,6 +135,219 @@ const AdminPanel: React.FC<Props> = ({ setIsAdmin }) => {
             sectionElement.scrollIntoView({ behavior: 'smooth' });
         }
         setIsBlurred(true);
+    };
+
+    const fetchGroups = async () => {
+        try {
+            const response = await fetch('https://schedule-server-rho.vercel.app/api/groups');
+            const data = await response.json();
+            setGroups(data);
+        } catch (err) {
+            console.error('Помилка отримання груп:', err);
+            toast.error('Помилка отримання груп');
+        }
+    };
+
+    const fetchTeachers = async () => {
+        try {
+            const response = await fetch('https://schedule-server-rho.vercel.app/api/teachers');
+            const data = await response.json();
+            setTeachers(data);
+        } catch (err) {
+            console.error('Помилка отримання вчителів:', err);
+            toast.error('Помилка отримання вчителів');
+        }
+    };
+
+    const fetchSpecialties = async () => {
+        try {
+            const response = await fetch('https://schedule-server-rho.vercel.app/api/specialties');
+            const data = await response.json();
+            setSpecialties(data);
+        } catch (err) {
+            console.error('Помилка отримання спеціальностей:', err);
+            toast.error('Помилка отримання спеціальностей');
+        }
+    };
+
+    const handleGroupSelect = (groupCode: string) => {
+        if (groupCode === 'add') {
+            setNewGroup({ group_code: '', specialty_id: 0, number_of_students: 0 });
+            setIsEditingGroup(false);
+        } else {
+            const group = groups.find(g => g.group_code === groupCode);
+            if (group) {
+                setNewGroup(group);
+                setIsEditingGroup(true);
+            } else {
+                setNewGroup({ group_code: '', specialty_id: 0, number_of_students: 0 });
+                setIsEditingGroup(false);
+            }
+        }
+        setSelectedGroup(groupCode === 'add' ? null : groupCode);
+        localStorage.setItem('selectedGroup', groupCode === 'add' ? '' : groupCode);
+        setIsGroupSelected(true); // Встановлюємо, що обрано групу
+        setSelectedTeacher(null); // Скидаємо вибір вчителя
+        localStorage.setItem('selectedTeacher', '');
+    };
+    
+    const handleTeacherSelect = (teacherName: string) => {
+        if (teacherName === 'add') {
+            setNewTeacher({ id: 0, full_name: '', department: '', post: 'Unknown' });
+            setIsEditingTeacher(false);
+        } else {
+            const teacher = teachers.find(t => t.full_name === teacherName);
+            if (teacher) {
+                setNewTeacher(teacher);
+                setIsEditingTeacher(true);
+            } else {
+                setNewTeacher({ id: 0, full_name: '', department: '', post: 'Unknown' });
+                setIsEditingTeacher(false);
+            }
+        }
+        setSelectedTeacher(teacherName === 'add' ? null : teacherName);
+        localStorage.setItem('selectedTeacher', teacherName === 'add' ? '' : teacherName);
+        setIsGroupSelected(false); // Встановлюємо, що обрано вчителя
+        setSelectedGroup(null); // Скидаємо вибір групи
+        localStorage.setItem('selectedGroup', '');
+    };
+
+    const addGroup = async () => {
+        try {
+            const response = await fetch('https://schedule-server-rho.vercel.app/api/groups', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(newGroup),
+            });
+            if (response.ok) {
+                fetchGroups();
+                setNewGroup({ group_code: '', specialty_id: 0, number_of_students: 0 });
+                setSelectedGroup(null); // Скидання обраної групи
+                toast.success('Група додана успішно');
+            } else {
+                const errorData = await response.text();
+                toast.error(errorData);
+            }
+        } catch (err) {
+            console.error('Помилка додавання групи:', err);
+            toast.error('Помилка додавання групи');
+        }
+    };
+
+    const updateGroup = async () => {
+        try {
+            const response = await fetch(`https://schedule-server-rho.vercel.app/api/groups/${newGroup.group_code}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(newGroup),
+            });
+            if (response.ok) {
+                fetchGroups();
+                setNewGroup({ group_code: '', specialty_id: 0, number_of_students: 0 });
+                setIsEditingGroup(false);
+                setSelectedGroup(null); // Скидання обраної групи
+                toast.success('Група оновлена успішно');
+            } else {
+                const errorData = await response.text();
+                toast.error(errorData);
+            }
+        } catch (err) {
+            console.error('Помилка оновлення групи:', err);
+            toast.error('Помилка оновлення групи');
+        }
+    };
+
+    const deleteGroup = async (groupCode: string) => {
+        try {
+            const response = await fetch(`https://schedule-server-rho.vercel.app/api/groups/${groupCode}`, {
+                method: 'DELETE',
+            });
+            if (response.ok) {
+                fetchGroups();
+                setSelectedGroup(null);
+                setIsEditingGroup(false);
+                toast.success('Група видалена успішно');
+            } else {
+                const errorData = await response.text();
+                toast.error(errorData);
+            }
+        } catch (err) {
+            console.error('Помилка видалення групи:', err);
+            toast.error('Помилка видалення групи');
+        }
+    };
+
+    const addTeacher = async () => {
+        try {
+            const response = await fetch('https://schedule-server-rho.vercel.app/api/teachers', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(newTeacher),
+            });
+            if (response.ok) {
+                fetchTeachers();
+                setNewTeacher({ id: 0, full_name: '', department: '', post: 'Unknown' });
+                setSelectedTeacher(null);
+                toast.success('Вчитель доданий успішно');
+            } else {
+                const errorData = await response.text();
+                toast.error(errorData);
+            }
+        } catch (err) {
+            console.error('Помилка додавання вчителя:', err);
+            toast.error('Помилка додавання вчителя');
+        }
+    };
+
+    const updateTeacher = async () => {
+        try {
+            const response = await fetch(`https://schedule-server-rho.vercel.app/api/teachers/${newTeacher.id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(newTeacher),
+            });
+            if (response.ok) {
+                fetchTeachers();
+                setNewTeacher({ id: 0, full_name: '', department: '', post: 'Unknown' });
+                setIsEditingTeacher(false);
+                setSelectedTeacher(null);
+                toast.success('Вчитель оновлений успішно');
+            } else {
+                const errorData = await response.text();
+                toast.error(errorData);
+            }
+        } catch (err) {
+            console.error('Помилка оновлення вчителя:', err);
+            toast.error('Помилка оновлення вчителя');
+        }
+    };
+
+    const deleteTeacher = async (teacherId: number) => {
+        try {
+            const response = await fetch(`https://schedule-server-rho.vercel.app/api/teachers/${teacherId}`, {
+                method: 'DELETE',
+            });
+            if (response.ok) {
+                fetchTeachers();
+                setSelectedTeacher(null);
+                setIsEditingTeacher(false);
+                toast.success('Вчитель видалений успішно');
+            } else {
+                const errorData = await response.text();
+                toast.error(errorData);
+            }
+        } catch (err) {
+            console.error('Помилка видалення вчителя:', err);
+            toast.error('Помилка видалення вчителя');
+        }
     };
 
     const handleSemesterChange = (semester: number) => {
@@ -152,7 +395,18 @@ const AdminPanel: React.FC<Props> = ({ setIsAdmin }) => {
                         )}
                     </div>
                     <div className={`main-content ${isBlurred ? 'blurred' : ''}`}>
-                        <h1>Назва групи чи вчителя: {selectedSemester} семестр, {selectedWeek} тиждень</h1>
+                        <h1>
+                            {selectedGroup || selectedTeacher ? (
+                                <>
+                                    {selectedGroup && `Група: ${selectedGroup}`}
+                                    {selectedTeacher && `Вчитель: ${selectedTeacher}`}
+                                    <br />
+                                    Семестр: {selectedSemester}, Тиждень: {selectedWeek}
+                                </>
+                            ) : (
+                                "Оберіть розклад"
+                            )}
+                        </h1>
                         {/* Основна частина*/}
                     </div>
                     {activeSection && (
@@ -186,15 +440,89 @@ const AdminPanel: React.FC<Props> = ({ setIsAdmin }) => {
                                 </div>
                                 <div id="groups" className={`section ${activeSection === 'groups' ? 'active' : ''}`}>
                                     <h2>Групи</h2>
-                                    {/* Контент для груп */}
+                                    <select value={selectedGroup || ''} onChange={(e) => handleGroupSelect(e.target.value)}>
+                                        <option value="">Оберіть групу</option>
+                                        <option value="add">Додати групу</option>
+                                        {groups.map(group => (
+                                            <option key={group.group_code} value={group.group_code}>{group.group_code}</option>
+                                        ))}
+                                    </select>
+                                    <input
+                                        type="text"
+                                        placeholder="Ім'я групи"
+                                        value={newGroup.group_code}
+                                        onChange={(e) => setNewGroup({ ...newGroup, group_code: e.target.value })}
+                                    />
+                                    <select
+                                        value={newGroup.specialty_id}
+                                        onChange={(e) => setNewGroup({ ...newGroup, specialty_id: parseInt(e.target.value) })}
+                                    >
+                                        <option value="">Оберіть спеціальність</option>
+                                        {specialties.map(specialty => (
+                                            <option key={specialty.id} value={specialty.id}>{specialty.specialty_name}</option>
+                                        ))}
+                                    </select>
+                                    <input
+                                        type="number"
+                                        min="1"
+                                        placeholder="Кількість студентів"
+                                        value={newGroup.number_of_students === 0 ? '' : newGroup.number_of_students}
+                                        onChange={(e) => setNewGroup({ ...newGroup, number_of_students: parseInt(e.target.value) || 0 })}
+                                    />
+                                    {isEditingGroup ? (
+                                        <button onClick={updateGroup}>Редагувати групу</button>
+                                    ) : (
+                                        <button onClick={addGroup}>Додати групу</button>
+                                    )}
+                                    {selectedGroup && (
+                                        <button className='delete' onClick={() => deleteGroup(selectedGroup)}>Видалити групу</button>
+                                    )}
                                 </div>
                                 <div id="teachers" className={`section ${activeSection === 'teachers' ? 'active' : ''}`}>
                                     <h2>Вчителі</h2>
-                                    {/* Контент для вчителів */}
+                                    <select value={selectedTeacher || ''} onChange={(e) => handleTeacherSelect(e.target.value)}>
+                                        <option value="">Оберіть вчителя</option>
+                                        <option value="add">Додати вчителя</option>
+                                        {teachers.map(teacher => (
+                                            <option key={teacher.id} value={teacher.full_name}>{teacher.full_name}</option>
+                                        ))}
+                                    </select>
+                                    <input
+                                        type="text"
+                                        placeholder="Ім'я вчителя"
+                                        value={newTeacher.full_name}
+                                        onChange={(e) => setNewTeacher({ ...newTeacher, full_name: e.target.value })}
+                                    />
+                                    <input
+                                        type="text"
+                                        placeholder="Факультет"
+                                        value={newTeacher.department}
+                                        onChange={(e) => setNewTeacher({ ...newTeacher, department: e.target.value })}
+                                    />
+                                    <select
+                                        value={newTeacher.post}
+                                        onChange={(e) => setNewTeacher({ ...newTeacher, post: e.target.value })}
+                                    >
+                                        <option value="Unknown">Невідомо</option>
+                                        <option value="Assistant">Асистент</option>
+                                        <option value="Teacher">Викладач</option>
+                                        <option value="Senior_teacher">Старший викладач</option>
+                                        <option value="Docent">Доцент</option>
+                                        <option value="Professor">Професор</option>
+                                    </select>
+                                    {isEditingTeacher ? (
+                                        <button onClick={updateTeacher}>Редагувати вчителя</button>
+                                    ) : (
+                                        <button onClick={addTeacher}>Додати вчителя</button>
+                                    )}
+                                    {selectedTeacher && (
+                                        <button className='delete' onClick={() => deleteTeacher(teachers.find(teacher => teacher.full_name === selectedTeacher)?.id || 0)}>Видалити вчителя</button>
+                                    )}
                                 </div>
                             </div>
                         </div>
                     )}
+                    <ToastContainer />
                 </div>
             ) : (
                 <Authentication setIsAuthenticated={setIsAuthenticated} setIsAdmin={setIsAdmin} />

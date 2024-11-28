@@ -464,18 +464,91 @@ button{
     flex-direction: column;
 }
 
-.semester-week-selector {
+.section-content {
+    overflow-y: auto;
+    flex: 1;
+    padding: 20px;
+}
+
+.section {
+    display: none;
+    align-items: center;
+}
+
+
+.section.active {
     display: flex;
-    justify-content: space-around;
+    flex-direction: column;
+}
+
+.section h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.section select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.section input {
+    width: 97.8%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.section button {
+    width: 100%;
+    padding: 10px 20px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: DodgerBlue;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.section button:hover {
+    background-color: RoyalBlue;
+}
+
+.section button:active {
+    transform: scale(0.95);
+}
+
+
+.section button.delete {
+    background-color: Tomato;
+}
+
+.section button.delete:hover {
+    background-color: Crimson;
+}
+
+.section .semester-week-selector {
+    display: flex;
+    justify-content: space-evenly;
     margin-top: 20px;
 }
 
-.semester-week-selector label {
+.section .semester-week-selector {
+    width: 100%;
     margin-right: 10px;
     font-size: 25px;
 }
 
-.semester-week-selector select {
+.section .semester-week-selector select {
+    width: 50px;
     padding: 5px;
     border-radius: 7px;
     font-size: 20px;
