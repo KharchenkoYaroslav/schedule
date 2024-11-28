@@ -1,13 +1,13 @@
-import { useEffect, useState } from 'react';
+import { useLayoutEffect, useState } from 'react';
 
 const useWindowResize = () => {
     const [scale, setScale] = useState<number>(1);
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         const handleResize = () => {
             const currentWidth = window.innerWidth;
-            if (currentWidth < 1100) {
-                const newScale = currentWidth / 1100;
+            if (currentWidth < 900) {
+                const newScale = currentWidth / 900;
                 setScale(newScale);
             } else {
                 setScale(1);
@@ -20,7 +20,7 @@ const useWindowResize = () => {
 
         window.addEventListener('resize', handleResize);
         window.addEventListener('orientationchange', handleOrientationChange);
-        handleResize(); 
+        handleResize(); // Виклик при монтуванні компонента
 
         return () => {
             window.removeEventListener('resize', handleResize);

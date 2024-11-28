@@ -216,10 +216,14 @@ button{
 }
 
 .authentication-container {
+    left: 0;
+    top: 0;
+    position: fixed;
+    height: 100vh;
+    width: 100vw;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
 }
 
 .authentication-form {
@@ -228,7 +232,6 @@ button{
     border-radius: 10px ;
     box-shadow: 2px 2px 10px darkslategrey;
     width: 300px;
-    text-align: center;
 }
 
 .authentication-form h1 {
@@ -240,7 +243,7 @@ button{
 .authentication-form input {   
     padding: 0.75rem;
     margin: 0.5rem 0;
-    width: 274px;
+    width: 90%;
     border: 1px solid #ccc;
     border-radius: 5px;
     font-size: 1rem;

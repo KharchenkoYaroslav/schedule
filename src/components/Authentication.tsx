@@ -44,8 +44,8 @@ const Authentication: React.FC<Props> = ({ setIsAuthenticated, setIsAdmin }) => 
     };
 
     return (
-        <div className="authentication-container" style={{ transform: `scaleY(${scale})`, transformOrigin: 'top left' }}>
-            <form className="authentication-form" onSubmit={(e) => { e.preventDefault(); handleLogin(); }}>
+        <div className="authentication-container" style={{ transform: `scaleX(${1/scale})`, transformOrigin: 'top left'}}>
+            <form className="authentication-form"  onSubmit={(e) => { e.preventDefault(); handleLogin(); }}>
                 <h1>Вхід</h1>
                 <input
                     type="text"
