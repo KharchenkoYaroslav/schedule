@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState, useLayoutEffect } from 'react';
+import React, { useRef, useEffect } from 'react';
 import './styles.css';
 import { IoChevronBack } from 'react-icons/io5';
 import { PiStudent } from 'react-icons/pi';
@@ -24,7 +24,6 @@ const InputField = ({ find, setFind, isStudent, setIsStudent, groupsList, teache
     const [isInputFocused, setIsInputFocused] = useLocalStorage<boolean>("isInputFocused", false);
     const suggestionRef = useRef<HTMLDivElement | null>(null);
     const inputRef = useRef<HTMLInputElement>(null);
-
     const handleResize = () => {
         const currentWidth = window.innerWidth;
         if (currentWidth < 900) {
@@ -37,7 +36,7 @@ const InputField = ({ find, setFind, isStudent, setIsStudent, groupsList, teache
 
     const scale = useWindowResize(handleResize);
     
-    useLayoutEffect(() => {
+    useEffect(() => {
         const handleFocus = () => {
             document.body.style.backgroundColor = 'hsl(219, 59%, 30%)';
         };
@@ -97,48 +96,52 @@ const InputField = ({ find, setFind, isStudent, setIsStudent, groupsList, teache
     };
 
     return (
+        
         <form className='input' action="" style={{ transform: `scaleY(${scale})`, transformOrigin: 'top left' }}>
-            {isInputVisible ? (
-                <div key="input-visible">
-                    <input
-                        ref={inputRef}
-                        type="text"
-                        placeholder={isStudent ? 'Введіть назву групи' : 'Введіть своє прізвище'}
-                        className='input__box'
-                        value={find}
-                        onChange={handleInputChange}
-                        onFocus={handleInputFocus}
-                        onBlur={handleInputBlur}
-                    />
-                    <button className='back_to_start' type="button" onClick={toFalseInput}>
-                        <span id='back_icon'><IoChevronBack /></span> назад
-                    </button>
-                    {isInputFocused && suggestions.length > 0 && (
-                        <div className="suggestions" ref={suggestionRef}>
-                            {suggestions.map((suggestion, index) => (
-                                <div
-                                    key={index}
-                                    className="suggestion"
-                                    onClick={() => handleSuggestionClick(suggestion)}
-                                >
-                                    {suggestion}
-                                </div>
-                            ))}
-                        </div>
-                    )}
-                </div>
-            ) : (
-                <div key="input-hidden" className='buttons-container'>
-                    <button className='to_feild' onClick={() => toTrueInput(true)} >
-                        Я студент<span className='text_icon'><PiStudent /></span>
-                    </button>
-                    <button className='to_feild' onClick={() => toTrueInput(false)} >
-                        Я вчитель<span className='text_icon'><LiaChalkboardTeacherSolid /></span>
-                    </button>
-                    <button className='to_feild' onClick={() => setIsAdmin(true)} >
-                        Адміністрація<span className='text_icon'><GrUserAdmin /></span>
-                    </button>
-                </div>
+            {!isInputVisible && (
+                
+                <div className='buttons-container'>
+                <button className='to_feild' onClick={() => toTrueInput(true)} >
+                    Я студент<span className='text_icon'><PiStudent /></span>
+                </button>
+                <button className='to_feild' onClick={() => toTrueInput(false)} >
+                    Я вчитель<span className='text_icon'><LiaChalkboardTeacherSolid /></span>
+                </button>
+                <button className='to_feild' onClick={() => setIsAdmin(true)} >
+                    Адміністрація<span className='text_icon'><GrUserAdmin /></span>
+                </button>
+            </div>
+            )}
+            {isInputVisible && (
+                <>
+                <input
+                    ref={inputRef}
+                    type="text"
+                    placeholder={isStudent ? 'Введіть назву групи' : 'Введіть своє прізвище'}
+                    className='input__box'
+                    value={find}
+                    onChange={handleInputChange}
+                    onFocus={handleInputFocus}
+                    onBlur={handleInputBlur}
+                    
+                />
+                <button className='back_to_start' type="button" onClick={toFalseInput}>
+                    <span id='back_icon'><IoChevronBack /></span> назад
+                </button>
+                {isInputFocused && suggestions.length > 0 && (
+                    <div className="suggestions" ref={suggestionRef}>
+                        {suggestions.map((suggestion, index) => (
+                            <div
+                                key={index}
+                                className="suggestion"
+                                onClick={() => handleSuggestionClick(suggestion)}
+                            >
+                                {suggestion}
+                            </div>
+                        ))}
+                    </div>
+                )}
+            </>
             )}
         </form>
     );
