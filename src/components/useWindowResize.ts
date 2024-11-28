@@ -15,11 +15,9 @@ const useWindowResize = () => {
             }
         };
 
-        // Використовуємо ResizeObserver для відслідковування зміни розміру вікна
         resizeObserverRef.current = new ResizeObserver(handleResize);
         resizeObserverRef.current.observe(document.documentElement);
-
-        // Виклик при монтуванні компонента
+        
         handleResize();
 
         return () => {

@@ -23,7 +23,6 @@ const App: React.FC = () => {
             setTeachersList(data.teachers);
         };
         fetchData();
-
     }, []);
 
     function handleValueFound(value: string) {

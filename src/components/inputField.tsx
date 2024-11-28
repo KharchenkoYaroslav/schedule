@@ -1,10 +1,11 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useRef, useEffect } from 'react';
 import './styles.css';
 import { IoChevronBack } from 'react-icons/io5';
 import { PiStudent } from 'react-icons/pi';
 import { LiaChalkboardTeacherSolid } from 'react-icons/lia';
 import { GrUserAdmin } from "react-icons/gr";
 import useWindowResize from './useWindowResize';
+import useLocalStorage from './useLocalStorage';
 
 interface Props {
     find: string;
@@ -18,9 +19,9 @@ interface Props {
 }
 
 const InputField = ({ find, setFind, isStudent, setIsStudent, groupsList, teachersList, onValueFound, setIsAdmin }: Props) => {
-    const [isInputVisible, setIsInputVisible] = useState(false);
-    const [suggestions, setSuggestions] = useState<string[]>([]);
-    const [isInputFocused, setIsInputFocused] = useState(false);
+    const [isInputVisible, setIsInputVisible] = useLocalStorage<boolean>("isInputVisible", false);
+    const [suggestions, setSuggestions] = useLocalStorage<string[]>("suggestions", []);
+    const [isInputFocused, setIsInputFocused] = useLocalStorage<boolean>("isInputFocused", false);
     const suggestionRef = useRef<HTMLDivElement | null>(null);
     const inputRef = useRef<HTMLInputElement>(null);
     const scale = useWindowResize();
@@ -47,14 +48,12 @@ const InputField = ({ find, setFind, isStudent, setIsStudent, groupsList, teache
     }, [inputRef, isInputVisible]);
 
     const toTrueInput = (isStudent: boolean) => {
-
         setIsStudent(isStudent);
         setIsInputVisible(true);
         setSuggestions(isStudent ? groupsList : teachersList);
     };
 
     const toFalseInput = () => {
-
         setIsInputVisible(false);
         setSuggestions([]);
         setFind("");
