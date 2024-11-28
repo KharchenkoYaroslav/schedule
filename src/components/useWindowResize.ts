@@ -20,7 +20,10 @@ const useWindowResize = () => {
 
         window.addEventListener('resize', handleResize);
         window.addEventListener('orientationchange', handleOrientationChange);
-        handleResize(); // Виклик при монтуванні компонента
+        setTimeout(() => {
+            handleResize(); 
+        }, 100); 
+        
 
         return () => {
             window.removeEventListener('resize', handleResize);
