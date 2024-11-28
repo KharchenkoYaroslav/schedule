@@ -14,7 +14,18 @@ const App: React.FC = () => {
     const [isAdmin, setIsAdmin] = useLocalStorage<boolean>("isAdmin", false); 
     const [groupsList, setGroupsList] = useLocalStorage<{ group_code: string }[]>("groupsList", []);
     const [teachersList, setTeachersList] = useLocalStorage<{ full_name: string }[]>("teachersList", []);
-    const scale = useWindowResize();
+
+    const handleResize = () => {
+        const currentWidth = window.innerWidth;
+        if (currentWidth < 900) {
+            const newScale = currentWidth / 900;
+            return newScale;
+        } else {
+            return 1;
+        }
+    };
+
+    const scale = useWindowResize(handleResize);
 
     useLayoutEffect(() => {
         const fetchData = async () => {

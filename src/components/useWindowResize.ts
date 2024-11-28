@@ -1,11 +1,10 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 
-const useWindowResize = () => {
+const useWindowResize = (handleResize: () => void) => {
     const [scale, setScale] = useState<number>(1);
-    const resizeObserverRef = useRef<ResizeObserver | null>(null);
 
     useEffect(() => {
-        const handleResize = () => {
+        const handleResizeInternal = () => {
             const currentWidth = window.innerWidth;
             if (currentWidth < 900) {
                 const newScale = currentWidth / 900;
@@ -15,18 +14,19 @@ const useWindowResize = () => {
             }
         };
 
-        resizeObserverRef.current = new ResizeObserver(handleResize);
-        resizeObserverRef.current.observe(document.documentElement);
+        const handleOrientationChange = () => {
+            handleResizeInternal();
+        };
 
-        handleResize();
+        window.addEventListener('resize', handleResizeInternal);
+        window.addEventListener('orientationchange', handleOrientationChange);
+        handleResizeInternal(); // Виклик при монтуванні компонента
 
         return () => {
-            if (resizeObserverRef.current) {
-                resizeObserverRef.current.disconnect();
-            }
+            window.removeEventListener('resize', handleResizeInternal);
+            window.removeEventListener('orientationchange', handleOrientationChange);
         };
-    }, []);
-    console.log(scale)
+    }, [handleResize]);
     
     return scale;
 };

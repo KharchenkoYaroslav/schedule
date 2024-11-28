@@ -25,7 +25,17 @@ const OutputTable: React.FC<Props> = ({ find, isStudent,setIsStudent, setFind, s
 
     const [schedule, setSchedule] = useState<GroupSchedule | TeacherSchedule | null>(null);
     const [error, setError] = useState<string | null>(null);
-    const scale = useWindowResize();
+    const handleResize = () => {
+        const currentWidth = window.innerWidth;
+        if (currentWidth < 900) {
+            const newScale = currentWidth / 900;
+            return newScale;
+        } else {
+            return 1;
+        }
+    };
+
+    const scale = useWindowResize(handleResize);
 
     useEffect(() => {
         const fetchData = async () => {
