@@ -224,9 +224,11 @@ button{
     display: flex;
     justify-content: center;
     align-items: center;
+    
 }
 
-.authentication-form {
+.authentication-form {   
+    margin-top: -100px;
     background: white;
     padding: 1.5rem;
     border-radius: 10px ;
