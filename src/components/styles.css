@@ -303,7 +303,7 @@ button{
     display: flex;
     flex-direction: column;
     background-color: WhiteSmoke;
-    height: calc(100vh - 40px);
+    min-height: calc(100vh - 40px);
 }
 
 .sidebar.collapsed {
