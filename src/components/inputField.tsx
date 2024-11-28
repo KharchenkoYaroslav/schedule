@@ -93,7 +93,7 @@ const InputField = ({ find, setFind, isStudent, setIsStudent, groupsList, teache
                 
                 <div className='buttons-container'>
                 <button className='to_feild' onClick={() => toTrueInput(true)} >
-                    Я студент<span className='text_icon'><PiStudent /></span>
+                    Я студент{scale}<span className='text_icon'><PiStudent /></span>
                 </button>
                 <button className='to_feild' onClick={() => toTrueInput(false)} >
                     Я вчитель<span className='text_icon'><LiaChalkboardTeacherSolid /></span>
