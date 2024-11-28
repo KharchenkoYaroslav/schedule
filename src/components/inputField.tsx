@@ -24,7 +24,7 @@ const InputField = ({ find, setFind, isStudent, setIsStudent, groupsList, teache
     const suggestionRef = useRef<HTMLDivElement | null>(null);
     const inputRef = useRef<HTMLInputElement>(null);
     const scale = useWindowResize();
-
+    
     useEffect(() => {
         const handleFocus = () => {
             document.body.style.backgroundColor = 'hsl(219, 59%, 30%)';
@@ -34,16 +34,7 @@ const InputField = ({ find, setFind, isStudent, setIsStudent, groupsList, teache
             document.body.style.backgroundColor = '';
         };
 
-        const inputElement = inputRef.current;
-        if (inputElement) {
-            inputElement.addEventListener('focus', handleFocus);
-            inputElement.addEventListener('blur', handleBlur);
-
-            return () => {
-                inputElement.removeEventListener('focus', handleFocus);
-                inputElement.removeEventListener('blur', handleBlur);
-            };
-        }
+        
     }, [inputRef, isInputVisible]);
 
     const toTrueInput = (event: React.MouseEvent<HTMLButtonElement>, isStudent: boolean) => {
