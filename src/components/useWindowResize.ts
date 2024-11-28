@@ -6,9 +6,7 @@ const useWindowResize = () => {
     useEffect(() => {
         const handleResizeInternal = () => {
             const currentWidth = window.innerWidth;
-            const currentHeight = window.innerHeight;
             const baseWidth = 900;
-            const baseHeight = 1600;
 
             // Перевірка, чи це телефон
             const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
@@ -17,12 +15,14 @@ const useWindowResize = () => {
             let newScale;
             if (isMobile) {
                 // Для мобільних пристроїв встановлюємо фіксований масштаб
-                newScale = 0.4;
+                newScale = 0.45;
             } else {
-                // Для десктопів розраховуємо масштаб на основі співвідношення ширини до висоти
-                const widthScale = currentWidth / baseWidth;
-                const heightScale = currentHeight / baseHeight;
-                newScale = Math.min(widthScale, heightScale);
+                // Для комп'ютерів розраховуємо масштаб на основі ширини екрану
+                if (currentWidth < baseWidth) {
+                    newScale = currentWidth / baseWidth;
+                } else {
+                    newScale = 1;
+                }
             }
 
             setScale(newScale);
