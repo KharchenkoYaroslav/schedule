@@ -1,9 +1,9 @@
-import { useLayoutEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const useWindowResize = () => {
     const [scale, setScale] = useState<number>(1);
 
-    useLayoutEffect(() => {
+    useEffect(() => {
         const handleResize = () => {
             const currentWidth = window.innerWidth;
             if (currentWidth < 900) {
@@ -14,20 +14,21 @@ const useWindowResize = () => {
             }
         };
 
-        const handleOrientationChange = () => {
-            handleResize();
+        const mediaQuery = window.matchMedia('(max-width: 899px)');
+
+        const handleMediaQueryChange = (event: MediaQueryListEvent) => {
+            if (event.matches) {
+                handleResize();
+            } else {
+                setScale(1);
+            }
         };
 
-        window.addEventListener('resize', handleResize);
-        window.addEventListener('orientationchange', handleOrientationChange);
-        setTimeout(() => {
-            handleResize(); 
-        }, 100); 
-        
+        mediaQuery.addEventListener('change', handleMediaQueryChange);
+        handleResize(); // Виклик при монтуванні компонента
 
         return () => {
-            window.removeEventListener('resize', handleResize);
-            window.removeEventListener('orientationchange', handleOrientationChange);
+            mediaQuery.removeEventListener('change', handleMediaQueryChange);
         };
     }, []);
     
