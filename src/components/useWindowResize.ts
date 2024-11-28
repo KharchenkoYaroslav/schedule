@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 
 const useWindowResize = () => {
     const [scale, setScale] = useState<number>(1);
-    const [isMobile, setIsMobile] = useState<boolean>(false);
+    const resizeObserverRef = useRef<ResizeObserver | null>(null);
 
     useEffect(() => {
         const handleResize = () => {
@@ -15,45 +15,19 @@ const useWindowResize = () => {
             }
         };
 
-        const handleOrientationChange = () => {
-            handleResize();
+        // Використовуємо ResizeObserver для відслідковування зміни розміру вікна
+        resizeObserverRef.current = new ResizeObserver(handleResize);
+        resizeObserverRef.current.observe(document.documentElement);
+
+        // Виклик при монтуванні компонента
+        handleResize();
+
+        return () => {
+            if (resizeObserverRef.current) {
+                resizeObserverRef.current.disconnect();
+            }
         };
-
-        // Визначаємо, чи є пристрій мобільним
-        const checkIsMobile = () => {
-            const mediaQuery = window.matchMedia('(max-width: 768px)');
-            setIsMobile(mediaQuery.matches);
-        };
-
-        checkIsMobile();
-
-        if (isMobile) {
-            window.addEventListener('resize', handleResize);
-            window.addEventListener('orientationchange', handleOrientationChange);
-        } else {
-            const mediaQuery = window.matchMedia('(max-width: 899px)');
-            const handleMediaQueryChange = (event: MediaQueryListEvent) => {
-                if (event.matches) {
-                    handleResize();
-                } else {
-                    setScale(1);
-                }
-            };
-            mediaQuery.addEventListener('change', handleMediaQueryChange);
-
-            // Виклик при монтуванні компонента
-            handleResize();
-
-            return () => {
-                if (isMobile) {
-                    window.removeEventListener('resize', handleResize);
-                    window.removeEventListener('orientationchange', handleOrientationChange);
-                } else {
-                    mediaQuery.removeEventListener('change', handleMediaQueryChange);
-                }
-            };
-        }
-    }, [isMobile]);
+    }, []);
     
     return scale;
 };
