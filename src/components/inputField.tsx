@@ -48,10 +48,6 @@ const InputField = ({ find, setFind, isStudent, setIsStudent, groupsList, teache
         }
     }, [inputRef, isInputVisible]);
 
-    useEffect(() => {
-        console.log('isInputVisible changed:', isInputVisible);
-    }, [isInputVisible]);
-
     const toTrueInput = (isStudent: boolean) => {
         setIsStudent(isStudent);
         setIsInputVisible(true);

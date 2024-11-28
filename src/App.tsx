@@ -1,4 +1,4 @@
-import React, { useLayoutEffect} from 'react';
+import React, { useState, useLayoutEffect, useEffect } from 'react';
 import './App.css';
 import InputField from './components/inputField';
 import OutputTable from './components/outputTable';
