@@ -24,9 +24,10 @@ const InputField = ({ find, setFind, isStudent, setIsStudent, groupsList, teache
     const [isInputFocused, setIsInputFocused] = useLocalStorage<boolean>("isInputFocused", false);
     const suggestionRef = useRef<HTMLDivElement | null>(null);
     const inputRef = useRef<HTMLInputElement>(null);
-    const scale = useWindowResize();
+    let scale = useWindowResize();
     
     useEffect(() => {
+        scale = useWindowResize();
         const handleFocus = () => {
             document.body.style.backgroundColor = 'hsl(219, 59%, 30%)';
         };
@@ -45,7 +46,7 @@ const InputField = ({ find, setFind, isStudent, setIsStudent, groupsList, teache
                 inputElement.removeEventListener('blur', handleBlur);
             };
         }
-    }, [inputRef, isInputVisible]);
+    }, [inputRef, isInputVisible, scale]);
 
     const toTrueInput = (isStudent: boolean) => {
         setIsStudent(isStudent);
