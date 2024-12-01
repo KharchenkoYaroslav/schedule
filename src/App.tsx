@@ -3,7 +3,7 @@ import './App.css';
 import InputField from './components/inputField';
 import OutputTable from './components/outputTable';
 import AdminPanel from './components/AdminPanel'; 
-import { FetchCombinedList } from './components/getData';
+import { FetchCombinedList } from './components/dataManagement';
 import useWindowResize from './components/useWindowResize';
 import useLocalStorage from './components/useLocalStorage';
 

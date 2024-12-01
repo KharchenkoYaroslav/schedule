@@ -518,10 +518,6 @@ button{
     transition: background-color 0.3s ease;
 }
 
-.section button:hover {
-    background-color: RoyalBlue;
-}
-
 .section button:active {
     transform: scale(0.95);
 }
@@ -529,10 +525,6 @@ button{
 
 .section button.delete {
     background-color: Tomato;
-}
-
-.section button.delete:hover {
-    background-color: Crimson;
 }
 
 .section .semester-week-selector {
@@ -554,15 +546,45 @@ button{
     font-size: 20px;
 }
 
+#addCurriculum{
+    margin-top: 30px;
+}
 
+#objects .delete{
+    margin-bottom: 25px;
+}
 
+.groupsCurriculum {
+    overflow: hidden;
+    transition: max-height 0.3s ease-in-out, visibility 0.3s ease-in-out;
+    max-height: 2000px; 
+    visibility: visible;
+}
 
+.groupsCurriculum.collapsed {
+    transition: max-height 0.3s ease-in-out, visibility 0.3s ease-in-out;
+    max-height: 0;
+    visibility: hidden;
+}
 
+.teachersCurriculum {
+    overflow: hidden;
+    transition: max-height 0.3s ease-in-out, visibility 0.3s ease-in-out;
+    max-height: 2000px; 
+    visibility: visible;
+}
 
+.teachersCurriculum.collapsed {
+    transition: max-height 0.3s ease-in-out, visibility 0.3s ease-in-out;
+    max-height: 0;
+    visibility: hidden;
+}
 
-
-
-
+#objects .setIsCollapsed{
+    padding: 0px 0px;
+    background: none;
+    color: black;
+}
 
 
 @media (hover: hover) {
@@ -582,6 +604,14 @@ button{
 
     .output table a:hover {
         color: DeepSkyBlue;
+    }
+
+    .section button:hover {
+        background-color: RoyalBlue;
+    }
+
+    .section button.delete:hover {
+        background-color: Crimson;
     }
 }
 
@@ -603,5 +633,13 @@ button{
     .output table a:active {
         color: DeepSkyBlue;
     }  
+
+    .section button:active {
+        background-color: RoyalBlue;
+    }
+
+    .section button.delete:active {
+        background-color: Crimson;
+    }
 }
 

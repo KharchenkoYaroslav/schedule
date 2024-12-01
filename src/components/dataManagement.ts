@@ -22,7 +22,6 @@ const cur_semester = () => {
     }
 };
 
-
 async function FetchScheduleForGroup(groupName: string): Promise<GroupSchedule | null> {
     try {
         const response = await axios.get(`https://schedule-server-rho.vercel.app/api/getGroup?groupName=${groupName}&semester=${cur_semester()}`);
@@ -30,6 +29,9 @@ async function FetchScheduleForGroup(groupName: string): Promise<GroupSchedule |
         if (!response.data || response.data.length === 0) {
             return null;
         }
+
+        // Логування отриманих даних від API
+        console.log('Received data from API:', response.data);
 
         const schedule: GroupSchedule = {
             groupName,
@@ -43,33 +45,64 @@ async function FetchScheduleForGroup(groupName: string): Promise<GroupSchedule |
             })) as Week
         };
 
+        const combinedPairs: { [key: string]: any } = {};
+
         response.data.forEach((item: any) => {
-            const weekNumber = item.week_number === '1' ? 'week_1' : 'week_2';
-            const dayOfWeek = Weekday[item.day_number as keyof typeof Weekday];
-            const pairNumber = parseInt(item.pair_number, 10) - 1;
+            const key = `${item.week_number}-${item.day_number}-${item.pair_number}`;
+            if (!combinedPairs[key]) {
+                combinedPairs[key] = {
+                    subject_name: [],
+                    teachers_with_post: [],
+                    lesson_type: [],
+                    visit_format: [],
+                    building: item.building,
+                    audience_number: item.audience_number
+                };
+            }
 
+            if (item.subject_name) combinedPairs[key].subject_name.push(item.subject_name);
+            if (item.teachers_with_post) combinedPairs[key].teachers_with_post.push(item.teachers_with_post);
+            if (item.lesson_type) combinedPairs[key].lesson_type.push(item.lesson_type);
+            if (item.visit_format) combinedPairs[key].visit_format.push(item.visit_format);
+        });
 
-            const teachersWithPost = item.teachers_with_post;
+        Object.keys(combinedPairs).forEach((key) => {
+            const [weekNumber, dayNumber, pairNumber] = key.split('-');
+            const dayOfWeek = Weekday[dayNumber as keyof typeof Weekday];
+            const pairIndex = parseInt(pairNumber, 10) - 1;
+
+            const teachersWithPost = combinedPairs[key].teachers_with_post;
+
+            // Логування для перевірки вчителів та їх посад
+            console.log(`Teacher${key}:`, teachersWithPost);
+
             const teachers: Teacher = [
-                teachersWithPost.map((teacher: string) => Object.keys(teacher)[0]),
-                teachersWithPost.map((teacher: AbbrPair) => AbbrPair[Object.values(teacher)[0] as keyof typeof AbbrPair])
+                teachersWithPost.flat().map((teacher: any) => teacher.name),
+                teachersWithPost.flat().map((teacher: any) => AbbrPair[teacher.post as keyof typeof AbbrPair])
             ];
 
+            // Логування для перевірки вчителів та їх посад
+            console.log('Teachers:', teachers);
+
             const groupPair = new GroupPair(
-                item.subject_name,
+                combinedPairs[key].subject_name,
                 teachers,
-                PairType[item.lesson_type as keyof typeof PairType],
-                PairFormat[item.visit_format as keyof typeof PairFormat],
-                item.building,
-                item.audience_number
+                combinedPairs[key].lesson_type.map((type: string) => PairType[type as keyof typeof PairType]),
+                combinedPairs[key].visit_format.map((format: string) => PairFormat[format as keyof typeof PairFormat]),
+                combinedPairs[key].building,
+                combinedPairs[key].audience_number
             );
 
             const dayIndex = Object.values(Weekday).indexOf(dayOfWeek);
-            if (schedule[weekNumber] && schedule[weekNumber]![dayIndex]) {
-                schedule[weekNumber]![dayIndex]!.pairs[pairNumber] = groupPair;
-                schedule[weekNumber]![dayIndex]!.dayOfWeek = dayOfWeek;
+            const week = schedule[`week_${weekNumber}`];
+            if (week && Array.isArray(week) && week[dayIndex]) {
+                week[dayIndex]!.pairs[pairIndex] = groupPair;
+                week[dayIndex]!.dayOfWeek = dayOfWeek;
             }
         });
+
+        // Логування сформованої структури перед поверненням
+        console.log('Formatted schedule:', schedule);
 
         return schedule;
     } catch (error) {
@@ -103,7 +136,6 @@ async function FetchScheduleForTeacher(teacherName: string): Promise<TeacherSche
             const dayOfWeek = Weekday[item.day_number as keyof typeof Weekday];
             const pairNumber = parseInt(item.pair_number, 10) - 1;
 
-            // Видаляємо JSON.parse, оскільки groups_list вже є об'єктом
             const groupsList = item.groups_list;
 
             const teacherPair = new TeacherPair(

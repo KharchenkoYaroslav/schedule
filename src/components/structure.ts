@@ -36,7 +36,6 @@ export const PairTime: Dictionary = {
     6: "18:30"
 };
 
-
 export enum AbbrPair {
     Assistant = "ac",
     Teacher = "вик",
@@ -45,8 +44,6 @@ export enum AbbrPair {
     Professor = "проф",
     Unknown = "невідомо"
 };
-
-
 
 class Pair {
     private name: string | string[];
@@ -84,7 +81,7 @@ class Pair {
     }
 }
 
-export type Teacher = [ string | string[], AbbrPair | AbbrPair[]];
+export type Teacher = [string | string[], AbbrPair | AbbrPair[]];
 
 export class GroupPair extends Pair {
     private teacher: Teacher;
@@ -128,6 +125,7 @@ interface Schedule {
 
 export interface GroupSchedule extends Schedule {
     groupName: string;
+    [key: string]: Week | string | null;
 }
 
 export interface TeacherSchedule extends Schedule {

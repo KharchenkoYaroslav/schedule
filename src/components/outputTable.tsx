@@ -10,7 +10,7 @@ import {
     TeacherSchedule,
     AbbrPair,
 } from './structure';
-import { FetchScheduleForGroup, FetchScheduleForTeacher } from './getData';
+import { FetchScheduleForGroup, FetchScheduleForTeacher } from './dataManagement';
 import useWindowResize from './useWindowResize';
 
 interface Props {
@@ -21,44 +21,43 @@ interface Props {
     setIsValueFound: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const OutputTable: React.FC<Props> = ({ find, isStudent,setIsStudent, setFind, setIsValueFound }) => {
+const OutputTable: React.FC<Props> = ({ find, isStudent, setIsStudent, setFind, setIsValueFound }) => {
 
     const [schedule, setSchedule] = useState<GroupSchedule | TeacherSchedule | null>(null);
     const [error, setError] = useState<string | null>(null);
-  
 
     const scale = useWindowResize();
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-
                 if (isStudent) {
                     const groupSchedule = await FetchScheduleForGroup(find);
                     if (groupSchedule) {
                         setSchedule(groupSchedule);
+                        // Логування отриманого розкладу для групи
+                        console.log('Group schedule:', groupSchedule);
                         return;
                     }
-                }
-                else {
+                } else {
                     const teacherSchedule = await FetchScheduleForTeacher(find);
                     if (teacherSchedule) {
                         setSchedule(teacherSchedule);
+                        // Логування отриманого розкладу для вчителя
+                        console.log('Teacher schedule:', teacherSchedule);
                         return;
                     }
                 }
-
+    
                 setError("Розклад не знайдено");
             } catch (err) {
                 setError("Помилка при отриманні розкладу");
             }
         };
-
+    
         fetchData();
-
+    
     }, [find]);
-
-
 
     const formatTypeAndFormat = (types: string | string[], formats: string | string[]): string => {
         if (!Array.isArray(types)) types = [types];
@@ -83,18 +82,20 @@ const OutputTable: React.FC<Props> = ({ find, isStudent,setIsStudent, setFind, s
     };
 
     const handleTeacherClick = async (teacherName: string) => {
-            setFind(teacherName);
-            setIsValueFound(true);
-            setIsStudent(false);
+        setFind(teacherName);
+        setIsValueFound(true);
+        setIsStudent(false);
     };
 
     const handleGroupClick = async (groupName: string) => {
-            setFind(groupName);
-            setIsValueFound(true);
-            setIsStudent(true);
+        setFind(groupName);
+        setIsValueFound(true);
+        setIsStudent(true);
     };
 
-    const transform_name = (fullName: string): string => {
+    const transform_name = (fullName: string | undefined): string => {
+        if (!fullName) return '';
+
         const words = fullName.split(' ');
 
         if (words.length != 3) {
@@ -186,6 +187,8 @@ const OutputTable: React.FC<Props> = ({ find, isStudent,setIsStudent, setFind, s
             return <h3>Розклад на тиждень {weekName} не знайдено</h3>;
         }
 
+                                                                
+
         return (
             <div className="table-container">
                 <h3>{weekName}</h3>
@@ -204,7 +207,7 @@ const OutputTable: React.FC<Props> = ({ find, isStudent,setIsStudent, setFind, s
                                     const pair = week.find(d => d?.dayOfWeek === day)?.pairs[pairIndex];
                                     return (
                                         <td key={day}>
-                                            {pair && (
+                                            {pair && (                                               
                                                 <>
                                                     <div className='subject'>{formatSubject(pair.getName())}</div>
                                                     {pair instanceof GroupPair ? (
@@ -299,6 +302,5 @@ const OutputTable: React.FC<Props> = ({ find, isStudent,setIsStudent, setFind, s
         </div>
     );
 };
-
 
 export default OutputTable;
