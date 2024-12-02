@@ -1,10 +1,11 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect,useLayoutEffect,  useRef } from 'react';
 import Authentication from './Authentication';
 import useWindowResize from './useWindowResize';
 import { IoChevronBack, IoChevronForward, IoChevronDown, IoChevronUp, IoClose, IoAdd, IoRemove } from 'react-icons/io5';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Curriculum, Group, Specialty, Teacher } from './adminStructure';
+import useLocalStorage from './useLocalStorage'; 
 import {
     fetchGroups,
     fetchTeachers,
@@ -26,7 +27,7 @@ interface Props {
 }
 
 const AdminPanel: React.FC<Props> = ({ setIsAdmin }) => {
-    const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+    const [isAuthenticated, setIsAuthenticated] = useLocalStorage<boolean>('isAuthenticated', false);
     const [isMenuCollapsed, setIsMenuCollapsed] = useState<boolean>(false);
     const [isAccountMenuCollapsed, setIsAccountMenuCollapsed] = useState<boolean>(false);
     const [isManagementMenuCollapsed, setIsManagementMenuCollapsed] = useState<boolean>(false);

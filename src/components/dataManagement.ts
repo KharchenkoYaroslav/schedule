@@ -30,9 +30,6 @@ async function FetchScheduleForGroup(groupName: string): Promise<GroupSchedule |
             return null;
         }
 
-        // Логування отриманих даних від API
-        console.log('Received data from API:', response.data);
-
         const schedule: GroupSchedule = {
             groupName,
             week_1: Array(6).fill(null).map(() => ({
@@ -73,16 +70,10 @@ async function FetchScheduleForGroup(groupName: string): Promise<GroupSchedule |
 
             const teachersWithPost = combinedPairs[key].teachers_with_post;
 
-            // Логування для перевірки вчителів та їх посад
-            console.log(`Teacher${key}:`, teachersWithPost);
-
             const teachers: Teacher = [
                 teachersWithPost.flat().map((teacher: any) => teacher.name),
                 teachersWithPost.flat().map((teacher: any) => AbbrPair[teacher.post as keyof typeof AbbrPair])
             ];
-
-            // Логування для перевірки вчителів та їх посад
-            console.log('Teachers:', teachers);
 
             const groupPair = new GroupPair(
                 combinedPairs[key].subject_name,
@@ -100,9 +91,6 @@ async function FetchScheduleForGroup(groupName: string): Promise<GroupSchedule |
                 week[dayIndex]!.dayOfWeek = dayOfWeek;
             }
         });
-
-        // Логування сформованої структури перед поверненням
-        console.log('Formatted schedule:', schedule);
 
         return schedule;
     } catch (error) {

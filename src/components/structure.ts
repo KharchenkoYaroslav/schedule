@@ -79,6 +79,22 @@ class Pair {
     public getAudience(): number | null {
         return this.audience;
     }
+
+    // Серіалізація
+    public serialize(): any {
+        return {
+            name: this.name,
+            type: this.type,
+            format: this.format,
+            building: this.building,
+            audience: this.audience
+        };
+    }
+
+    // Десеріалізація
+    public static deserialize(data: any): Pair {
+        return new Pair(data.name, data.type, data.format, data.building, data.audience);
+    }
 }
 
 export type Teacher = [string | string[], AbbrPair | AbbrPair[]];
@@ -94,6 +110,19 @@ export class GroupPair extends Pair {
     public getTeacher(): Teacher {
         return this.teacher;
     }
+
+    // Серіалізація
+    public serialize(): any {
+        return {
+            ...super.serialize(),
+            teacher: this.teacher
+        };
+    }
+
+    // Десеріалізація
+    public static deserialize(data: any): GroupPair {
+        return new GroupPair(data.name, data.teacher, data.type, data.format, data.building, data.audience);
+    }
 }
 
 export class TeacherPair extends Pair {
@@ -106,6 +135,19 @@ export class TeacherPair extends Pair {
 
     public getGroup(): string | string[] {
         return this.group;
+    }
+
+    // Серіалізація
+    public serialize(): any {
+        return {
+            ...super.serialize(),
+            group: this.group
+        };
+    }
+
+    // Десеріалізація
+    public static deserialize(data: any): TeacherPair {
+        return new TeacherPair(data.name, data.group, data.type, data.format, data.building, data.audience);
     }
 }
 

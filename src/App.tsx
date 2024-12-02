@@ -22,6 +22,7 @@ const App: React.FC = () => {
             const data = await FetchCombinedList();
             setGroupsList(data.groups);
             setTeachersList(data.teachers);
+            console.log(data.teachers);
         };
         fetchData();
     }, []);

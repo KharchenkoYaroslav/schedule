@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState  } from 'react';
 import './styles.css';
 import { IoChevronBack } from 'react-icons/io5';
 import { PiStudent } from 'react-icons/pi';
@@ -19,9 +19,9 @@ interface Props {
 }
 
 const InputField = ({ find, setFind, isStudent, setIsStudent, groupsList, teachersList, onValueFound, setIsAdmin }: Props) => {
-    const [isInputVisible, setIsInputVisible] = useLocalStorage<boolean>("isInputVisible", false);
-    const [suggestions, setSuggestions] = useLocalStorage<string[]>("suggestions", []);
-    const [isInputFocused, setIsInputFocused] = useLocalStorage<boolean>("isInputFocused", false);
+    const [isInputVisible, setIsInputVisible] =  useState<boolean>(false);
+    const [suggestions, setSuggestions] = useState<string[]>([]); 
+    const [isInputFocused, setIsInputFocused] = useState<boolean>(false);
     const suggestionRef = useRef<HTMLDivElement | null>(null);
     const inputRef = useRef<HTMLInputElement>(null);
 
