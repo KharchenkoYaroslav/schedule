@@ -107,7 +107,7 @@ const InputField = ({ find, setFind, isStudent, setIsStudent, groupsList, teache
                     <input
                         ref={inputRef}
                         type="text"
-                        placeholder={isStudent ? 'Введіть назву групи' : 'Введіть своє прізвище'}
+                        placeholder={isStudent ? 'Введіть назву групи' : 'Введіть своє прізвище або id'}
                         className='input__box'
                         value={find}
                         onChange={handleInputChange}

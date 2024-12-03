@@ -97,6 +97,11 @@ class Pair {
     }
 }
 
+export interface TeacherData {
+    id: string;
+    full_name: string;
+}
+
 export type Teacher = [string | string[], AbbrPair | AbbrPair[]];
 
 export class GroupPair extends Pair {

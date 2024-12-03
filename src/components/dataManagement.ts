@@ -99,9 +99,9 @@ async function FetchScheduleForGroup(groupName: string): Promise<GroupSchedule |
     }
 }
 
-async function FetchScheduleForTeacher(teacherName: string): Promise<TeacherSchedule | null> {
+async function FetchScheduleForTeacher(teacherId: string, teacherName: string): Promise<TeacherSchedule | null> {
     try {
-        const response = await axios.get(`https://schedule-server-rho.vercel.app/api/getTeacher?teacherName=${teacherName}&semester=${cur_semester()}`);
+        const response = await axios.get(`https://schedule-server-rho.vercel.app/api/getTeacher?teacherId=${teacherId}&semester=${cur_semester()}`);
 
         if (!response.data || response.data.length === 0) {
             return null;

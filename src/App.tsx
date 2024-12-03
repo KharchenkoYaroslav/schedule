@@ -3,9 +3,10 @@ import './App.css';
 import InputField from './components/inputField';
 import OutputTable from './components/outputTable';
 import AdminPanel from './components/AdminPanel'; 
-import { FetchCombinedList } from './components/dataManagement';
+import { FetchCombinedList, FetchScheduleForTeacher } from './components/dataManagement';
 import useWindowResize from './components/useWindowResize';
 import useLocalStorage from './components/useLocalStorage';
+import { TeacherData } from './components/structure';
 
 const App: React.FC = () => {
     const [find, setFind] = useLocalStorage<string>("find", "");
@@ -13,7 +14,7 @@ const App: React.FC = () => {
     const [isStudent, setIsStudent] = useLocalStorage<boolean>("isStudent", false);
     const [isAdmin, setIsAdmin] = useLocalStorage<boolean>("isAdmin", false); 
     const [groupsList, setGroupsList] = useLocalStorage<{ group_code: string }[]>("groupsList", []);
-    const [teachersList, setTeachersList] = useLocalStorage<{ full_name: string }[]>("teachersList", []);
+    const [teachersList, setTeachersList] = useLocalStorage<TeacherData[]>("teachersList", []);
 
     const scale = useWindowResize();
 
@@ -28,7 +29,7 @@ const App: React.FC = () => {
     }, []);
 
     function handleValueFound(value: string) {
-        const found = groupsList.some(group => group.group_code === value) || teachersList.some(teacher => teacher.full_name === value);
+        const found = groupsList.some(group => group.group_code === value) || teachersList.some(teacher => `${teacher.id} - ${teacher.full_name}` === value);
         setIsValueFound(found);
     }
 
@@ -44,7 +45,7 @@ const App: React.FC = () => {
                     isStudent={isStudent}
                     setIsStudent={setIsStudent}
                     groupsList={groupsList.map(group => group.group_code)}
-                    teachersList={teachersList.map(teacher => teacher.full_name)}
+                    teachersList={teachersList.map(teacher => `${teacher.id} - ${teacher.full_name}`)}
                     onValueFound={handleValueFound}
                     setIsAdmin={setIsAdmin} 
                 />        
@@ -56,6 +57,7 @@ const App: React.FC = () => {
                     setIsStudent={setIsStudent}
                     setFind={setFind}
                     setIsValueFound={setIsValueFound}
+                    teachersList={teachersList}
                 />
             )}
             {isAdmin && (

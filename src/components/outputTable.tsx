@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import './styles.css';
 import { MdOutlineSettingsBackupRestore } from 'react-icons/md';
 import {
@@ -9,6 +9,7 @@ import {
     GroupSchedule,
     TeacherSchedule,
     AbbrPair,
+    TeacherData,
 } from './structure';
 import { FetchScheduleForGroup, FetchScheduleForTeacher } from './dataManagement';
 import useWindowResize from './useWindowResize';
@@ -21,27 +22,28 @@ interface Props {
     setIsStudent: React.Dispatch<React.SetStateAction<boolean>>;
     setFind: React.Dispatch<React.SetStateAction<string>>;
     setIsValueFound: React.Dispatch<React.SetStateAction<boolean>>;
+    teachersList: TeacherData[];
 }
 
-const OutputTable: React.FC<Props> = ({ find, isStudent, setIsStudent, setFind, setIsValueFound }) => {
-
+const OutputTable: React.FC<Props> = ({ find, isStudent, setIsStudent, setFind, setIsValueFound, teachersList }) => {
     const [schedule, setSchedule] = useState<GroupSchedule | TeacherSchedule | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [scheduleManager, setScheduleManager] = useLocalStorage<ScheduleManager>('ScheduleManager', new ScheduleManager());
-    
+
     const scale = useWindowResize();
 
     useEffect(() => {
+        let isMounted = true;
+        let timeoutId: NodeJS.Timeout;
+
         const fetchData = async () => {
             try {
                 const response = await fetch('https://schedule-server-rho.vercel.app/api/lastDatabaseUpdate');
                 const data = await response.json();
                 const serverLastUpdate = data.lastUpdate;
 
+                let fetchedSchedule: GroupSchedule | TeacherSchedule | null = null;
 
-                let fetchedSchedule: GroupSchedule | TeacherSchedule | null;
-
-                // Перевіряємо, чи scheduleManager є екземпляром ScheduleManager
                 if (!(scheduleManager instanceof ScheduleManager)) {
                     const storedData = localStorage.getItem('ScheduleManager');
                     if (storedData) {
@@ -49,54 +51,76 @@ const OutputTable: React.FC<Props> = ({ find, isStudent, setIsStudent, setFind, 
                     } else {
                         setScheduleManager(new ScheduleManager());
                     }
-                    return; // Додаємо return, щоб уникнути подальших операцій, якщо scheduleManager не ініціалізований
+                    return;
                 }
 
                 if (isStudent) {
                     if (scheduleManager.isGroupScheduleUpToDate(find, serverLastUpdate)) {
                         fetchedSchedule = scheduleManager.getGroupSchedule(find);
-                    }
-                    else {
+                    } else {
                         fetchedSchedule = await FetchScheduleForGroup(find);
                         if (fetchedSchedule) {
                             scheduleManager.addOrUpdateGroupSchedule(find, fetchedSchedule, serverLastUpdate);
                         } else {
                             scheduleManager.removeGroupSchedule(find);
-                            setTimeout(() => {
-                                setIsValueFound(false);
-                                setFind("");
+                            timeoutId = setTimeout(() => {
+                                if (isMounted) {
+                                    setIsValueFound(false);
+                                    setFind("");
+                                }
                             }, 1500);
                         }
                     }
                 } else {
-                    if (scheduleManager.isTeacherScheduleUpToDate(find, serverLastUpdate)) {
-                        fetchedSchedule = scheduleManager.getTeacherSchedule(find);
-                    } else {
-                        fetchedSchedule = await FetchScheduleForTeacher(find);
-                        if (fetchedSchedule) {
-                            scheduleManager.addOrUpdateTeacherSchedule(find, fetchedSchedule, serverLastUpdate);
+                    const teacher = teachersList.find(teacher => `${teacher.id} - ${teacher.full_name}` === find);
+                    if (teacher) {
+                        if (scheduleManager.isTeacherScheduleUpToDate(teacher.id, serverLastUpdate)) {
+                            fetchedSchedule = scheduleManager.getTeacherSchedule(teacher.id);                            
                         } else {
-                            scheduleManager.removeTeacherSchedule(find);
-                            setTimeout(() => {
+                            fetchedSchedule = await FetchScheduleForTeacher(teacher.id, teacher.full_name);
+                            if (fetchedSchedule) {
+                                scheduleManager.addOrUpdateTeacherSchedule(teacher.id, fetchedSchedule, serverLastUpdate);
+                            } else {
+                                scheduleManager.removeTeacherSchedule(teacher.id);
+                                timeoutId = setTimeout(() => {
+                                    if (isMounted) {
+                                        setIsValueFound(false);
+                                        setFind("");
+                                    }
+                                }, 1500);
+                            }
+                        }
+                    } else {
+                        setError("Вчитель не знайдений");
+                        timeoutId = setTimeout(() => {
+                            if (isMounted) {
                                 setIsValueFound(false);
                                 setFind("");
-                            }, 1500);
-                        }
+                            }
+                        }, 1500);
                     }
                 }
-                setSchedule(fetchedSchedule);
 
-                localStorage.setItem('ScheduleManager', scheduleManager.serialize());
+                if (isMounted) {
+                    setSchedule(fetchedSchedule);
+                    localStorage.setItem('ScheduleManager', scheduleManager.serialize());
+                }
 
             } catch (err) {
-                setError("Помилка при отриманні розкладу");
-                console.log(err);
+                if (isMounted) {
+                    setError("Помилка при отриманні розкладу");
+                    console.log(err);
+                }
             }
         };
 
         fetchData();
-    }, [find, isStudent, scheduleManager]);
 
+        return () => {
+            isMounted = false;
+            clearTimeout(timeoutId);
+        };
+    }, [find, isStudent, scheduleManager, teachersList]);
 
     const formatTypeAndFormat = (types: string | string[], formats: string | string[]): string => {
         if (!Array.isArray(types)) types = [types];
@@ -314,9 +338,12 @@ const OutputTable: React.FC<Props> = ({ find, isStudent, setIsStudent, setFind, 
         return <h3 className='message'>Завантаження...</h3>;
     }
 
+    const teacher = teachersList.find(teacher => `${teacher.id} - ${teacher.full_name}` === find);
+    const teacherName = teacher ? teacher.full_name : find;
+
     return (
         <div className="output" style={{ transform: `scaleY(${scale})`, transformOrigin: 'top left' }}>
-            <h2>{find}</h2>
+            <h2>{teacherName}</h2>
             <button className='restart' type="button" onClick={() => {
                 setIsValueFound(false);
                 setFind("");
