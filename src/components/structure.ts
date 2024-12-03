@@ -1,3 +1,4 @@
+// structure.ts
 export enum Weekday {
     Monday = "Понеділок",
     Tuesday = "Вівторок",
@@ -178,3 +179,4 @@ export interface GroupSchedule extends Schedule {
 export interface TeacherSchedule extends Schedule {
     name: string;
 }
+

@@ -586,6 +586,125 @@ button{
     color: black;
 }
 
+.schedule_Lable{
+    color: white;
+}
+
+/* Загальні стилі для таблиці */
+.schedule-table {
+    
+    width: 100%;
+    border-color: red;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    border: none; /* Прибираємо контур по контуру таблиці */
+}
+
+
+
+.schedule-table th,
+.schedule-table td {
+    border: 1px solid DarkGrey;
+    background-color: #f9f9f9;
+    padding: 8px;
+    text-align: center;
+}
+.schedule-table th:hover td:not(:first-child),
+.schedule-table td:hover:not(:first-child) {
+    background-color: Gainsboro;
+}
+
+/* Стилі для DraggableCell та DroppableCell */
+.draggable-cell{
+    width: 100%;
+    margin: 5px 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 18px;
+    font-style: bold;
+}
+
+
+.droppable-cell{
+    font-style: bold;
+    border-radius: 10px;
+    color: white;
+    padding: 5px 0;
+}
+
+/* Стилі для заголовків */
+.main-content h3 {
+    color: white;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    font-size: 1.5em;
+}
+
+/* Додаємо border-radius до кутових елементів */
+.schedule-table th:first-child {
+    border-top-left-radius: 10px;
+}
+
+.schedule-table th:last-child {
+    border-top-right-radius: 10px;
+}
+
+.schedule-table tr:last-child td:first-child {
+    border-bottom-left-radius: 10px;
+}
+
+.schedule-table tr:last-child td:last-child {
+    border-bottom-right-radius: 10px;
+}
+
+/* Прибираємо верхній контур у всіх верхніх елементів */
+.schedule-table th {
+    border-top: none;
+}
+
+/* Прибираємо нижній контур у всіх нижніх елементів */
+.schedule-table tr:last-child td {
+    border-bottom: none;
+}
+
+/* Прибираємо лівий контур у всіх лівих елементів */
+.schedule-table td:first-child,
+.schedule-table th:first-child {
+    border-left: none;
+}
+
+/* Прибираємо правий контур у всіх правих елементів */
+.schedule-table td:last-child,
+.schedule-table th:last-child {
+    border-right: none;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 @media (hover: hover) {
     .back_to_start:hover  {

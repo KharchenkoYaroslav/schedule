@@ -1,4 +1,4 @@
-import React, { useState, useEffect,useLayoutEffect,  useRef } from 'react';
+import React, { useState, useEffect,  useRef } from 'react';
 import Authentication from './Authentication';
 import useWindowResize from './useWindowResize';
 import { IoChevronBack, IoChevronForward, IoChevronDown, IoChevronUp, IoClose, IoAdd, IoRemove } from 'react-icons/io5';
@@ -21,6 +21,7 @@ import {
     updateCurriculum,
     deleteCurriculum
 } from './adminDataManagement';
+import MainAdminContent from './mainAdminContent';
 
 interface Props {
     setIsAdmin: React.Dispatch<React.SetStateAction<boolean>>;
@@ -42,8 +43,6 @@ const AdminPanel: React.FC<Props> = ({ setIsAdmin }) => {
     const [newGroup, setNewGroup] = useState<Group>({ group_code: '', specialty_id: 0, number_of_students: 0 });
     const [newTeacher, setNewTeacher] = useState<Teacher>({ id: 0, full_name: '', department: '', post: 'Unknown' });
     const [selectedSemester, setSelectedSemester] = useState<number>(1);
-    const [selectedWeek, setSelectedWeek] = useState<number>(1);
-    const [isGroupSelected, setIsGroupSelected] = useState<boolean>(true);
     const [isEditingGroup, setIsEditingGroup] = useState<boolean>(false);
     const [isEditingTeacher, setIsEditingTeacher] = useState<boolean>(false);
     const [filterGroupName, setFilterGroupName] = useState<string>('');
@@ -139,7 +138,6 @@ const AdminPanel: React.FC<Props> = ({ setIsAdmin }) => {
         }
         setSelectedGroup(groupCode === 'add' ? null : groupCode);
         localStorage.setItem('selectedGroup', groupCode === 'add' ? '' : groupCode);
-        setIsGroupSelected(true);
         setSelectedTeacher(null);
         localStorage.setItem('selectedTeacher', '');
     };
@@ -160,7 +158,6 @@ const AdminPanel: React.FC<Props> = ({ setIsAdmin }) => {
         }
         setSelectedTeacher(teacherId === 0 ? null : teacherId);
         localStorage.setItem('selectedTeacher', teacherId === 0 ? '' : teacherId.toString());
-        setIsGroupSelected(false);
         setSelectedGroup(null);
         localStorage.setItem('selectedGroup', '');
     };
@@ -324,11 +321,6 @@ const AdminPanel: React.FC<Props> = ({ setIsAdmin }) => {
         localStorage.setItem('selectedSemester', semester.toString());
     };
 
-    const handleWeekChange = (week: number) => {
-        setSelectedWeek(week);
-        localStorage.setItem('selectedWeek', week.toString());
-    };
-
     const getTeacherDisplayName = (teacher: Teacher) => {
         return `${teacher.full_name} (${teacher.id})`;
     };
@@ -430,21 +422,13 @@ const AdminPanel: React.FC<Props> = ({ setIsAdmin }) => {
                             </div>
                         )}
                     </div>
-                    <div className={`main-content ${isBlurred ? 'blurred' : ''}`}>
-                        <h1>
-                            {selectedGroup || selectedTeacher ? (
-                                <>
-                                    {selectedGroup && `Група: ${selectedGroup}`}
-                                    {selectedTeacher && `Вчитель: ${teachers.find(t => t.id === selectedTeacher)?.full_name}`}
-                                    <br />
-                                    Семестр: {selectedSemester}, Тиждень: {selectedWeek}
-                                </>
-                            ) : (
-                                "Оберіть розклад"
-                            )}
-                        </h1>
-                        {/* Основна частина*/}
-                    </div>
+                    <MainAdminContent
+                        selectedGroup={selectedGroup}
+                        selectedTeacher={selectedTeacher}
+                        teachers={teachers}
+                        selectedSemester={selectedSemester}
+                        isBlurred={isBlurred}
+                    />
                     {activeSection && (
                         <div className="section-window" ref={sectionWindowRef} style={{ transform: `scaleY(${scale})`, transformOrigin: 'top left', top: `${5 / scale}%` }}>
                             <button className="close-button" onClick={handleCloseSection}>
@@ -457,13 +441,6 @@ const AdminPanel: React.FC<Props> = ({ setIsAdmin }) => {
                                         <div>
                                             <label>Семестр:</label>
                                             <select value={selectedSemester} onChange={(e) => handleSemesterChange(parseInt(e.target.value))}>
-                                                <option value="1">1</option>
-                                                <option value="2">2</option>
-                                            </select>
-                                        </div>
-                                        <div>
-                                            <label>Тиждень:</label>
-                                            <select value={selectedWeek} onChange={(e) => handleWeekChange(parseInt(e.target.value))}>
                                                 <option value="1">1</option>
                                                 <option value="2">2</option>
                                             </select>

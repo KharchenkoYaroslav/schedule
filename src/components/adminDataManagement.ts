@@ -1,4 +1,4 @@
-
+/* eslint-disable */
 import axios from 'axios';
 import { Curriculum, Group, Specialty, Teacher } from './adminStructure';
 
