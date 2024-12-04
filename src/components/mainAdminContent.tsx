@@ -1,11 +1,9 @@
-// MainAdminContent.tsx
 import React, { useState, useEffect } from 'react';
 import { Teacher } from './adminStructure';
 import { FetchScheduleForGroup, FetchScheduleForTeacher } from './dataManagement';
 import GroupScheduleTable from './GroupScheduleTable';
 import TeacherScheduleTable from './TeacherScheduleTable';
 import { GroupSchedule, TeacherSchedule } from './structure';
-
 
 interface MainContentProps {
     selectedGroup: string | null;
@@ -53,7 +51,7 @@ const MainAdminContent: React.FC<MainContentProps> = ({
                     <>
                         {selectedGroup && `Група: ${selectedGroup}`}
                         {selectedTeacher && `Вчитель: ${teachers.find(t => t.id === selectedTeacher)?.full_name}`}
-                        {selectedTeacher && `, ${teachers.find(t => t.id === selectedTeacher)?.id}`}
+                        {selectedTeacher && `, ID: ${selectedTeacher}`}
                         <br />
                         Семестр: {selectedSemester}
                     </>
@@ -61,11 +59,24 @@ const MainAdminContent: React.FC<MainContentProps> = ({
                     "Оберіть розклад"
                 )}
             </h1>
-            {isGroupSchedule ? (
-                <GroupScheduleTable schedule={groupSchedule} setSchedule={setGroupSchedule} />
-            ) : (
-                <TeacherScheduleTable schedule={teacherSchedule} setSchedule={setTeacherSchedule} />
-            )}
+            {selectedGroup || selectedTeacher ? (
+                isGroupSchedule ? (
+                    <GroupScheduleTable
+                        schedule={groupSchedule}
+                        setSchedule={setGroupSchedule}
+                        selectedSemester={selectedSemester}
+                        groupName={selectedGroup || ''}
+                    />
+                ) : (
+                    <TeacherScheduleTable
+                        schedule={teacherSchedule}
+                        setSchedule={setTeacherSchedule}
+                        selectedSemester={selectedSemester}
+                        teacherName={teachers.find(t => t.id === selectedTeacher)?.full_name || ''}
+                        teacherId={selectedTeacher || 0}
+                    />
+                )
+            ) : null}
         </div>
     );
 };

@@ -103,7 +103,7 @@ export interface TeacherData {
     full_name: string;
 }
 
-export type Teacher = [string | string[], AbbrPair | AbbrPair[]];
+export type Teacher = [number | number[], string | string[], AbbrPair | AbbrPair[], ];
 
 export class GroupPair extends Pair {
     private teacher: Teacher;
@@ -177,6 +177,6 @@ export interface GroupSchedule extends Schedule {
 }
 
 export interface TeacherSchedule extends Schedule {
+    id: number;
     name: string;
 }
-

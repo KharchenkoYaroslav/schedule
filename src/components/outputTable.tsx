@@ -272,7 +272,7 @@ const OutputTable: React.FC<Props> = ({ find, isStudent, setIsStudent, setFind, 
                                                 <>
                                                     <div className='subject'>{formatSubject(pair.getName())}</div>
                                                     {pair instanceof GroupPair ? (
-                                                        renderTeachers(pair.getTeacher()[0], pair.getTeacher()[1])
+                                                        renderTeachers(pair.getTeacher()[1], pair.getTeacher()[2])
                                                     ) : (
                                                         renderGroups(pair.getGroup())
                                                     )}

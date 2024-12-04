@@ -32,13 +32,13 @@ async function FetchScheduleForGroup(groupName: string): Promise<GroupSchedule |
 
         const schedule: GroupSchedule = {
             groupName,
-            week_1: Array(6).fill(null).map(() => ({
+            week_1: Array(6).fill(null).map((_, index) => ({
                 pairs: Array(6).fill(null),
-                dayOfWeek: Weekday.Monday
+                dayOfWeek: Weekday[Object.keys(Weekday)[index] as keyof typeof Weekday]
             })) as Week,
-            week_2: Array(6).fill(null).map(() => ({
+            week_2: Array(6).fill(null).map((_, index) => ({
                 pairs: Array(6).fill(null),
-                dayOfWeek: Weekday.Monday
+                dayOfWeek: Weekday[Object.keys(Weekday)[index] as keyof typeof Weekday]
             })) as Week
         };
 
@@ -71,6 +71,7 @@ async function FetchScheduleForGroup(groupName: string): Promise<GroupSchedule |
             const teachersWithPost = combinedPairs[key].teachers_with_post;
 
             const teachers: Teacher = [
+                teachersWithPost.flat().map((teacher: any) => Number(teacher.id)),
                 teachersWithPost.flat().map((teacher: any) => teacher.name),
                 teachersWithPost.flat().map((teacher: any) => AbbrPair[teacher.post as keyof typeof AbbrPair])
             ];
@@ -108,14 +109,15 @@ async function FetchScheduleForTeacher(teacherId: string, teacherName: string): 
         }
 
         const schedule: TeacherSchedule = {
+            id: Number(teacherId),
             name: teacherName,
-            week_1: Array(6).fill(null).map(() => ({
+            week_1: Array(6).fill(null).map((_, index) => ({
                 pairs: Array(6).fill(null),
-                dayOfWeek: Weekday.Monday
+                dayOfWeek: Weekday[Object.keys(Weekday)[index] as keyof typeof Weekday]
             })) as Week,
-            week_2: Array(6).fill(null).map(() => ({
+            week_2: Array(6).fill(null).map((_, index) => ({
                 pairs: Array(6).fill(null),
-                dayOfWeek: Weekday.Monday
+                dayOfWeek: Weekday[Object.keys(Weekday)[index] as keyof typeof Weekday]
             })) as Week
         };
 
