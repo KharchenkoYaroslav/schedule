@@ -6,7 +6,7 @@ const useWindowResize = () => {
     useEffect(() => {
         const handleResizeInternal = () => {
             const currentWidth = window.innerWidth;
-            const baseWidth = 900;
+            const baseWidth = 1300;
 
             // Перевірка, чи це телефон
             const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);

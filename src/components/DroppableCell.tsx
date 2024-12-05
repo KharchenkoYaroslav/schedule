@@ -24,7 +24,7 @@ const DroppableCell: React.FC<DroppableCellProps> = ({ type, pairIndex, dayIndex
         <div 
             className='droppable-cell'
             ref={drop}
-            style={{ backgroundColor: isOver ? 'DeepSkyBlue' : 'DodgerBlue' } }
+            style={{ backgroundColor: isOver ? 'DeepSkyBlue' : '#5f5f5f' } }
         >
             Перетягнути
         </div>

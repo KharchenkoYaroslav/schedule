@@ -1,6 +1,7 @@
 import React from 'react';
 import { useDrag } from 'react-dnd';
 import { GroupPair, TeacherPair } from './structure';
+import { formatSubject } from './formatUtils';
 
 interface DraggableCellProps {
     cell: GroupPair | TeacherPair | null;
@@ -27,7 +28,7 @@ const DraggableCell: React.FC<DraggableCellProps> = ({ cell, type, pairIndex, da
             style={{ opacity: isDragging ? 0.5 : 1 }}
             onClick={() => onDrop({ pairIndex, dayIndex, weekIndex }, { pairIndex, dayIndex, weekIndex })}
         >
-            {cell ? cell.getName() : 'Вільно'}
+            {cell && formatSubject(cell.getName())}
         </div>
     );
 };

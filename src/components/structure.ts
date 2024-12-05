@@ -34,7 +34,8 @@ export const PairTime: Dictionary = {
     3: "12:20",
     4: "14:15",
     5: "16:10",
-    6: "18:30"
+    6: "18:30",
+    7: "20:20"
 };
 
 export enum AbbrPair {
@@ -157,7 +158,7 @@ export class TeacherPair extends Pair {
     }
 }
 
-export type PairArray = [GroupPair | TeacherPair | null, GroupPair | TeacherPair | null, GroupPair | TeacherPair | null, GroupPair | TeacherPair | null, GroupPair | TeacherPair | null, GroupPair | TeacherPair | null];
+export type PairArray = [GroupPair | TeacherPair | null, GroupPair | TeacherPair | null, GroupPair | TeacherPair | null, GroupPair | TeacherPair | null, GroupPair | TeacherPair | null, GroupPair | TeacherPair | null, GroupPair | TeacherPair | null];
 
 export interface Day {
     pairs: PairArray;

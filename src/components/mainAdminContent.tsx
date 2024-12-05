@@ -4,6 +4,7 @@ import { FetchScheduleForGroup, FetchScheduleForTeacher } from './dataManagement
 import GroupScheduleTable from './GroupScheduleTable';
 import TeacherScheduleTable from './TeacherScheduleTable';
 import { GroupSchedule, TeacherSchedule } from './structure';
+import useWindowResize from './useWindowResize';
 
 interface MainContentProps {
     selectedGroup: string | null;
@@ -23,6 +24,7 @@ const MainAdminContent: React.FC<MainContentProps> = ({
     const [groupSchedule, setGroupSchedule] = useState<GroupSchedule | null>(null);
     const [teacherSchedule, setTeacherSchedule] = useState<TeacherSchedule | null>(null);
     const [isGroupSchedule, setIsGroupSchedule] = useState<boolean>(false);
+    const scale = useWindowResize();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -45,7 +47,7 @@ const MainAdminContent: React.FC<MainContentProps> = ({
     }, [selectedGroup, selectedTeacher, selectedSemester, teachers]);
 
     return (
-        <div className={`main-content ${isBlurred ? 'blurred' : ''}`}>
+        <div className={`main-content ${isBlurred ? 'blurred' : ''}`} style={{ transform: `scaleY(${scale})`, transformOrigin: 'top left' }}>
             <h1 className='schedule_Lable'>
                 {selectedGroup || selectedTeacher ? (
                     <>

@@ -15,6 +15,7 @@ import { FetchScheduleForGroup, FetchScheduleForTeacher } from './dataManagement
 import useWindowResize from './useWindowResize';
 import ScheduleManager from './scheduleManager';
 import useLocalStorage from './useLocalStorage';
+import { formatSubject, formatTypeAndFormat, transform_name } from './formatUtils';
 
 interface Props {
     find: string;
@@ -122,28 +123,6 @@ const OutputTable: React.FC<Props> = ({ find, isStudent, setIsStudent, setFind, 
         };
     }, [find, isStudent, scheduleManager, teachersList]);
 
-    const formatTypeAndFormat = (types: string | string[], formats: string | string[]): string => {
-        if (!Array.isArray(types)) types = [types];
-        if (!Array.isArray(formats)) formats = [formats];
-
-        if (types.length === 1 && formats.length > 1) {
-            return `${types[0]}., ${formats.join(', ')}.`;
-        } else if (types.length === formats.length) {
-            return types.map((type, index) => `${type}, ${formats[index]}`).join('., ') + '.';
-        } else if (types.length > 1 && formats.length === 1) {
-            return `${types.join(', ')}., ${formats[0]}.`;
-        } else {
-            return '';
-        }
-    };
-
-    const formatSubject = (subject: string | string[]): string => {
-        if (!Array.isArray(subject)) return subject;
-        else {
-            return `${subject.join(', ')}`;
-        }
-    };
-
     const handleTeacherClick = async (teacherName: string) => {
         setFind(teacherName);
         setIsValueFound(true);
@@ -155,23 +134,6 @@ const OutputTable: React.FC<Props> = ({ find, isStudent, setIsStudent, setFind, 
         setIsValueFound(true);
         setIsStudent(true);
     };
-
-    const transform_name = (fullName: string | undefined): string => {
-        if (!fullName) return '';
-
-        const words = fullName.split(' ');
-
-        if (words.length != 3) {
-            return fullName;
-        }
-
-        const firstWord = words[0];
-
-        const secondInitial = words[1][0] + '.';
-
-        const thirdInitial = words[2][0] + '.';
-        return `${firstWord} ${secondInitial}${thirdInitial}`;
-    }
 
     const renderTeachers = (teachers: string | string[], positions: AbbrPair | AbbrPair[]) => {
         if (Array.isArray(teachers) && Array.isArray(positions)) {
@@ -261,7 +223,7 @@ const OutputTable: React.FC<Props> = ({ find, isStudent, setIsStudent, setFind, 
                         </tr>
                     </thead>
                     <tbody>
-                        {[...Array(6)].map((_, pairIndex) => (
+                        {[...Array(7)].map((_, pairIndex) => (
                             <tr key={pairIndex}>
                                 <td>{pairIndex + 1} <br /> {PairTime[pairIndex + 1]}</td>
                                 {Object.values(Weekday).map(day => {

@@ -700,7 +700,7 @@ const AdminPanel: React.FC<Props> = ({ setIsAdmin }) => {
                             </div>
                         </div>
                     )}
-                    <ToastContainer />
+                    <ToastContainer style={{ transform: `scaleY(${scale})`, transformOrigin: 'top right' }}/>
                 </div>
             ) : (
                 <Authentication setIsAuthenticated={setIsAuthenticated} setIsAdmin={setIsAdmin} />

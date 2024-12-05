@@ -5,6 +5,7 @@ import DraggableCell from './DraggableCell';
 import DroppableCell from './DroppableCell';
 import { TeacherSchedule, Weekday, TeacherPair, PairArray } from './structure';
 import axios from 'axios';
+import { toast } from 'react-toastify';
 
 interface TeacherScheduleTableProps {
     schedule: TeacherSchedule | null;
@@ -34,12 +35,11 @@ const TeacherScheduleTable: React.FC<TeacherScheduleTableProps> = ({ schedule, s
     const initializeWeek = (): TeacherSchedule['week_1'] => {
         return Object.values(Weekday).map(day => ({
             dayOfWeek: day,
-            pairs: Array(6).fill(null) as PairArray,
+            pairs: Array(7).fill(null) as PairArray,
         }));
     };
 
     const sendScheduleUpdate = async (data: {
-        isGroup: boolean;
         semester: number;
         sourceId: string | null;
         sourceWeek: number;
@@ -53,8 +53,10 @@ const TeacherScheduleTable: React.FC<TeacherScheduleTableProps> = ({ schedule, s
         console.log('Sending data to server:', data);
         try {
             await axios.post('https://schedule-server-rho.vercel.app/api/updateSchedule', data);
+            toast.success('Розклад успішно оновлено!');
         } catch (err) {
             console.error('Помилка оновлення розкладу:', err);
+            toast.error('Помилка оновлення розкладу!');
             throw err;
         }
     };
@@ -89,7 +91,6 @@ const TeacherScheduleTable: React.FC<TeacherScheduleTableProps> = ({ schedule, s
         const destinationEnglishDay = convertToEnglishDay(destinationDayOfWeek);
 
         const data = {
-            isGroup: true,
             semester: selectedSemester,
             sourceId: sourceGroupId,
             sourceWeek: source.weekIndex + 1,
@@ -100,8 +101,6 @@ const TeacherScheduleTable: React.FC<TeacherScheduleTableProps> = ({ schedule, s
             destinationDay: destinationEnglishDay,
             destinationPair: destination.pairIndex + 1,
         };
-
-        console.log(data);
 
         try {
             await sendScheduleUpdate(data);
@@ -141,7 +140,7 @@ const TeacherScheduleTable: React.FC<TeacherScheduleTableProps> = ({ schedule, s
                     </tr>
                 </thead>
                 <tbody>
-                    {[...Array(6)].map((_, pairIndex) => (
+                    {[...Array(7)].map((_, pairIndex) => (
                         <tr key={pairIndex}>
                             <td>{pairIndex + 1}</td>
                             {week.map((day, dayIndex) => (

@@ -5,6 +5,7 @@ import DraggableCell from './DraggableCell';
 import DroppableCell from './DroppableCell';
 import { GroupSchedule, Weekday, GroupPair, PairArray } from './structure';
 import axios from 'axios';
+import { toast } from 'react-toastify';
 
 interface GroupScheduleTableProps {
     schedule: GroupSchedule | null;
@@ -32,18 +33,17 @@ const GroupScheduleTable: React.FC<GroupScheduleTableProps> = ({ schedule, setSc
     const initializeWeek = (): GroupSchedule['week_1'] => {
         return Object.values(Weekday).map(day => ({
             dayOfWeek: day,
-            pairs: Array(6).fill(null) as PairArray,
+            pairs: Array(7).fill(null) as PairArray,
         }));
     };
 
     const sendScheduleUpdate = async (data: {
-        isGroup: boolean;
         semester: number;
-        sourceId: number | null;
+        sourceId: string | null;
         sourceWeek: number;
         sourceDay: string;
         sourcePair: number;
-        destinationId: number | null;
+        destinationId: string | null;
         destinationWeek: number;
         destinationDay: string;
         destinationPair: number;
@@ -51,8 +51,10 @@ const GroupScheduleTable: React.FC<GroupScheduleTableProps> = ({ schedule, setSc
         console.log('Sending data to server:', data);
         try {
             await axios.post('https://schedule-server-rho.vercel.app/api/updateSchedule', data);
+            toast.success('Розклад успішно оновлено!');
         } catch (err) {
             console.error('Помилка оновлення розкладу:', err);
+            toast.error('Помилка оновлення розкладу!');
             throw err;
         }
     };
@@ -60,7 +62,7 @@ const GroupScheduleTable: React.FC<GroupScheduleTableProps> = ({ schedule, setSc
     const handleDrop = async (source: { pairIndex: number; dayIndex: number; weekIndex: number }, destination: { pairIndex: number; dayIndex: number; weekIndex: number }) => {
         if (!schedule) return;
     
-        const newSchedule = { ...schedule };
+        const newSchedule = { ...schedule } as GroupSchedule;
         const sourceWeek = source.weekIndex === 0 ? newSchedule.week_1 : newSchedule.week_2;
         const destinationWeek = destination.weekIndex === 0 ? newSchedule.week_1 : newSchedule.week_2;
     
@@ -77,8 +79,8 @@ const GroupScheduleTable: React.FC<GroupScheduleTableProps> = ({ schedule, setSc
             return null;
         };
     
-        const sourceTeacherId = getTeacherId(sourcePair);
-        const destinationTeacherId = getTeacherId(destinationPair);
+        const sourceTeacherId = newSchedule.groupName;
+        const destinationTeacherId = newSchedule.groupName;
     
         const sourceDayOfWeek = sourceWeek[source.dayIndex].dayOfWeek;
         const destinationDayOfWeek = destinationWeek[destination.dayIndex].dayOfWeek;
@@ -87,7 +89,6 @@ const GroupScheduleTable: React.FC<GroupScheduleTableProps> = ({ schedule, setSc
         const destinationEnglishDay = convertToEnglishDay(destinationDayOfWeek);
     
         const data = {
-            isGroup: false,
             semester: selectedSemester,
             sourceId: sourceTeacherId,
             sourceWeek: source.weekIndex + 1,
@@ -98,8 +99,6 @@ const GroupScheduleTable: React.FC<GroupScheduleTableProps> = ({ schedule, setSc
             destinationDay: destinationEnglishDay,
             destinationPair: destination.pairIndex + 1,
         };
-    
-        console.log(data);
     
         try {
             await sendScheduleUpdate(data);
@@ -139,7 +138,7 @@ const GroupScheduleTable: React.FC<GroupScheduleTableProps> = ({ schedule, setSc
                     </tr>
                 </thead>
                 <tbody>
-                    {[...Array(6)].map((_, pairIndex) => (
+                    {[...Array(7)].map((_, pairIndex) => (
                         <tr key={pairIndex}>
                             <td>{pairIndex + 1}</td>
                             {week.map((day, dayIndex) => (
