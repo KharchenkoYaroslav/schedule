@@ -1,6 +1,5 @@
-/* eslint-disable */
 import axios from 'axios';
-import { Curriculum, Group, Specialty, Teacher } from './adminStructure';
+import { Curriculum, Group, Specialty, Teacher, Pair } from './adminStructure';
 
 export const fetchGroups = async (): Promise<Group[]> => {
     try {
@@ -119,6 +118,86 @@ export const deleteCurriculum = async (curriculumId: number): Promise<void> => {
         await axios.delete(`https://schedule-server-rho.vercel.app/api/curriculums/${curriculumId}`);
     } catch (err) {
         console.error('Помилка видалення предмету:', err);
+        throw err;
+    }
+};
+
+export const getPairsByCriteria = async (criteria: {
+    semester: number;
+    groupId?: string | null;
+    teacherId?: number | null;
+    weekNumber: number;
+    dayNumber: string;
+    pairNumber: number;
+}): Promise<Pair[]> => {
+    try {
+        console.log(criteria);
+        const response = await axios.get('https://schedule-server-rho.vercel.app/api/getPairsByCriteria', {
+            params: criteria
+        });
+
+        // Конвертуємо рядки назад у числа
+        const pairs: Pair[] = response.data.map((pair: any) => ({
+            ...pair,
+            semester_number: parseInt(pair.semester_number, 10),
+            week_number: parseInt(pair.week_number, 10),
+            pair_number: parseInt(pair.pair_number, 10)
+        }));
+        console.log(criteria);
+
+        console.log(pairs);
+
+
+        return pairs;
+    } catch (err) {
+        console.error('Помилка отримання пар за критеріями:', err);
+        throw err;
+    }
+};
+
+export const addPair = async (pairData: Pair): Promise<void> => {
+    try {
+        const { id, groups_list, teachers_list, ...rest } = pairData; // Виключаємо id з об'єкта pairData
+
+        // Check for null values and convert to JSON strings
+        const formattedPairData = {
+            ...rest,
+            groups_list: groups_list ? JSON.stringify(groups_list) : JSON.stringify([]),
+            teachers_list: teachers_list ? JSON.stringify(teachers_list) : JSON.stringify([])
+        };
+
+        console.log(formattedPairData);
+
+
+        await axios.post('https://schedule-server-rho.vercel.app/api/addPair', formattedPairData);
+    } catch (err) {
+        console.error('Помилка додавання пари:', err);
+        throw err;
+    }
+};
+
+export const editPair = async (pairData: Pair): Promise<void> => {
+    try {
+        // Check for null values and convert to JSON strings
+        const formattedPairData = {
+            ...pairData,
+            groups_list: pairData.groups_list ? JSON.stringify(pairData.groups_list) : JSON.stringify([]),
+            teachers_list: pairData.teachers_list ? JSON.stringify(pairData.teachers_list) : JSON.stringify([]),
+            audience: pairData.audience ? pairData.audience : null
+        };
+
+        await axios.put('https://schedule-server-rho.vercel.app/api/editPair', formattedPairData);
+    } catch (err) {
+        console.error('Помилка редагування пари:', err);
+        throw err;
+    }
+};
+
+export const deletePair = async (pairId: number): Promise<void> => {
+    try {
+        await axios.delete(`https://schedule-server-rho.vercel.app/api/deletePair/${pairId}`);
+    } catch (err) {
+        console.error('Помилка видалення пари:', err);
         throw err;
     }
 };

@@ -55,7 +55,7 @@ const DraggableCell: React.FC<DraggableCellProps> = ({ cell, type, pairIndex, da
             onDoubleClick={handleDoubleClick}
             title='Подвійний клік для редагування'
         >
-            {cell && formatSubject(cell.getName())}
+            {cell ? formatSubject(cell.getName()): 'Вільно'}
         </div>
     );
 };

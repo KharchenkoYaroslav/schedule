@@ -4,8 +4,8 @@ import useWindowResize from './useWindowResize';
 import { IoChevronBack, IoChevronForward, IoChevronDown, IoChevronUp, IoClose, IoAdd, IoRemove } from 'react-icons/io5';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { Curriculum, Group, Specialty, Teacher } from './adminStructure';
-import useLocalStorage from './useLocalStorage'; 
+import { Curriculum, Group, Specialty, Teacher, Pair } from './adminStructure';
+import useLocalStorage from './useLocalStorage';
 import {
     fetchGroups,
     fetchTeachers,
@@ -19,7 +19,11 @@ import {
     deleteTeacher,
     addCurriculum,
     updateCurriculum,
-    deleteCurriculum
+    deleteCurriculum,
+    addPair,
+    editPair,
+    deletePair,
+    getPairsByCriteria
 } from './adminDataManagement';
 import MainAdminContent from './mainAdminContent';
 
@@ -27,7 +31,7 @@ interface Props {
     setIsAdmin: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const AdminPanel: React.FC<Props> = ({ setIsAdmin }) => {
+const AdminTable: React.FC<Props> = ({ setIsAdmin }) => {
     const [isAuthenticated, setIsAuthenticated] = useLocalStorage<boolean>('isAuthenticated', false);
     const [isMenuCollapsed, setIsMenuCollapsed] = useState<boolean>(false);
     const [isAccountMenuCollapsed, setIsAccountMenuCollapsed] = useState<boolean>(false);
@@ -66,6 +70,18 @@ const AdminPanel: React.FC<Props> = ({ setIsAdmin }) => {
     const sectionWindowRef = useRef<HTMLDivElement | null>(null);
 
     const [pairParams, setPairParams] = useState<{ pairIndex: number; dayIndex: number; weekIndex: number } | null>(null);
+    const [selectedSubject, setSelectedSubject] = useState<number | null>(null);
+    const [selectedTeachers, setSelectedTeachers] = useState<number[]>([]);
+    const [selectedGroups, setSelectedGroups] = useState<string[]>([]);
+    const [lessonType, setLessonType] = useState<'Lecture' | 'Practice' | 'Laboratory'>('Lecture');
+    const [visitFormat, setVisitFormat] = useState<'Offline' | 'Online'>('Offline');
+    const [audience, setAudience] = useState<number | null>(null);
+    const [pairs, setPairs] = useState<Pair[]>([]);
+
+    const pairsRef = useRef<Pair[]>(pairs);
+    useEffect(() => {
+        pairsRef.current = pairs;
+    }, [pairs]);
 
     useEffect(() => {
         if (isAuthenticated) {
@@ -104,6 +120,32 @@ const AdminPanel: React.FC<Props> = ({ setIsAdmin }) => {
             fetchCurriculums().then(setCurriculums).catch(() => toast.error('Помилка отримання предметів'));
         }
     }, [isAuthenticated]);
+
+    useEffect(() => {
+        const fetchPairs = async () => {
+            if (pairParams) {
+                try {
+                    const criteria = {
+                        semester: selectedSemester,
+                        groupId: selectedGroup,
+                        teacherId: selectedTeacher,
+                        weekNumber: pairParams.weekIndex + 1,
+                        dayNumber: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][pairParams.dayIndex],
+                        pairNumber: pairParams.pairIndex + 1,
+                    };
+                    const fetchedPairs = await getPairsByCriteria(criteria);
+                    console.log(criteria);
+                    console.log(fetchedPairs);
+                    
+                    setPairs(fetchedPairs);
+                } catch (err) {
+                    toast.error('Помилка отримання пар');
+                }
+            }
+        };
+
+        fetchPairs();
+    }, [selectedSemester, selectedGroups, selectedTeachers, pairParams]);
 
     const handleLogout = () => {
         localStorage.removeItem('token');
@@ -396,6 +438,67 @@ const AdminPanel: React.FC<Props> = ({ setIsAdmin }) => {
         handleSectionClick('pair');
     };
 
+    const handleAddPair = () => {
+        if (!selectedSubject) {
+            toast.error('Оберіть предмет');
+            return;
+        }
+
+        const newPair: Pair = {
+            id: 0,
+            semester_number: selectedSemester,
+            groups_list: selectedGroup ? [selectedGroup] : null, 
+            teachers_list: selectedTeacher ? [{ id: selectedTeacher, name: teachers.find(t => t.id === selectedTeacher)?.full_name || '' }] : null,
+            subject_id: selectedSubject, 
+            week_number: (pairParams?.weekIndex === 0 ? 1 : 2),
+            day_number: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][pairParams?.dayIndex || 0] as 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday' | 'Saturday',
+            pair_number: (pairParams?.pairIndex || 0) + 1,
+            lesson_type: lessonType,
+            visit_format: visitFormat,
+            audience: visitFormat === 'Offline' ? audience : null
+        };
+
+        const isDuplicate = pairs.some(pair =>
+            pair.subject_id === newPair.subject_id &&
+            pair.week_number === newPair.week_number &&
+            pair.day_number === newPair.day_number &&
+            pair.pair_number === newPair.pair_number
+        );
+
+        if (isDuplicate) {
+            toast.error('Пара з таким предметом вже існує на цей час');
+            return;
+        }
+
+        if (selectedTeacher && pairs.length > 0) {//якщо в немає pairs немає пар
+            toast.error('У вчителя може бути тільки одна пара в один час');
+            return;
+        }
+
+        addPair(newPair)
+        setPairs([...pairs, newPair]);
+        toast.success('Пара додана успішно');
+    };
+
+    const handleEditPair = async (pair: Pair) => {
+        try {
+            await editPair(pair);
+            toast.success('Пара оновлена успішно');
+        } catch (err) {
+            toast.error('Помилка оновлення пари');
+        }
+    };
+
+    const handleDeletePair = async (pairId: number) => {
+        try {
+            await deletePair(pairId);
+            setPairs(pairs.filter(pair => pair.id !== pairId));
+            toast.success('Пара видалена успішно');
+        } catch (err) {
+            toast.error('Помилка видалення пари');
+        }
+    };
+
     return (
         <>
             {isAuthenticated ? (
@@ -437,6 +540,7 @@ const AdminPanel: React.FC<Props> = ({ setIsAdmin }) => {
                         selectedSemester={selectedSemester}
                         isBlurred={isBlurred}
                         onPairClick={handlePairClick}
+                        pairsRef={pairsRef}
                     />
                     {activeSection && (
                         <div className="section-window" ref={sectionWindowRef} style={{ transform: `scaleY(${scale})`, transformOrigin: 'top left', top: `${5 / scale}%` }}>
@@ -708,21 +812,98 @@ const AdminPanel: React.FC<Props> = ({ setIsAdmin }) => {
                                 </div>
                                 <div id="pair" className={`section ${activeSection === 'pair' ? 'active' : ''}`}>
                                     <h2>Пара</h2>
-                                    {pairParams && (
-                                        <>
-                                            <p>Pair Index: {pairParams.pairIndex}</p>
-                                            <p>Day Index: {pairParams.dayIndex}</p>
-                                            <p>Week Index: {pairParams.weekIndex}</p>
-                                            <p>Selected Semester: {selectedSemester}</p>
-                                            <p>Selected Group: {selectedGroup || 'None'}</p>
-                                            <p>Selected Teacher: {selectedTeacher || 'None'}</p>
-                                        </>
-                                    )}
+                                    <div className="add-pair-section">
+                                        <select value={selectedSubject || ''} onChange={(e) => setSelectedSubject(parseInt(e.target.value))}>
+                                            <option value="">Оберіть предмет для додавання</option>
+                                            {curriculums
+                                                .filter(curriculum => curriculum.subject_name.toLowerCase().includes(filterCurriculumName.toLowerCase()))
+                                                .map(curriculum => (
+                                                    <option key={curriculum.id} value={curriculum.id}>{curriculum.subject_name}</option>
+                                                ))}
+                                        </select>
+                                        <input
+                                            type="text"
+                                            placeholder="Фільтр за назвою предмету"
+                                            value={filterCurriculumName}
+                                            onChange={(e) => setFilterCurriculumName(e.target.value)}
+                                        />
+                                        <button onClick={handleAddPair} disabled={!selectedSubject}>Додати пару {selectedSubject}</button>
+                                    </div>
+                                    {pairs.map((pair, index) => {
+                                        const curriculum = curriculums.find(c => c.id === pair.subject_id);
+                                        const relatedTeachers = curriculum ? curriculum.related_teachers.map(t => teachers.find(teacher => teacher.id === parseInt(t.id))) : [];
+                                        const relatedGroups = curriculum ? curriculum.related_groups.map(g => groups.find(group => group.group_code === g.code)) : [];
+
+                                        return (
+                                            <div key={index} className="pair-item">
+                                                <h3>Пара {curriculum?.subject_name}</h3>
+                                                <select value={pair.subject_id} onChange={(e) => {
+                                                    const updatedPairs = [...pairs];
+                                                    updatedPairs[index].subject_id = parseInt(e.target.value);
+                                                    setPairs(updatedPairs);
+                                                }}>
+                                                    <option value="">Оберіть предмет</option>
+                                                    {curriculums.map(curriculum => (
+                                                        <option key={curriculum.id} value={curriculum.id}>{curriculum.subject_name}</option>
+                                                    ))}
+                                                </select>
+                                                <select multiple value={pair.teachers_list?.map(t => t.id.toString()) || []} onChange={(e) => {
+                                                    const updatedPairs = [...pairs];
+                                                    updatedPairs[index].teachers_list = Array.from(e.target.selectedOptions, option => ({ id: parseInt(option.value), name: '' }));
+                                                    setPairs(updatedPairs);
+                                                }}>
+                                                    {relatedTeachers.map(teacher => (
+                                                        <option key={teacher?.id} value={teacher?.id}>{teacher?.full_name}</option>
+                                                    ))}
+                                                </select>
+                                                <select multiple value={pair.groups_list || []} onChange={(e) => {
+                                                    const updatedPairs = [...pairs];
+                                                    updatedPairs[index].groups_list = Array.from(e.target.selectedOptions, option => option.value);
+                                                    setPairs(updatedPairs);
+                                                }}>
+                                                    {relatedGroups.map(group => (
+                                                        <option key={group?.group_code} value={group?.group_code}>{group?.group_code}</option>
+                                                    ))}
+                                                </select>
+                                                <select value={pair.lesson_type} onChange={(e) => {
+                                                    const updatedPairs = [...pairs];
+                                                    updatedPairs[index].lesson_type = e.target.value as 'Lecture' | 'Practice' | 'Laboratory';
+                                                    setPairs(updatedPairs);
+                                                }}>
+                                                    <option value="Lecture">Лекція</option>
+                                                    <option value="Practice">Практика</option>
+                                                    <option value="Laboratory">Лабораторна</option>
+                                                </select>
+                                                <select value={pair.visit_format} onChange={(e) => {
+                                                    const updatedPairs = [...pairs];
+                                                    updatedPairs[index].visit_format = e.target.value as 'Offline' | 'Online';
+                                                    setPairs(updatedPairs);
+                                                }}>
+                                                    <option value="Offline">Офлайн</option>
+                                                    <option value="Online">Онлайн</option>
+                                                </select>
+                                                {pair.visit_format === 'Offline' && (
+                                                    <input
+                                                        type="number"
+                                                        placeholder="Аудиторія"
+                                                        value={pair.audience || ''}
+                                                        onChange={(e) => {
+                                                            const updatedPairs = [...pairs];
+                                                            updatedPairs[index].audience = parseInt(e.target.value);
+                                                            setPairs(updatedPairs);
+                                                        }}
+                                                    />
+                                                )}
+                                                <button onClick={() => handleDeletePair(pair.id)}>Видалити пару</button>
+                                                <button onClick={() => handleEditPair(pair)}>Редагувати пару</button>
+                                            </div>
+                                        );
+                                    })}
                                 </div>
                             </div>
                         </div>
                     )}
-                    <ToastContainer style={{ transform: `scaleY(${scale})`, transformOrigin: 'top right', position: 'fixed', right: '10 px' }}/>
+                    <ToastContainer style={{ transform: `scaleY(${scale})`, transformOrigin: 'top right', position: 'fixed', right: '10 px' }} />
                 </div>
             ) : (
                 <Authentication setIsAuthenticated={setIsAuthenticated} setIsAdmin={setIsAdmin} />
@@ -731,4 +912,4 @@ const AdminPanel: React.FC<Props> = ({ setIsAdmin }) => {
     );
 };
 
-export default AdminPanel;
+export default AdminTable;

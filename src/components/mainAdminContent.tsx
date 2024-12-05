@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Teacher } from './adminStructure';
+import { Pair, Teacher } from './adminStructure';
 import { FetchScheduleForGroup, FetchScheduleForTeacher } from './dataManagement';
 import GroupScheduleTable from './GroupScheduleTable';
 import TeacherScheduleTable from './TeacherScheduleTable';
@@ -13,6 +13,7 @@ interface MainContentProps {
     selectedSemester: number;
     isBlurred: boolean;
     onPairClick: (pairIndex: number, dayIndex: number, weekIndex: number) => void;
+    pairsRef: React.MutableRefObject<Pair[]>;
 }
 
 const MainAdminContent: React.FC<MainContentProps> = ({
@@ -21,7 +22,8 @@ const MainAdminContent: React.FC<MainContentProps> = ({
     teachers,
     selectedSemester,
     isBlurred,
-    onPairClick
+    onPairClick,
+    pairsRef
 }) => {
     const [groupSchedule, setGroupSchedule] = useState<GroupSchedule | null>(null);
     const [teacherSchedule, setTeacherSchedule] = useState<TeacherSchedule | null>(null);
@@ -46,7 +48,7 @@ const MainAdminContent: React.FC<MainContentProps> = ({
         };
 
         fetchData();
-    }, [selectedGroup, selectedTeacher, selectedSemester, teachers]);
+    }, [selectedGroup, selectedTeacher, selectedSemester, teachers, pairsRef.current]);// оновлюєтіся при зміні параметрів пар
 
     return (
         <div className={`main-content ${isBlurred ? 'blurred' : ''}`} style={{ transform: `scaleY(${scale})`, transformOrigin: 'top left' }}>

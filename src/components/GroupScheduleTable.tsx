@@ -72,14 +72,6 @@ const GroupScheduleTable: React.FC<GroupScheduleTableProps> = ({ schedule, setSc
         const sourcePair = sourceWeek[source.dayIndex].pairs[source.pairIndex] as GroupPair;
         const destinationPair = destinationWeek[destination.dayIndex].pairs[destination.pairIndex] as GroupPair;
     
-        const getTeacherId = (pair: GroupPair | null): number | null => {
-            if (pair && pair instanceof GroupPair) {
-                const teacher = pair.getTeacher();
-                return Array.isArray(teacher[0]) ? teacher[0][0] : teacher[0];
-            }
-            return null;
-        };
-    
         const sourceTeacherId = newSchedule.groupName;
         const destinationTeacherId = newSchedule.groupName;
     

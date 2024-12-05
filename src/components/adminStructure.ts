@@ -36,3 +36,17 @@ export interface Curriculum {
     }[];
     correspondence: boolean;
 }
+
+export interface Pair {
+    id: number;
+    semester_number: number;
+    groups_list: string[] | null;
+    teachers_list: { id: number; name: string }[] | null;
+    subject_id: number;
+    week_number: number;
+    day_number: 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday' | 'Saturday';
+    pair_number: number;
+    lesson_type: 'Lecture' | 'Practice' | 'Laboratory';
+    visit_format: 'Offline' | 'Online';
+    audience: number | null;
+}
