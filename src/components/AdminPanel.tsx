@@ -524,10 +524,10 @@ const AdminTable: React.FC<Props> = ({ setIsAdmin }) => {
                                         Меню керування {isManagementMenuCollapsed ? <IoChevronDown /> : <IoChevronUp />}
                                     </h3>
                                     <div className={`menu-content ${isManagementMenuCollapsed ? 'collapsed' : ''}`}>
-                                        <button onClick={() => { setActiveSection('schedule'); handleSectionClick('schedule'); }}>Розклад</button>
                                         <button onClick={() => { setActiveSection('objects'); handleSectionClick('objects'); }}>Предмети</button>
                                         <button onClick={() => { setActiveSection('groups'); handleSectionClick('groups'); }}>Групи</button>
                                         <button onClick={() => { setActiveSection('teachers'); handleSectionClick('teachers'); }}>Вчителі</button>
+                                        <button onClick={() => { setActiveSection('additionally'); handleSectionClick('additionally'); }}>Додатково</button>
                                     </div>
                                 </div>
                             </div>
@@ -548,7 +548,7 @@ const AdminTable: React.FC<Props> = ({ setIsAdmin }) => {
                                 <IoClose />
                             </button>
                             <div className="section-content">
-                                <div id="schedule" className={`section ${activeSection === 'schedule' ? 'active' : ''}`}>
+                                <div id="additionally" className={`section ${activeSection === 'additionally' ? 'active' : ''}`}>
                                     <h2>Розклад</h2>
                                     <div className="semester-week-selector">
                                         <div>
