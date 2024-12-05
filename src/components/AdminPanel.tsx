@@ -136,7 +136,7 @@ const AdminTable: React.FC<Props> = ({ setIsAdmin }) => {
                     const fetchedPairs = await getPairsByCriteria(criteria);
                     console.log(criteria);
                     console.log(fetchedPairs);
-                    
+
                     setPairs(fetchedPairs);
                 } catch (err) {
                     toast.error('Помилка отримання пар');
@@ -447,9 +447,9 @@ const AdminTable: React.FC<Props> = ({ setIsAdmin }) => {
         const newPair: Pair = {
             id: 0,
             semester_number: selectedSemester,
-            groups_list: selectedGroup ? [selectedGroup] : null, 
+            groups_list: selectedGroup ? [selectedGroup] : null,
             teachers_list: selectedTeacher ? [{ id: selectedTeacher, name: teachers.find(t => t.id === selectedTeacher)?.full_name || '' }] : null,
-            subject_id: selectedSubject, 
+            subject_id: selectedSubject,
             week_number: (pairParams?.weekIndex === 0 ? 1 : 2),
             day_number: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][pairParams?.dayIndex || 0] as 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday' | 'Saturday',
             pair_number: (pairParams?.pairIndex || 0) + 1,
@@ -827,7 +827,7 @@ const AdminTable: React.FC<Props> = ({ setIsAdmin }) => {
                                             value={filterCurriculumName}
                                             onChange={(e) => setFilterCurriculumName(e.target.value)}
                                         />
-                                        <button onClick={handleAddPair} disabled={!selectedSubject}>Додати пару {selectedSubject}</button>
+                                        <button onClick={handleAddPair} disabled={!selectedSubject}>Додати пару</button>
                                     </div>
                                     {pairs.map((pair, index) => {
                                         const curriculum = curriculums.find(c => c.id === pair.subject_id);
@@ -849,7 +849,11 @@ const AdminTable: React.FC<Props> = ({ setIsAdmin }) => {
                                                 </select>
                                                 <select multiple value={pair.teachers_list?.map(t => t.id.toString()) || []} onChange={(e) => {
                                                     const updatedPairs = [...pairs];
-                                                    updatedPairs[index].teachers_list = Array.from(e.target.selectedOptions, option => ({ id: parseInt(option.value), name: '' }));
+                                                    updatedPairs[index].teachers_list = Array.from(e.target.selectedOptions, option => {
+                                                        const teacherId = parseInt(option.value);
+                                                        const teacher = teachers.find(t => t.id === teacherId);
+                                                        return { id: teacherId, name: teacher ? teacher.full_name : '' };
+                                                    });
                                                     setPairs(updatedPairs);
                                                 }}>
                                                     {relatedTeachers.map(teacher => (

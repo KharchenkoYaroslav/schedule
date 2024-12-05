@@ -178,7 +178,8 @@ export const addPair = async (pairData: Pair): Promise<void> => {
 
 export const editPair = async (pairData: Pair): Promise<void> => {
     try {
-        // Check for null values and convert to JSON strings
+        console.log(pairData);
+        
         const formattedPairData = {
             ...pairData,
             groups_list: pairData.groups_list ? JSON.stringify(pairData.groups_list) : JSON.stringify([]),
