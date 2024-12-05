@@ -1,4 +1,4 @@
-import React, { useState, useEffect,  useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Authentication from './Authentication';
 import useWindowResize from './useWindowResize';
 import { IoChevronBack, IoChevronForward, IoChevronDown, IoChevronUp, IoClose, IoAdd, IoRemove } from 'react-icons/io5';
@@ -64,6 +64,8 @@ const AdminPanel: React.FC<Props> = ({ setIsAdmin }) => {
 
     const scale = useWindowResize();
     const sectionWindowRef = useRef<HTMLDivElement | null>(null);
+
+    const [pairParams, setPairParams] = useState<{ pairIndex: number; dayIndex: number; weekIndex: number } | null>(null);
 
     useEffect(() => {
         if (isAuthenticated) {
@@ -388,6 +390,12 @@ const AdminPanel: React.FC<Props> = ({ setIsAdmin }) => {
         });
     };
 
+    const handlePairClick = (pairIndex: number, dayIndex: number, weekIndex: number) => {
+        setPairParams({ pairIndex, dayIndex, weekIndex });
+        setActiveSection('pair');
+        handleSectionClick('pair');
+    };
+
     return (
         <>
             {isAuthenticated ? (
@@ -428,6 +436,7 @@ const AdminPanel: React.FC<Props> = ({ setIsAdmin }) => {
                         teachers={teachers}
                         selectedSemester={selectedSemester}
                         isBlurred={isBlurred}
+                        onPairClick={handlePairClick}
                     />
                     {activeSection && (
                         <div className="section-window" ref={sectionWindowRef} style={{ transform: `scaleY(${scale})`, transformOrigin: 'top left', top: `${5 / scale}%` }}>
@@ -695,6 +704,19 @@ const AdminPanel: React.FC<Props> = ({ setIsAdmin }) => {
                                     )}
                                     {selectedTeacher && (
                                         <button className='delete' onClick={() => handleDeleteTeacher(selectedTeacher)}>Видалити вчителя</button>
+                                    )}
+                                </div>
+                                <div id="pair" className={`section ${activeSection === 'pair' ? 'active' : ''}`}>
+                                    <h2>Пара</h2>
+                                    {pairParams && (
+                                        <>
+                                            <p>Pair Index: {pairParams.pairIndex}</p>
+                                            <p>Day Index: {pairParams.dayIndex}</p>
+                                            <p>Week Index: {pairParams.weekIndex}</p>
+                                            <p>Selected Semester: {selectedSemester}</p>
+                                            <p>Selected Group: {selectedGroup || 'None'}</p>
+                                            <p>Selected Teacher: {selectedTeacher || 'None'}</p>
+                                        </>
                                     )}
                                 </div>
                             </div>

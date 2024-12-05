@@ -12,6 +12,7 @@ interface MainContentProps {
     teachers: Teacher[];
     selectedSemester: number;
     isBlurred: boolean;
+    onPairClick: (pairIndex: number, dayIndex: number, weekIndex: number) => void;
 }
 
 const MainAdminContent: React.FC<MainContentProps> = ({
@@ -19,7 +20,8 @@ const MainAdminContent: React.FC<MainContentProps> = ({
     selectedTeacher,
     teachers,
     selectedSemester,
-    isBlurred
+    isBlurred,
+    onPairClick
 }) => {
     const [groupSchedule, setGroupSchedule] = useState<GroupSchedule | null>(null);
     const [teacherSchedule, setTeacherSchedule] = useState<TeacherSchedule | null>(null);
@@ -68,6 +70,7 @@ const MainAdminContent: React.FC<MainContentProps> = ({
                         setSchedule={setGroupSchedule}
                         selectedSemester={selectedSemester}
                         groupName={selectedGroup || ''}
+                        onPairClick={onPairClick}
                     />
                 ) : (
                     <TeacherScheduleTable
@@ -76,6 +79,7 @@ const MainAdminContent: React.FC<MainContentProps> = ({
                         selectedSemester={selectedSemester}
                         teacherName={teachers.find(t => t.id === selectedTeacher)?.full_name || ''}
                         teacherId={selectedTeacher || 0}
+                        onPairClick={onPairClick}
                     />
                 )
             ) : null}

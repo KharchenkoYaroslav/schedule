@@ -13,9 +13,10 @@ interface TeacherScheduleTableProps {
     selectedSemester: number;
     teacherName: string;
     teacherId: number;
+    onPairClick: (pairIndex: number, dayIndex: number, weekIndex: number) => void;
 }
 
-const TeacherScheduleTable: React.FC<TeacherScheduleTableProps> = ({ schedule, setSchedule, selectedSemester, teacherName, teacherId }) => {
+const TeacherScheduleTable: React.FC<TeacherScheduleTableProps> = ({ schedule, setSchedule, selectedSemester, teacherName, teacherId, onPairClick }) => {
     useEffect(() => {
         if (!schedule) {
             initializeSchedule();
@@ -152,6 +153,7 @@ const TeacherScheduleTable: React.FC<TeacherScheduleTableProps> = ({ schedule, s
                                         dayIndex={dayIndex}
                                         weekIndex={weekIndex}
                                         onDrop={handleDrop}
+                                        onDoubleClick={onPairClick}
                                     />
                                     <DroppableCell
                                         type="teacherPair"

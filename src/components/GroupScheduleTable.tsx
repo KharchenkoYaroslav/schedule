@@ -12,9 +12,10 @@ interface GroupScheduleTableProps {
     setSchedule: React.Dispatch<React.SetStateAction<GroupSchedule | null>>;
     selectedSemester: number;
     groupName: string;
+    onPairClick: (pairIndex: number, dayIndex: number, weekIndex: number) => void;
 }
 
-const GroupScheduleTable: React.FC<GroupScheduleTableProps> = ({ schedule, setSchedule, selectedSemester, groupName }) => {
+const GroupScheduleTable: React.FC<GroupScheduleTableProps> = ({ schedule, setSchedule, selectedSemester, groupName, onPairClick }) => {
     useEffect(() => {
         if (!schedule) {
             initializeSchedule();
@@ -150,6 +151,7 @@ const GroupScheduleTable: React.FC<GroupScheduleTableProps> = ({ schedule, setSc
                                         dayIndex={dayIndex}
                                         weekIndex={weekIndex}
                                         onDrop={handleDrop}
+                                        onDoubleClick={onPairClick}
                                     />
                                     <DroppableCell
                                         type="groupPair"
