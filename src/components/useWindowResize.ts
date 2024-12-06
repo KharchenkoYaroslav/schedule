@@ -15,7 +15,7 @@ const useWindowResize = () => {
             let newScale;
             if (isMobile) {
                 // Для мобільних пристроїв встановлюємо фіксований масштаб
-                newScale = 0.45;
+                newScale = 0.4;
             } else {
                 // Для комп'ютерів розраховуємо масштаб на основі ширини екрану
                 if (currentWidth < baseWidth) {
