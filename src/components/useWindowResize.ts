@@ -12,7 +12,7 @@ const useWindowResize = () => {
 
             let newScale;
             if (isMobile) {
-                newScale = 0.4;
+                newScale = 0.35;
             } else {
                 if (currentWidth < baseWidth) {
                     newScale = currentWidth / baseWidth;
