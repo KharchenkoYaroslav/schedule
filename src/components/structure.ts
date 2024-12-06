@@ -100,7 +100,7 @@ class Pair {
 }
 
 export interface TeacherData {
-    id: string;
+    id: number;
     full_name: string;
 }
 

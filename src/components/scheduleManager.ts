@@ -2,9 +2,9 @@ import { GroupSchedule, TeacherSchedule, GroupPair, TeacherPair } from "./struct
 
 class ScheduleManager {
   groupSchedules: { [key: string]: { schedule: GroupSchedule, lastUpdate: string } };
-  teacherSchedules: { [key: string]: { schedule: TeacherSchedule, lastUpdate: string }};
+  teacherSchedules: { [key: number]: { schedule: TeacherSchedule, lastUpdate: string }};
 
-  constructor(data?: { groupSchedules: { [key: string]: { schedule: GroupSchedule, lastUpdate: string } }, teacherSchedules: { [key: string]: { schedule: TeacherSchedule, lastUpdate: string } } }) {
+  constructor(data?: { groupSchedules: { [key: string]: { schedule: GroupSchedule, lastUpdate: string } }, teacherSchedules: { [key: number]: { schedule: TeacherSchedule, lastUpdate: string } } }) {
       this.groupSchedules = data?.groupSchedules || {};
       this.teacherSchedules = data?.teacherSchedules || {};
   }
@@ -15,7 +15,7 @@ class ScheduleManager {
   }
 
   // Додавання або оновлення розкладу вчителя
-  addOrUpdateTeacherSchedule(find: string, schedule: TeacherSchedule, lastUpdate: string) {
+  addOrUpdateTeacherSchedule(find: number, schedule: TeacherSchedule, lastUpdate: string) {
       this.teacherSchedules[find] = { schedule, lastUpdate };
   }
 
@@ -25,7 +25,7 @@ class ScheduleManager {
   }
 
   // Видалення розкладу вчителя
-  removeTeacherSchedule(find: string) {
+  removeTeacherSchedule(find: number) {
       delete this.teacherSchedules[find];
   }
 
@@ -35,7 +35,7 @@ class ScheduleManager {
   }
 
   // Отримання розкладу вчителя
-  getTeacherSchedule(find: string): TeacherSchedule | null {
+  getTeacherSchedule(find: number): TeacherSchedule | null {
       return this.teacherSchedules[find]?.schedule || null;
   }
 
@@ -45,7 +45,7 @@ class ScheduleManager {
   }
 
   // Перевірка останнього оновлення для вчителя
-  isTeacherScheduleUpToDate(find: string, serverLastUpdate: string): boolean {
+  isTeacherScheduleUpToDate(find: number, serverLastUpdate: string): boolean {
       return this.teacherSchedules[find]?.lastUpdate === serverLastUpdate;
   }
 

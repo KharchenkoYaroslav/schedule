@@ -39,8 +39,9 @@ const MainAdminContent: React.FC<MainContentProps> = ({
                     setIsGroupSchedule(true);
                 }
             } else if (selectedTeacher) {
-                const teacherSchedule = await FetchScheduleForTeacher(selectedTeacher.toString(), teachers.find(t => t.id === selectedTeacher)?.full_name || '');
-                if (teacherSchedule) {
+                const teacherSchedule = await FetchScheduleForTeacher(selectedTeacher, teachers.find(t => t.id === selectedTeacher)?.full_name || '');
+                
+                if (teacherSchedule) {  
                     setTeacherSchedule(teacherSchedule);
                     setIsGroupSchedule(false);
                 }
@@ -48,7 +49,7 @@ const MainAdminContent: React.FC<MainContentProps> = ({
         };
 
         fetchData();
-    }, [selectedGroup, selectedTeacher, selectedSemester, teachers, pairsRef.current]);// оновлюєтіся при зміні параметрів пар
+    }, [selectedGroup, selectedTeacher, selectedSemester, teachers, pairsRef.current]);
 
     return (
         <div className={`main-content ${isBlurred ? 'blurred' : ''}`} style={{ transform: `scaleY(${scale})`, transformOrigin: 'top left' }}>

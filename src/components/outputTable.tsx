@@ -55,6 +55,8 @@ const OutputTable: React.FC<Props> = ({ find, isStudent, setIsStudent, setFind, 
                     return;
                 }
 
+                console.log(isStudent);
+
                 if (isStudent) {
                     if (scheduleManager.isGroupScheduleUpToDate(find, serverLastUpdate)) {
                         fetchedSchedule = scheduleManager.getGroupSchedule(find);
@@ -123,8 +125,8 @@ const OutputTable: React.FC<Props> = ({ find, isStudent, setIsStudent, setFind, 
         };
     }, [find, isStudent, scheduleManager, teachersList]);
 
-    const handleTeacherClick = async (teacherName: string) => {
-        setFind(teacherName);
+    const handleTeacherClick = async (teacherName: string, teacherID: number) => {
+        setFind(`${teacherID} - ${teacherName}`);
         setIsValueFound(true);
         setIsStudent(false);
     };
@@ -135,52 +137,27 @@ const OutputTable: React.FC<Props> = ({ find, isStudent, setIsStudent, setFind, 
         setIsStudent(true);
     };
 
-    const renderTeachers = (teachers: string | string[], positions: AbbrPair | AbbrPair[]) => {
-        if (Array.isArray(teachers) && Array.isArray(positions)) {
-            const links = teachers.map((teacher, index) => (
-                <a key={index} className='nowrap' href="#" onClick={() => handleTeacherClick(teacher)}>
-                    {positions[index]}. {transform_name(teacher)}
-                </a>
-            ));
-            return <div className='group_teacher'>{links.map((link, i) => (
-                <span key={i}>
-                    {link}
-                    {i < links.length - 1 ? ', ' : ''}
-                </span>
-            ))}</div>;
-        } else if (Array.isArray(teachers)) {
-            const links = teachers.map((teacher, index) => (
-                <a key={index} className='nowrap' href="#" onClick={() => handleTeacherClick(teacher)}>
-                    {positions}. {transform_name(teacher)}
-                </a>
-            ));
-            return <div className='group_teacher'>{links.map((link, i) => (
-                <span key={i}>
-                    {link}
-                    {i < links.length - 1 ? ', ' : ''}
-                </span>
-            ))}</div>;
-        } else if (Array.isArray(positions)) {
-            const links = positions.map((position, index) => (
-                <a key={index} className='nowrap' href="#" onClick={() => handleTeacherClick(teachers)}>
-                    {position}. {transform_name(teachers)}
-                </a>
-            ));
-            return <div className='group_teacher'>{links.map((link, i) => (
-                <span key={i}>
-                    {link}
-                    {i < links.length - 1 ? ', ' : ''}
-                </span>
-            ))}</div>;
-        } else {
-            return (
-                <div className='group_teacher'>
-                    <a href="#" className='nowrap' onClick={() => handleTeacherClick(teachers)}>
-                        {positions}. {transform_name(teachers)}
-                    </a>
-                </div>
-            );
-        }
+    const renderTeachers = (teachers_id: number | number[], teachers_name: string | string[], positions: AbbrPair | AbbrPair[]) => {
+        const teachersArray = Array.isArray(teachers_id) ? teachers_id : [teachers_id];
+        const namesArray = Array.isArray(teachers_name) ? teachers_name : [teachers_name];
+        const positionsArray = Array.isArray(positions) ? positions : [positions];
+
+        const links = teachersArray.map((teacherId, index) => (
+            <a key={index} className='nowrap' href="#" onClick={() => handleTeacherClick(namesArray[index], Number(teacherId))}>
+                {positionsArray[index]}. {transform_name(namesArray[index])}
+            </a>
+        ));
+
+        return (
+            <div className='group_teacher'>
+                {links.map((link, i) => (
+                    <span key={i}>
+                        {link}
+                        {i < links.length - 1 ? ', ' : ''}
+                    </span>
+                ))}
+            </div>
+        );
     };
 
     const renderGroups = (groups: string | string[]) => {
@@ -234,7 +211,7 @@ const OutputTable: React.FC<Props> = ({ find, isStudent, setIsStudent, setFind, 
                                                 <>
                                                     <div className='subject'>{formatSubject(pair.getName())}</div>
                                                     {pair instanceof GroupPair ? (
-                                                        renderTeachers(pair.getTeacher()[1], pair.getTeacher()[2])
+                                                        renderTeachers(pair.getTeacher()[0], pair.getTeacher()[1] , pair.getTeacher()[2])
                                                     ) : (
                                                         renderGroups(pair.getGroup())
                                                     )}
