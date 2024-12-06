@@ -131,7 +131,6 @@ export const getPairsByCriteria = async (criteria: {
     pairNumber: number;
 }): Promise<Pair[]> => {
     try {
-        console.log(criteria);
         const response = await axios.get('https://schedule-server-rho.vercel.app/api/getPairsByCriteria', {
             params: criteria
         });
@@ -142,10 +141,6 @@ export const getPairsByCriteria = async (criteria: {
             week_number: parseInt(pair.week_number, 10),
             pair_number: parseInt(pair.pair_number, 10)
         }));
-        console.log(criteria);
-
-        console.log(pairs);
-
 
         return pairs;
     } catch (err) {
@@ -163,9 +158,6 @@ export const addPair = async (pairData: Pair): Promise<void> => {
             groups_list: groups_list ? JSON.stringify(groups_list) : JSON.stringify([]),
             teachers_list: teachers_list ? JSON.stringify(teachers_list) : JSON.stringify([])
         };
-
-        console.log(formattedPairData);
-
 
         await axios.post('https://schedule-server-rho.vercel.app/api/addPair', formattedPairData);
     } catch (err) {

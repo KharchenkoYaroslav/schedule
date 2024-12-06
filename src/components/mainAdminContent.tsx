@@ -23,7 +23,7 @@ const MainAdminContent: React.FC<MainContentProps> = ({
     selectedSemester,
     isBlurred,
     onPairClick,
-    pairsRef
+    pairsRef,
 }) => {
     const [groupSchedule, setGroupSchedule] = useState<GroupSchedule | null>(null);
     const [teacherSchedule, setTeacherSchedule] = useState<TeacherSchedule | null>(null);

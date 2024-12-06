@@ -51,7 +51,6 @@ const TeacherScheduleTable: React.FC<TeacherScheduleTableProps> = ({ schedule, s
         destinationDay: string;
         destinationPair: number;
     }): Promise<void> => {
-        console.log('Sending data to server:', data);
         try {
             await axios.post('https://schedule-server-rho.vercel.app/api/updateSchedule', data);
             toast.success('Розклад успішно оновлено!');
