@@ -5,7 +5,6 @@ import { PiStudent } from 'react-icons/pi';
 import { LiaChalkboardTeacherSolid } from 'react-icons/lia';
 import { GrUserAdmin } from "react-icons/gr";
 import useWindowResize from './useWindowResize';
-import useLocalStorage from './useLocalStorage';
 
 interface Props {
     find: string;

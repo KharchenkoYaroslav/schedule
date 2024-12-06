@@ -1,4 +1,3 @@
-// structure.ts
 export enum Weekday {
     Monday = "Понеділок",
     Tuesday = "Вівторок",
