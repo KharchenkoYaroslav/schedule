@@ -50,7 +50,7 @@ const DraggableCell: React.FC<DraggableCellProps> = ({ cell, type, pairIndex, da
         <div
             className='draggable-cell'
             ref={drag}
-            style={{ opacity: isDragging ? 0.5 : 1 }}
+            style={{ opacity: isDragging ? 0.5 : 1, color: cell ? 'RoyalBlue': 'black', fontWeight: cell ? 'bold': 'normal' }}
             onClick={handleClick}
             onDoubleClick={handleDoubleClick}
             title='Подвійний клік для редагування'
