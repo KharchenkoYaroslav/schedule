@@ -421,7 +421,6 @@ button{
     filter: blur(20px) brightness(80%) ;
 }
 
-
 .section-window {
     position: fixed;
     left:25%;
@@ -445,20 +444,18 @@ button{
     content: '';
     position: absolute;
     width: 100%;
-    height: 3%; /* Висота області блюру */
-    z-index: 1; /* Розміщуємо псевдоелементи поверх контенту */
+    height: 3%;
+    z-index: 1; 
 }
+
 .section-window::before {
-    
     top: 0;
     background: linear-gradient(to bottom, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0));
-    /*backdrop-filter: blur(10px);  Ефект блюру */
 }
 
 .section-window::after {
     bottom: 0;
     background: linear-gradient(to top, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0));
-    /*backdrop-filter: blur(10px);  Ефект блюру */
 }
 
 .close-button {
@@ -613,7 +610,6 @@ button{
     color: white;
 }
 
-/* Загальні стилі для таблиці */
 .schedule-table {
     
     width: 100%;
@@ -621,10 +617,8 @@ button{
     border-collapse: collapse;
     margin-bottom: 20px;
     border-radius: 10px;
-    border: none; /* Прибираємо контур по контуру таблиці */
+    border: none;
 }
-
-
 
 .schedule-table th,
 .schedule-table td {
@@ -633,12 +627,12 @@ button{
     padding: 8px;
     text-align: center;
 }
+
 .schedule-table th:hover td:not(:first-child),
 .schedule-table td:hover:not(:first-child) {
     background-color: Gainsboro;
 }
 
-/* Стилі для DraggableCell та DroppableCell */
 .draggable-cell{
     width: 100%;
     display: flex;
@@ -658,7 +652,6 @@ button{
     margin:5px 0;
 }
 
-/* Стилі для заголовків */
 .main-content h3 {
     color: white;
     margin-top: 20px;
@@ -666,7 +659,6 @@ button{
     font-size: 1.5em;
 }
 
-/* Додаємо border-radius до кутових елементів */
 .schedule-table th:first-child {
     border-top-left-radius: 10px;
 }
@@ -683,50 +675,23 @@ button{
     border-bottom-right-radius: 10px;
 }
 
-/* Прибираємо верхній контур у всіх верхніх елементів */
 .schedule-table th {
     border-top: none;
 }
 
-/* Прибираємо нижній контур у всіх нижніх елементів */
 .schedule-table tr:last-child td {
     border-bottom: none;
 }
 
-/* Прибираємо лівий контур у всіх лівих елементів */
 .schedule-table td:first-child,
 .schedule-table th:first-child {
     border-left: none;
 }
 
-/* Прибираємо правий контур у всіх правих елементів */
 .schedule-table td:last-child,
 .schedule-table th:last-child {
     border-right: none;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 @media (hover: hover) {
     .back_to_start:hover  {
@@ -783,4 +748,3 @@ button{
         background-color: Crimson;
     }
 }
-
