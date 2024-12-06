@@ -134,8 +134,6 @@ const AdminTable: React.FC<Props> = ({ setIsAdmin }) => {
                         pairNumber: pairParams.pairIndex + 1,
                     };
                     const fetchedPairs = await getPairsByCriteria(criteria);
-                    console.log(criteria);
-                    console.log(fetchedPairs);
 
                     setPairs(fetchedPairs);
                 } catch (err) {
@@ -482,7 +480,17 @@ const AdminTable: React.FC<Props> = ({ setIsAdmin }) => {
 
     const handleEditPair = async (pair: Pair) => {
         try {
-            await editPair(pair);
+            if (pairParams) {
+                const criteria = {
+                    semester: selectedSemester,
+                    groupId: selectedGroup,
+                    teacherId: selectedTeacher,
+                    weekNumber: pairParams.weekIndex + 1,
+                    dayNumber: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][pairParams.dayIndex],
+                    pairNumber: pairParams.pairIndex + 1,
+                };
+                await editPair(pair, criteria);
+            }  
             toast.success('Пара оновлена успішно');
         } catch (err) {
             toast.error('Помилка оновлення пари');

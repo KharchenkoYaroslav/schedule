@@ -136,7 +136,6 @@ export const getPairsByCriteria = async (criteria: {
             params: criteria
         });
 
-        // Конвертуємо рядки назад у числа
         const pairs: Pair[] = response.data.map((pair: any) => ({
             ...pair,
             semester_number: parseInt(pair.semester_number, 10),
@@ -157,9 +156,8 @@ export const getPairsByCriteria = async (criteria: {
 
 export const addPair = async (pairData: Pair): Promise<void> => {
     try {
-        const { id, groups_list, teachers_list, ...rest } = pairData; // Виключаємо id з об'єкта pairData
+        const { id, groups_list, teachers_list, ...rest } = pairData; 
 
-        // Check for null values and convert to JSON strings
         const formattedPairData = {
             ...rest,
             groups_list: groups_list ? JSON.stringify(groups_list) : JSON.stringify([]),
@@ -176,12 +174,30 @@ export const addPair = async (pairData: Pair): Promise<void> => {
     }
 };
 
-export const editPair = async (pairData: Pair): Promise<void> => {
+export const editPair = async (pairData: Pair, criteria: {
+    semester: number;
+    groupId?: string | null;
+    teacherId?: number | null;
+    weekNumber: number;
+    dayNumber: string;
+    pairNumber: number;
+}): Promise<void> => {
     try {
-        console.log(pairData);
         
+        const pairs = await getPairsByCriteria(criteria);
+        const pair = pairs[0];
+
+        if (!pair) {
+            throw new Error('Пара не знайдена');
+        }
+
+        const newId = pair.id;
+
+        const { id, ...rest } = pairData; 
+
         const formattedPairData = {
-            ...pairData,
+            ...rest,
+            id: newId, 
             groups_list: pairData.groups_list ? JSON.stringify(pairData.groups_list) : JSON.stringify([]),
             teachers_list: pairData.teachers_list ? JSON.stringify(pairData.teachers_list) : JSON.stringify([]),
             audience: pairData.audience ? pairData.audience : null
