@@ -22,9 +22,9 @@ const cur_semester = () => {
     }
 };
 
-async function FetchScheduleForGroup(groupName: string): Promise<GroupSchedule | null> {
+async function FetchScheduleForGroup(groupName: string, semester?: number): Promise<GroupSchedule | null> {
     try {
-        const response = await axios.get(`https://schedule-server-rho.vercel.app/api/getGroup?groupName=${groupName}&semester=${cur_semester()}`);
+        const response = await axios.get(`https://schedule-server-rho.vercel.app/api/getGroup?groupName=${groupName}&semester=${semester? semester:cur_semester()}`);
 
         if (!response.data || response.data.length === 0) {
             return null;
@@ -100,9 +100,9 @@ async function FetchScheduleForGroup(groupName: string): Promise<GroupSchedule |
     }
 }
 
-async function FetchScheduleForTeacher(teacherId: number, teacherName: string): Promise<TeacherSchedule | null> {
+async function FetchScheduleForTeacher(teacherId: number, teacherName: string, semester?: number): Promise<TeacherSchedule | null> {
     try {
-        const response = await axios.get(`https://schedule-server-rho.vercel.app/api/getTeacher?teacherId=${teacherId}&semester=${cur_semester()}`);
+        const response = await axios.get(`https://schedule-server-rho.vercel.app/api/getTeacher?teacherId=${teacherId}&semester=${semester? semester:cur_semester()}`);
 
         if (!response.data || response.data.length === 0) {
             return null;

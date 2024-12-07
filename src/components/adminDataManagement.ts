@@ -141,7 +141,7 @@ export const getPairsByCriteria = async (criteria: {
             week_number: parseInt(pair.week_number, 10),
             pair_number: parseInt(pair.pair_number, 10)
         }));
-
+        
         return pairs;
     } catch (err) {
         console.error('Помилка отримання пар за критеріями:', err);

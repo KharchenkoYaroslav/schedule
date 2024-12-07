@@ -33,18 +33,14 @@ const MainAdminContent: React.FC<MainContentProps> = ({
     useEffect(() => {
         const fetchData = async () => {
             if (selectedGroup) {
-                const groupSchedule = await FetchScheduleForGroup(selectedGroup);
-                if (groupSchedule) {
+                const groupSchedule = await FetchScheduleForGroup(selectedGroup, selectedSemester);
                     setGroupSchedule(groupSchedule);
                     setIsGroupSchedule(true);
-                }
+
             } else if (selectedTeacher) {
-                const teacherSchedule = await FetchScheduleForTeacher(selectedTeacher, teachers.find(t => t.id === selectedTeacher)?.full_name || '');
-                
-                if (teacherSchedule) {  
+                const teacherSchedule = await FetchScheduleForTeacher(selectedTeacher, teachers.find(t => t.id === selectedTeacher)?.full_name || '', selectedSemester);                
                     setTeacherSchedule(teacherSchedule);
                     setIsGroupSchedule(false);
-                }
             }
         };
 
