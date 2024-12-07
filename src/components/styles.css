@@ -547,19 +547,19 @@ button{
     background-color: Tomato;
 }
 
-.section .semester-week-selector {
+.section .semester-selector {
     display: flex;
     justify-content: space-evenly;
     margin-top: 20px;
 }
 
-.section .semester-week-selector {
+.section .semester-selector {
     width: 100%;
     margin-right: 10px;
     font-size: 25px;
 }
 
-.section .semester-week-selector select {
+.section .semester-selector select {
     width: 50px;
     padding: 5px;
     border-radius: 7px;
@@ -572,6 +572,29 @@ button{
 
 #objects .delete{
     margin-bottom: 25px;
+}
+
+.instruction{
+    width: 80%;
+    overflow: hidden;
+    text-align: left;
+    transition: max-height 0.3s ease-in-out, visibility 0.3s ease-in-out;
+    max-height: 2000px; 
+    visibility: visible;
+    line-height:1.5;
+}
+
+.instruction.collapsed {
+    transition: max-height 0.3s ease-in-out, visibility 0.3s ease-in-out;
+    max-height: 0;
+    visibility: hidden;
+}
+
+#additionally .setIsCollapsed{
+    margin-top: -10px;
+    padding: 0px 0px;
+    background: none;
+    color: black;
 }
 
 .groupsCurriculum {
@@ -606,6 +629,7 @@ button{
     color: black;
 }
 
+
 .schedule_Lable{
     color: white;
 }
@@ -622,41 +646,40 @@ button{
 
 .schedule-table th,
 .schedule-table td {
-    border: 1px solid DarkGrey;
+    border: 1px dashed DarkGrey;
     background-color: #f9f9f9;
-    padding: 8px;
     text-align: center;
+    padding: 5px;
 }
 
-.schedule-table th:hover td:not(:first-child),
-.schedule-table td:hover:not(:first-child) {
-    background-color: Gainsboro;
-}
-
-.draggable-cell{
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    font-size: 18px;
-    font-style: bold;
-}
-
-
-.droppable-cell{
-    font-style: bold;
+.cell{
+    cursor: grab;
+    background-color: dodgerblue;
+    color:white;
     border-radius: 10px;
-    color: white;
-    padding: 5px 0;
-    margin:5px 0;
+    padding: 7px;
 }
+
+.cell.empty {
+    background-color: DimGrey; 
+}
+
 
 .main-content h3 {
     color: white;
     margin-top: 20px;
     margin-bottom: 10px;
     font-size: 1.5em;
+}
+
+.schedule-table th  {
+    border-right: 1px solid DarkGrey;
+    border-bottom: 1px solid DarkGrey;
+}
+
+.schedule-table td:first-child {
+    border-right: 1px solid DarkGrey;
+    border-bottom: 1px solid DarkGrey;
 }
 
 .schedule-table th:first-child {
@@ -694,7 +717,7 @@ button{
 }
 
 @media (hover: hover) {
-    .back_to_start:hover  {
+    .back_to_start:hover, .cell:hover  {
         background-color: DeepSkyBlue;
     }
 
@@ -722,7 +745,7 @@ button{
 }
 
 @media (hover: none) and (pointer: coarse) {
-    .back_to_start:active {
+    .back_to_start:active, .cell:active {
         background-color: DeepSkyBlue;
     }
 

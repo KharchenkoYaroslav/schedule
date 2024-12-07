@@ -36,6 +36,7 @@ const AdminTable: React.FC<Props> = ({ setIsAdmin }) => {
     const [isMenuCollapsed, setIsMenuCollapsed] = useState<boolean>(false);
     const [isAccountMenuCollapsed, setIsAccountMenuCollapsed] = useState<boolean>(false);
     const [isManagementMenuCollapsed, setIsManagementMenuCollapsed] = useState<boolean>(false);
+    const [isInstructionCollapsed, setIsInstructionCollapsed] = useState<boolean>(false);
     const [adminName, setAdminName] = useState<string>('');
     const [activeSection, setActiveSection] = useState<string | null>(null);
     const [isBlurred, setIsBlurred] = useState<boolean>(false);
@@ -557,16 +558,37 @@ const AdminTable: React.FC<Props> = ({ setIsAdmin }) => {
                             </button>
                             <div className="section-content">
                                 <div id="additionally" className={`section ${activeSection === 'additionally' ? 'active' : ''}`}>
-                                    <h2>Розклад</h2>
-                                    <div className="semester-week-selector">
+                                    <h2>Додатково</h2>
+                                    <div className="semester-selector">
                                         <div>
-                                            <label>Семестр:</label>
+                                            <label>Семестр: </label>
                                             <select value={selectedSemester} onChange={(e) => handleSemesterChange(parseInt(e.target.value))}>
                                                 <option value="1">1</option>
                                                 <option value="2">2</option>
                                             </select>
                                         </div>
                                     </div>
+                                    <button className='setIsCollapsed' onClick={() => setIsInstructionCollapsed(!isInstructionCollapsed)}>
+                                            <h3 >
+                                                Інструкція користуванння {isInstructionCollapsed ? <IoChevronDown /> : <IoChevronUp />}
+                                            </h3>
+                                        </button>
+                                    <div className={`instruction ${isInstructionCollapsed ? 'collapsed' : ''}`}>
+                                        <p>1) Додайте групи та їх параметри</p>
+                                        <p>2) Додайте вчителів та їх параметри</p>
+                                        <p>3) Додайте предмети та груп й вчителів до них, пропишіть кількість запланованих пар</p>
+                                        <p>4) Оберіть групу чи вчителя в відповідних пунктах меню щоб редагувати їх розклад</p>
+                                        <p>5) Перетягніть розклад однієї пари на іншу щоб поміняти їх місьцями, якщо це не вдається значить ви намагаєтесь задати вчителю 2 пари на один час</p>
+                                        <p>6) Подвійний клік на пару що редагувати її</p>
+                                        <p>7) В меню редагування пари оберіть предмет та додайти його</p>
+                                        <p>8) Відредагуйте необхідні параметри пари та натисніть „редагувати“</p>
+                                    </div>
+                                    <button>
+                                        Перенести розклад на наступний рік
+                                    </button>
+                                    <button className='delete'>
+                                        Перенести розклад на рік назад
+                                    </button>
                                 </div>
                                 <div id="objects" className={`section ${activeSection === 'objects' ? 'active' : ''}`}>
                                     <h2>Предмети</h2>

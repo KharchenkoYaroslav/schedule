@@ -1,8 +1,7 @@
 import React, { useEffect } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import DraggableCell from './DraggableCell';
-import DroppableCell from './DroppableCell';
+import Cell from './Cell';
 import { TeacherSchedule, Weekday, TeacherPair, PairArray } from './structure';
 import axios from 'axios';
 import { toast } from 'react-toastify';
@@ -145,7 +144,7 @@ const TeacherScheduleTable: React.FC<TeacherScheduleTableProps> = ({ schedule, s
                             <td>{pairIndex + 1}</td>
                             {week.map((day, dayIndex) => (
                                 <td key={dayIndex}>
-                                    <DraggableCell
+                                    <Cell
                                         cell={day.pairs[pairIndex]}
                                         type="teacherPair"
                                         pairIndex={pairIndex}
@@ -153,13 +152,6 @@ const TeacherScheduleTable: React.FC<TeacherScheduleTableProps> = ({ schedule, s
                                         weekIndex={weekIndex}
                                         onDrop={handleDrop}
                                         onDoubleClick={onPairClick}
-                                    />
-                                    <DroppableCell
-                                        type="teacherPair"
-                                        pairIndex={pairIndex}
-                                        dayIndex={dayIndex}
-                                        weekIndex={weekIndex}
-                                        onDrop={handleDrop}
                                     />
                                 </td>
                             ))}

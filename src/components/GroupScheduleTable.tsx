@@ -1,8 +1,7 @@
 import React, { useEffect } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import DraggableCell from './DraggableCell';
-import DroppableCell from './DroppableCell';
+import Cell from './Cell';
 import { GroupSchedule, Weekday, GroupPair, PairArray } from './structure';
 import axios from 'axios';
 import { toast } from 'react-toastify';
@@ -135,21 +134,14 @@ const GroupScheduleTable: React.FC<GroupScheduleTableProps> = ({ schedule, setSc
                             <td>{pairIndex + 1}</td>
                             {week.map((day, dayIndex) => (
                                 <td key={dayIndex}>
-                                    <DraggableCell
+                                    <Cell
                                         cell={day.pairs[pairIndex]}
-                                        type="groupPair"
+                                        type="teacherPair"
                                         pairIndex={pairIndex}
                                         dayIndex={dayIndex}
                                         weekIndex={weekIndex}
                                         onDrop={handleDrop}
                                         onDoubleClick={onPairClick}
-                                    />
-                                    <DroppableCell
-                                        type="groupPair"
-                                        pairIndex={pairIndex}
-                                        dayIndex={dayIndex}
-                                        weekIndex={weekIndex}
-                                        onDrop={handleDrop}
                                     />
                                 </td>
                             ))}

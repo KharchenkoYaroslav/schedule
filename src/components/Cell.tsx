@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { useDrag } from 'react-dnd';
+import { useDrag, useDrop, DragPreviewImage } from 'react-dnd';
 import { GroupPair, TeacherPair } from './structure';
 import { formatSubject } from './formatUtils';
 
-interface DraggableCellProps {
+interface CellProps {
     cell: GroupPair | TeacherPair | null;
     type: string;
     pairIndex: number;
@@ -13,12 +13,22 @@ interface DraggableCellProps {
     onDoubleClick: (pairIndex: number, dayIndex: number, weekIndex: number) => void;
 }
 
-const DraggableCell: React.FC<DraggableCellProps> = ({ cell, type, pairIndex, dayIndex, weekIndex, onDrop, onDoubleClick }) => {
-    const [{ isDragging }, drag] = useDrag({
+const Cell: React.FC<CellProps> = ({ cell, type, pairIndex, dayIndex, weekIndex, onDrop, onDoubleClick }) => {
+    const [{ isDragging }, drag, preview] = useDrag({
         type,
         item: { pairIndex, dayIndex, weekIndex },
         collect: (monitor) => ({
             isDragging: monitor.isDragging(),
+        }),
+    });
+
+    const [{ isOver }, drop] = useDrop({
+        accept: type,
+        drop: (item: { pairIndex: number; dayIndex: number; weekIndex: number }) => {
+            onDrop(item, { pairIndex, dayIndex, weekIndex });
+        },
+        collect: (monitor) => ({
+            isOver: monitor.isOver(),
         }),
     });
 
@@ -31,7 +41,7 @@ const DraggableCell: React.FC<DraggableCellProps> = ({ cell, type, pairIndex, da
                     onDrop({ pairIndex, dayIndex, weekIndex }, { pairIndex, dayIndex, weekIndex });
                 }
                 setClickCount(0);
-            }, 200);
+            }, 500);
 
             return () => clearTimeout(timer);
         }
@@ -46,18 +56,27 @@ const DraggableCell: React.FC<DraggableCellProps> = ({ cell, type, pairIndex, da
         onDoubleClick(pairIndex, dayIndex, weekIndex);
     };
 
+    const backgroundColor = isOver ? 'RoyalBlue' : undefined;
+
     return (
+        <>
+        <DragPreviewImage connect={preview} src="data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=" />
         <div
-            className='draggable-cell'
-            ref={drag}
-            style={{ opacity: isDragging ? 0.5 : 1, color: cell ? 'RoyalBlue': 'black', fontWeight: cell ? 'bold': 'normal' }}
+            className={`cell ${!cell ? 'empty' : ''} ${isOver ? 'is-over' : ''} `}
+            ref={(node) => drag(drop(node))}
+            style={{ 
+                opacity: isDragging ? 0.5 : 1, 
+                fontWeight: cell ? 'bold' : 'normal',
+                backgroundColor,
+            }}
             onClick={handleClick}
             onDoubleClick={handleDoubleClick}
-            title='Подвійний клік для редагування'
+            title='Перетягнути щоб поміняти місьцями, подвійний клік для редагування'
         >
-            {cell ? formatSubject(cell.getName()): 'Вільно'}
+            {cell ? formatSubject(cell.getName()) : 'Вільно'}
         </div>
+        </>
     );
 };
 
-export default DraggableCell;
+export default Cell;
