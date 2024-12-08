@@ -23,7 +23,9 @@ import {
     addPair,
     editPair,
     deletePair,
-    getPairsByCriteria
+    getPairsByCriteria,
+    updateGroups,
+    fetchNullGroups
 } from './adminDataManagement';
 import MainAdminContent from './mainAdminContent';
 
@@ -83,6 +85,16 @@ const AdminTable: React.FC<Props> = ({ setIsAdmin }) => {
     useEffect(() => {
         pairsRef.current = pairs;
     }, [pairs]);
+
+    const [filteredCurriculumsPair, setFilteredCurriculumsPair] = useState<Curriculum[]>([]);
+
+    const [nullGroupsString, setNullGroupsString] = useState<string>('');
+
+    useEffect(() => {
+        if (isAuthenticated) {
+            fetchNullGroups().then(setNullGroupsString).catch(() => toast.error('Помилка отримання груп з нульовою кількістю студентів'));
+        }
+    }, [isAuthenticated, groups]);
 
     useEffect(() => {
         if (isAuthenticated) {
@@ -145,6 +157,10 @@ const AdminTable: React.FC<Props> = ({ setIsAdmin }) => {
 
         fetchPairs();
     }, [selectedSemester, selectedGroups, selectedTeachers, pairParams]);
+
+    useEffect(() => {
+        setFilteredCurriculumsPair(getFilteredCurriculums(selectedGroup, selectedTeacher));
+    }, [selectedGroup, selectedTeacher, curriculums]);
 
     const handleLogout = () => {
         localStorage.removeItem('token');
@@ -469,7 +485,7 @@ const AdminTable: React.FC<Props> = ({ setIsAdmin }) => {
             return;
         }
 
-        if (selectedTeacher && pairs.length > 0) {//якщо в немає pairs немає пар
+        if (selectedTeacher && pairs.length > 0) {
             toast.error('У вчителя може бути тільки одна пара в один час');
             return;
         }
@@ -491,7 +507,7 @@ const AdminTable: React.FC<Props> = ({ setIsAdmin }) => {
                     pairNumber: pairParams.pairIndex + 1,
                 };
                 await editPair(pair, criteria);
-            }  
+            }
             toast.success('Пара оновлена успішно');
         } catch (err) {
             toast.error('Помилка оновлення пари');
@@ -505,6 +521,25 @@ const AdminTable: React.FC<Props> = ({ setIsAdmin }) => {
             toast.success('Пара видалена успішно');
         } catch (err) {
             toast.error('Помилка видалення пари');
+        }
+    };
+
+    const getFilteredCurriculums = (selectedGroup: string | null, selectedTeacher: number | null) => {
+        return curriculums.filter(curriculum => {
+            const relatedGroups = curriculum.related_groups.map(g => g.code);
+            const relatedTeachers = curriculum.related_teachers.map(t => parseInt(t.id));
+            return (selectedGroup && relatedGroups.includes(selectedGroup)) || (selectedTeacher && relatedTeachers.includes(selectedTeacher));
+        });
+    };
+
+    const handleUpdateGroups = async (toNextYear: boolean) => {
+        try {
+            await updateGroups(toNextYear);
+            await fetchGroups().then(setGroups).catch(() => toast.error('Помилка отримання груп'));
+            await fetchNullGroups().then(setNullGroupsString).catch(() => toast.error('Помилка отримання груп з нульовою кількістю студентів'));
+            toast.success('Групи оновлені успішно');
+        } catch (err) {
+            toast.error('Помилка оновлення груп');
         }
     };
 
@@ -569,10 +604,10 @@ const AdminTable: React.FC<Props> = ({ setIsAdmin }) => {
                                         </div>
                                     </div>
                                     <button className='setIsCollapsed' onClick={() => setIsInstructionCollapsed(!isInstructionCollapsed)}>
-                                            <h3 >
-                                                Інструкція користуванння {isInstructionCollapsed ? <IoChevronDown /> : <IoChevronUp />}
-                                            </h3>
-                                        </button>
+                                        <h3 >
+                                            Інструкція користуванння {isInstructionCollapsed ? <IoChevronDown /> : <IoChevronUp />}
+                                        </h3>
+                                    </button>
                                     <div className={`instruction ${isInstructionCollapsed ? 'collapsed' : ''}`}>
                                         <p>1) Додайте групи та їх параметри</p>
                                         <p>2) Додайте вчителів та їх параметри</p>
@@ -584,10 +619,13 @@ const AdminTable: React.FC<Props> = ({ setIsAdmin }) => {
                                         <p>8) Відредагуйте необхідні параметри пари та натисніть „редагувати“</p>
                                         <p>9) Кнопки нижче автоматично перейменують групи минулого/наступного року на групи наступного/минулого року та зададуть їм нову кількість студентів відповідну до назви групи, групи яких не було в системі отримують кількість студентів рівну 1</p>
                                     </div>
-                                    <button>
+                                    <h3 style={{color: 'red'}}>
+                                        {nullGroupsString ? `Внесіть кількість студентів для: ${nullGroupsString}`: ''}
+                                    </h3>
+                                    <button onClick={() => handleUpdateGroups(true)}>
                                         Перенести розклад на наступний рік
                                     </button>
-                                    <button className='delete'>
+                                    <button className='delete' onClick={() => handleUpdateGroups(false)}>
                                         Перенести розклад на рік назад
                                     </button>
                                 </div>
@@ -846,11 +884,9 @@ const AdminTable: React.FC<Props> = ({ setIsAdmin }) => {
                                     <div className="add-pair-section">
                                         <select value={selectedSubject || ''} onChange={(e) => setSelectedSubject(parseInt(e.target.value))}>
                                             <option value="">Оберіть предмет для додавання</option>
-                                            {curriculums
-                                                .filter(curriculum => curriculum.subject_name.toLowerCase().includes(filterCurriculumName.toLowerCase()))
-                                                .map(curriculum => (
-                                                    <option key={curriculum.id} value={curriculum.id}>{curriculum.subject_name}</option>
-                                                ))}
+                                            {filteredCurriculumsPair.map(curriculum => (
+                                                <option key={curriculum.id} value={curriculum.id}>{curriculum.subject_name}</option>
+                                            ))}
                                         </select>
                                         <input
                                             type="text"

@@ -210,3 +210,23 @@ export const deletePair = async (pairId: number): Promise<void> => {
         throw err;
     }
 };
+
+export const updateGroups = async (toNextYear: boolean): Promise<void> => {
+    try {
+        await axios.post('https://schedule-server-rho.vercel.app/api/updateGroups', { toNextYear });
+    } catch (err) {
+        console.error('Помилка оновлення груп:', err);
+        throw err;
+    }
+};
+
+export const fetchNullGroups = async (): Promise<string> => {
+    try {
+        const response = await axios.get('https://schedule-server-rho.vercel.app/api/nullGroups');
+        const groupCodes = response.data.map((group: { group_code: string }) => group.group_code);
+        return groupCodes.join(', ');
+    } catch (err) {
+        console.error('Помилка отримання груп з нульовою кількістю студентів:', err);
+        throw err;
+    }
+};
