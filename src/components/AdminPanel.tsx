@@ -547,45 +547,6 @@ const AdminTable: React.FC<Props> = ({ setIsAdmin }) => {
         <>
             {isAuthenticated ? (
                 <div className="admin-panel">
-                    <div className={`sidebar ${isMenuCollapsed ? 'collapsed' : ''} ${isBlurred ? 'blurred' : ''}`}>
-                        <button className="collapse-button" onClick={() => setIsMenuCollapsed(!isMenuCollapsed)} style={{ transform: `scaleY(${scale})`, transformOrigin: 'top left' }}>
-                            {!isMenuCollapsed && <span className="admin-name" title={adminName}>{adminName}</span>}
-                            {isMenuCollapsed ? <IoChevronForward /> : <IoChevronBack />}
-                        </button>
-                        {!isMenuCollapsed && (
-                            <div className="menu-container" style={{ transform: `scaleY(${scale})`, transformOrigin: 'top left' }}>
-                                <div className="account-menu">
-                                    <h3 onClick={() => setIsAccountMenuCollapsed(!isAccountMenuCollapsed)}>
-                                        Меню акаунту {isAccountMenuCollapsed ? <IoChevronDown /> : <IoChevronUp />}
-                                    </h3>
-                                    <div className={`menu-content ${isAccountMenuCollapsed ? 'collapsed' : ''}`}>
-                                        <button onClick={handleLogout}>Вийти з акаунта</button>
-                                        <button onClick={() => setIsAdmin(false)}>На головну</button>
-                                    </div>
-                                </div>
-                                <div className="management-menu">
-                                    <h3 onClick={() => setIsManagementMenuCollapsed(!isManagementMenuCollapsed)}>
-                                        Меню керування {isManagementMenuCollapsed ? <IoChevronDown /> : <IoChevronUp />}
-                                    </h3>
-                                    <div className={`menu-content ${isManagementMenuCollapsed ? 'collapsed' : ''}`}>
-                                        <button onClick={() => { setActiveSection('objects'); handleSectionClick('objects'); }}>Предмети</button>
-                                        <button onClick={() => { setActiveSection('groups'); handleSectionClick('groups'); }}>Групи</button>
-                                        <button onClick={() => { setActiveSection('teachers'); handleSectionClick('teachers'); }}>Вчителі</button>
-                                        <button onClick={() => { setActiveSection('additionally'); handleSectionClick('additionally'); }}>Додатково</button>
-                                    </div>
-                                </div>
-                            </div>
-                        )}
-                    </div>
-                    <MainAdminContent
-                        selectedGroup={selectedGroup}
-                        selectedTeacher={selectedTeacher}
-                        teachers={teachers}
-                        selectedSemester={selectedSemester}
-                        isBlurred={isBlurred}
-                        onPairClick={handlePairClick}
-                        pairsRef={pairsRef}
-                    />
                     {activeSection && (
                         <div className="section-window" ref={sectionWindowRef} style={{ transform: `scaleY(${scale})`, transformOrigin: 'top left', top: `${5 / scale}%` }}>
                             <button className="close-button" onClick={handleCloseSection}>
@@ -975,6 +936,50 @@ const AdminTable: React.FC<Props> = ({ setIsAdmin }) => {
                             </div>
                         </div>
                     )}
+
+
+
+
+                    <div className={`sidebar ${isMenuCollapsed ? 'collapsed' : ''} ${isBlurred ? 'blurred' : ''}`}>
+                        <button className="collapse-button" onClick={() => setIsMenuCollapsed(!isMenuCollapsed)} style={{ transform: `scaleY(${scale})`, transformOrigin: 'top left' }}>
+                            {!isMenuCollapsed && <span className="admin-name" title={adminName}>{adminName}</span>}
+                            {isMenuCollapsed ? <IoChevronForward /> : <IoChevronBack />}
+                        </button>
+                        {!isMenuCollapsed && (
+                            <div className="menu-container" style={{ transform: `scaleY(${scale})`, transformOrigin: 'top left' }}>
+                                <div className="account-menu">
+                                    <h3 onClick={() => setIsAccountMenuCollapsed(!isAccountMenuCollapsed)}>
+                                        Меню акаунту {isAccountMenuCollapsed ? <IoChevronDown /> : <IoChevronUp />}
+                                    </h3>
+                                    <div className={`menu-content ${isAccountMenuCollapsed ? 'collapsed' : ''}`}>
+                                        <button onClick={handleLogout}>Вийти з акаунта</button>
+                                        <button onClick={() => setIsAdmin(false)}>На головну</button>
+                                    </div>
+                                </div>
+                                <div className="management-menu">
+                                    <h3 onClick={() => setIsManagementMenuCollapsed(!isManagementMenuCollapsed)}>
+                                        Меню керування {isManagementMenuCollapsed ? <IoChevronDown /> : <IoChevronUp />}
+                                    </h3>
+                                    <div className={`menu-content ${isManagementMenuCollapsed ? 'collapsed' : ''}`}>
+                                        <button onClick={() => { setActiveSection('objects'); handleSectionClick('objects'); }}>Предмети</button>
+                                        <button onClick={() => { setActiveSection('groups'); handleSectionClick('groups'); }}>Групи</button>
+                                        <button onClick={() => { setActiveSection('teachers'); handleSectionClick('teachers'); }}>Вчителі</button>
+                                        <button onClick={() => { setActiveSection('additionally'); handleSectionClick('additionally'); }}>Додатково</button>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                    <MainAdminContent
+                        selectedGroup={selectedGroup}
+                        selectedTeacher={selectedTeacher}
+                        teachers={teachers}
+                        selectedSemester={selectedSemester}
+                        isBlurred={isBlurred}
+                        onPairClick={handlePairClick}
+                        pairsRef={pairsRef}
+                    />
+                    
                     <ToastContainer style={{ transform: `scaleY(${scale})`, transformOrigin: 'top right', position: 'fixed', right: '10 px' }} />
                 </div>
             ) : (

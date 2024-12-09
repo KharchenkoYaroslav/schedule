@@ -82,7 +82,6 @@ class Pair {
         return this.audience;
     }
 
-    // Серіалізація
     public serialize(): any {
         return {
             name: this.name,
@@ -93,7 +92,6 @@ class Pair {
         };
     }
 
-    // Десеріалізація
     public static deserialize(data: any): Pair {
         return new Pair(data.name, data.type, data.format, data.building, data.audience);
     }
@@ -102,6 +100,7 @@ class Pair {
 export interface TeacherData {
     id: number;
     full_name: string;
+    department: string;
 }
 
 export type Teacher = [number | number[], string | string[], AbbrPair | AbbrPair[], ];
@@ -118,7 +117,6 @@ export class GroupPair extends Pair {
         return this.teacher;
     }
 
-    // Серіалізація
     public serialize(): any {
         return {
             ...super.serialize(),
@@ -126,7 +124,6 @@ export class GroupPair extends Pair {
         };
     }
 
-    // Десеріалізація
     public static deserialize(data: any): GroupPair {
         return new GroupPair(data.name, data.teacher, data.type, data.format, data.building, data.audience);
     }
@@ -144,7 +141,6 @@ export class TeacherPair extends Pair {
         return this.group;
     }
 
-    // Серіалізація
     public serialize(): any {
         return {
             ...super.serialize(),
@@ -152,7 +148,6 @@ export class TeacherPair extends Pair {
         };
     }
 
-    // Десеріалізація
     public static deserialize(data: any): TeacherPair {
         return new TeacherPair(data.name, data.group, data.type, data.format, data.building, data.audience);
     }

@@ -278,7 +278,7 @@ const OutputTable: React.FC<Props> = ({ find, isStudent, setIsStudent, setFind, 
     }
 
     const teacher = teachersList.find(teacher => `${teacher.id} - ${teacher.full_name}` === find);
-    const teacherName = teacher ? teacher.full_name : find;
+    const teacherName = teacher ? `${teacher.full_name} (${teacher.department})` : find;
 
     return (
         <div className="output" style={{ transform: `scaleY(${scale})`, transformOrigin: 'top left' }}>

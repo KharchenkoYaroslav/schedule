@@ -298,6 +298,7 @@ button{
 }
 
 .sidebar {
+    position: sticky;
     width: 250px;
     background-color: #f4f4f4;
     padding: 20px;
@@ -305,7 +306,7 @@ button{
     display: flex;
     flex-direction: column;
     background-color: WhiteSmoke;
-    min-height: calc(100vh - 40px);
+    height: calc(100vh - 40px);
 }
 
 .sidebar.collapsed {
@@ -411,6 +412,8 @@ button{
 }
 
 .main-content {
+    height: calc(100vh - 40px);
+    overflow-y: auto;
     flex: 1;
     padding: 20px;
     background-color: CornflowerBlue;
@@ -427,7 +430,7 @@ button{
     top:5%;
     transform: translate(-50%, -50%);
     width: 50%;
-
+    z-index: 2;
     height: 90vh;
 
     background-color: white;
