@@ -302,6 +302,9 @@ const OutputTable: React.FC<Props> = ({ find, isStudent, setIsStudent, setFind, 
                     </>
                 )}
             </div>
+            <div style={{ minHeight: '200px', display:'block' }}>
+                 
+            </div>
         </div>
     );
 };
