@@ -34,13 +34,13 @@ const MainAdminContent: React.FC<MainContentProps> = ({
         const fetchData = async () => {
             if (selectedGroup) {
                 const groupSchedule = await FetchScheduleForGroup(selectedGroup, selectedSemester);
-                    setGroupSchedule(groupSchedule);
-                    setIsGroupSchedule(true);
+                setGroupSchedule(groupSchedule);
+                setIsGroupSchedule(true);
 
             } else if (selectedTeacher) {
-                const teacherSchedule = await FetchScheduleForTeacher(selectedTeacher, teachers.find(t => t.id === selectedTeacher)?.full_name || '', selectedSemester);                
-                    setTeacherSchedule(teacherSchedule);
-                    setIsGroupSchedule(false);
+                const teacherSchedule = await FetchScheduleForTeacher(selectedTeacher, teachers.find(t => t.id === selectedTeacher)?.full_name || '', selectedSemester);
+                setTeacherSchedule(teacherSchedule);
+                setIsGroupSchedule(false);
             }
         };
 
@@ -48,8 +48,8 @@ const MainAdminContent: React.FC<MainContentProps> = ({
     }, [selectedGroup, selectedTeacher, selectedSemester, teachers, pairsRef.current]);
 
     return (
-        <div className={`main-content ${isBlurred ? 'blurred' : ''}`} style={{ transform: `scaleY(${scale})`, transformOrigin: 'top left' }}>
-            <h1 className='schedule_Lable'>
+        <div className={`main-content ${isBlurred ? 'blurred' : ''}`} >
+            <h1 className='schedule_Lable' style={{ transform: `scaleY(${scale})`, transformOrigin: 'top left' }}>
                 {selectedGroup || selectedTeacher ? (
                     <>
                         {selectedGroup && `Група: ${selectedGroup}`}
@@ -62,26 +62,31 @@ const MainAdminContent: React.FC<MainContentProps> = ({
                     "Оберіть розклад"
                 )}
             </h1>
-            {selectedGroup || selectedTeacher ? (
-                isGroupSchedule ? (
-                    <GroupScheduleTable
-                        schedule={groupSchedule}
-                        setSchedule={setGroupSchedule}
-                        selectedSemester={selectedSemester}
-                        groupName={selectedGroup || ''}
-                        onPairClick={onPairClick}
-                    />
-                ) : (
-                    <TeacherScheduleTable
-                        schedule={teacherSchedule}
-                        setSchedule={setTeacherSchedule}
-                        selectedSemester={selectedSemester}
-                        teacherName={teachers.find(t => t.id === selectedTeacher)?.full_name || ''}
-                        teacherId={selectedTeacher || 0}
-                        onPairClick={onPairClick}
-                    />
-                )
-            ) : null}
+            <div style={{ transform: `scaleY(${scale})`, transformOrigin: 'top left', height: '0px' }}>
+                {selectedGroup || selectedTeacher ? (
+                    isGroupSchedule ? (
+                        <GroupScheduleTable
+                            schedule={groupSchedule}
+                            setSchedule={setGroupSchedule}
+                            selectedSemester={selectedSemester}
+                            groupName={selectedGroup || ''}
+                            onPairClick={onPairClick}
+                        />
+                    ) : (
+                        <TeacherScheduleTable
+                            schedule={teacherSchedule}
+                            setSchedule={setTeacherSchedule}
+                            selectedSemester={selectedSemester}
+                            teacherName={teachers.find(t => t.id === selectedTeacher)?.full_name || ''}
+                            teacherId={selectedTeacher || 0}
+                            onPairClick={onPairClick}
+                        />
+                    )
+                ) : null}
+                <div style={{ minHeight: '20px' }}>
+                </div>
+            </div>
+
         </div>
     );
 };

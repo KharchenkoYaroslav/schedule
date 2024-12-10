@@ -163,7 +163,7 @@ const TeacherScheduleTable: React.FC<TeacherScheduleTableProps> = ({ schedule, s
     };
 
     return (
-        <DndProvider backend={HTML5Backend}>
+        <DndProvider backend={HTML5Backend} >
             {schedule && (
                 <>
                     <h3>Тиждень 1</h3>
