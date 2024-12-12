@@ -265,8 +265,12 @@ const AdminTable: React.FC<Props> = ({ setIsAdmin }) => {
     };
 
     const handleUpdateGroup = async () => {
+        if (!selectedGroup) {
+            toast.error('Група не вибрана');
+            return;
+        }
         try {
-            await updateGroup(newGroup.group_code, newGroup);
+            await updateGroup(selectedGroup, newGroup);
             fetchGroups().then(setGroups).catch(() => toast.error('Помилка отримання груп'));
             setNewGroup({ group_code: '', specialty_id: 0, number_of_students: 0 });
             setIsEditingGroup(false);
