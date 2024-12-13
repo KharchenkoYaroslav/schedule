@@ -504,6 +504,7 @@ const AdminTable: React.FC<Props> = ({ setIsAdmin }) => {
             if (pairParams) {
                 const criteria = {
                     semester: selectedSemester,
+                    subjectId: pair.subject_id,
                     groupId: selectedGroup,
                     teacherId: selectedTeacher,
                     weekNumber: pairParams.weekIndex + 1,

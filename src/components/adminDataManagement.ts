@@ -149,6 +149,35 @@ export const getPairsByCriteria = async (criteria: {
     }
 };
 
+export const getPairByCriteria = async (criteria: {
+    semester: number;
+    subjectId: number;
+    groupId?: string | null;
+    teacherId?: number | null;
+    weekNumber: number;
+    dayNumber: string;
+    pairNumber: number;
+}): Promise<Pair[]> => {
+    try {
+        const response = await axios.get('https://schedule-server-rho.vercel.app/api/getPairByCriteria', {
+            params: criteria
+        });
+
+        const pairs: Pair[] = response.data.map((pair: any) => ({
+            ...pair,
+            subject_id: parseInt(pair.subject_id, 10),
+            semester_number: parseInt(pair.semester_number, 10),
+            week_number: parseInt(pair.week_number, 10),
+            pair_number: parseInt(pair.pair_number, 10)
+        }));
+        
+        return pairs;
+    } catch (err) {
+        console.error('Помилка отримання пар за критеріями:', err);
+        throw err;
+    }
+};
+
 export const addPair = async (pairData: Pair): Promise<void> => {
     try {
         const { id, groups_list, teachers_list, ...rest } = pairData; 
@@ -168,6 +197,7 @@ export const addPair = async (pairData: Pair): Promise<void> => {
 
 export const editPair = async (pairData: Pair, criteria: {
     semester: number;
+    subjectId: number;
     groupId?: string | null;
     teacherId?: number | null;
     weekNumber: number;
@@ -176,17 +206,17 @@ export const editPair = async (pairData: Pair, criteria: {
 }): Promise<void> => {
     try {
         
-        const pairs = await getPairsByCriteria(criteria);
+        const pairs = await getPairByCriteria(criteria);
         const pair = pairs[0];
 
         if (!pair) {
             throw new Error('Пара не знайдена');
-        }
+        }  
 
         const newId = pair.id;
 
         const { id, ...rest } = pairData; 
-
+        console.log(newId);
         const formattedPairData = {
             ...rest,
             id: newId, 
