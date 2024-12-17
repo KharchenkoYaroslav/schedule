@@ -270,11 +270,11 @@ const OutputTable: React.FC<Props> = ({ find, isStudent, setIsStudent, setFind, 
     }, [error]);
 
     if (error) {
-        return <h3 className='message'>{error}</h3>;
+        return <h3 className='message' style={{ transform: `scaleY(${scale})`, transformOrigin: 'top left' }}>{error}</h3>;
     }
 
     if (!schedule) {
-        return <h3 className='message'>Завантаження...</h3>;
+        return <h3 className='message' style={{ transform: `scaleY(${scale})`, transformOrigin: 'top left' }}>Завантаження...</h3>;
     }
 
     const teacher = teachersList.find(teacher => `${teacher.id} - ${teacher.full_name}` === find);
