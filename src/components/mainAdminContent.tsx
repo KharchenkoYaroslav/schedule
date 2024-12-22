@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Pair, Teacher } from './adminStructure';
 import { FetchScheduleForGroup, FetchScheduleForTeacher } from './dataManagement';
-import GroupScheduleTable from './groupScheduleTable';
-import TeacherScheduleTable from './teacherScheduleTable';
+import GroupScheduleTable from './GroupScheduleTable';
+import TeacherScheduleTable from './TeacherScheduleTable';
 import { GroupSchedule, TeacherSchedule } from './structure';
 import useWindowResize from './useWindowResize';
 
