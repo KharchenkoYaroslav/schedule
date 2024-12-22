@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import Authentication from './authentication';
+import Authentication from './Authentication';
 import useWindowResize from './useWindowResize';
 import { IoChevronBack, IoChevronForward, IoChevronDown, IoChevronUp, IoClose, IoAdd, IoRemove } from 'react-icons/io5';
 import { ToastContainer, toast } from 'react-toastify';

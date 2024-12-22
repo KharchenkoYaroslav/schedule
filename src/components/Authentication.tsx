@@ -7,7 +7,7 @@ interface Props {
     setIsAuthenticated: React.Dispatch<React.SetStateAction<boolean>>;
     setIsAdmin: React.Dispatch<React.SetStateAction<boolean>>;
 }
-//style={{ transform: `scaleY(${scale})`, transformOrigin: 'top left' }}
+
 const Authentication: React.FC<Props> = ({ setIsAuthenticated, setIsAdmin }) => {
     const [login, setLogin] = useState('');
     const [password, setPassword] = useState('');
