@@ -41,12 +41,13 @@ button{
     box-shadow: 0 0 10px black;
 }
 
-#back_icon {
+.back_icon {
     display: inline-block;
     vertical-align: baseline;
     position: relative;
     top: 4px; 
 }
+
 
 .back_to_start:active {
     transform: scale(0.8);
@@ -228,6 +229,13 @@ button{
     justify-content: center;
     align-items: center;
     
+}
+
+.authentication-container .back_icon {
+    display: inline-block;
+    vertical-align: baseline;
+    position: relative;
+    top: 2px; 
 }
 
 .authentication-form {   
@@ -524,6 +532,16 @@ button{
     font-size: 16px;
 }
 
+.section label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: bolder;
+}
+#correspondence{
+    font-weight: normal;
+    text-align: center ;
+}
+
 .section input {
     width: 95%;
     padding: 10px;
@@ -552,6 +570,7 @@ button{
 
 
 .section button.delete {
+    margin-bottom: 10px;
     background-color: Tomato;
 }
 
@@ -572,6 +591,13 @@ button{
     padding: 5px;
     border-radius: 7px;
     font-size: 20px;
+}
+
+.section .back_icon {
+    display: inline-block;
+    vertical-align: baseline;
+    position: relative;
+    top: 2px; 
 }
 
 #addCurriculum{

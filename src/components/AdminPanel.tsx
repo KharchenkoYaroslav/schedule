@@ -80,6 +80,11 @@ const AdminTable: React.FC<Props> = ({ setIsAdmin }) => {
     const [visitFormat, setVisitFormat] = useState<'Offline' | 'Online'>('Offline');
     const [audience, setAudience] = useState<number | null>(null);
     const [pairs, setPairs] = useState<Pair[]>([]);
+    const [mismatchedCurriculumsString, setMismatchedCurriculumsString] = useState<string>('');
+    const [filterTeacherNameCurriculum, setFilterTeacherNameCurriculum] = useState<string>('');
+    const filteredTeachersCurriculum = teachers.filter(teacher =>
+        teacher.full_name.toLowerCase().includes(filterTeacherNameCurriculum.toLowerCase())
+    );
 
     const pairsRef = useRef<Pair[]>(pairs);
     useEffect(() => {
@@ -161,6 +166,16 @@ const AdminTable: React.FC<Props> = ({ setIsAdmin }) => {
     useEffect(() => {
         setFilteredCurriculumsPair(getFilteredCurriculums(selectedGroup, selectedTeacher));
     }, [selectedGroup, selectedTeacher, curriculums]);
+
+    useEffect(() => {
+        if (isAuthenticated) {
+            const mismatchedCurriculums = curriculums.filter(curriculum => !curriculum.correspondence);
+
+            const mismatchedCurriculumsString = mismatchedCurriculums.map(curriculum => curriculum.subject_name).join(', ');
+
+            setMismatchedCurriculumsString(mismatchedCurriculumsString);
+        }
+    }, [isAuthenticated, curriculums]);
 
     const handleLogout = () => {
         localStorage.removeItem('token');
@@ -586,8 +601,11 @@ const AdminTable: React.FC<Props> = ({ setIsAdmin }) => {
                                         <p>9) Кнопки нижче автоматично перейменують групи минулого/наступного року на групи наступного/минулого року та зададуть їм нову кількість студентів відповідну до назви групи.</p>
                                         <p>10) Внесіть кількість студентів вказаним нижче групам після переходу на наступний/минулий рік</p>
                                     </div>
-                                    <h3 style={{color: 'red'}}>
-                                        {nullGroupsString ? `Внесіть кількість студентів для: ${nullGroupsString}`: ''}
+                                    <h3 style={{ color: 'red' }}>
+                                        {nullGroupsString ? `Внесіть кількість студентів для: ${nullGroupsString}` : ''}
+                                    </h3>
+                                    <h3 style={{ color: 'red' }}>
+                                        {mismatchedCurriculumsString ? `Розклад не відповідає навчальному плану для предметів: ${mismatchedCurriculumsString}` : ''}
                                     </h3>
                                     <button onClick={() => handleUpdateGroups(true)}>
                                         Перенести розклад на наступний рік
@@ -611,139 +629,18 @@ const AdminTable: React.FC<Props> = ({ setIsAdmin }) => {
                                         value={filterCurriculumName}
                                         onChange={(e) => setFilterCurriculumName(e.target.value)}
                                     />
+                                    <label>Назва предмету:</label>
                                     <input
                                         type="text"
-                                        placeholder="Назва предмету"
+                                        placeholder="Введіть назву предмету"
                                         value={newCurriculum.subject_name}
                                         onChange={(e) => setNewCurriculum({ ...newCurriculum, subject_name: e.target.value })}
                                     />
-                                    <label>
+                                    <label id='correspondence'>
                                         {selectedCurriculum ? (selectedCurriculum.correspondence ? `Розклад відповідає навчальному плану` : `Розклад не відповідає навчальному плану`) : ''}
                                     </label>
-                                    <div>
-                                        <button className='setIsCollapsed' onClick={() => setIsTeachersCollapsed(!isTeachersCollapsed)}>
-                                            <h3 >
-                                                Пов'язані вчителі {isTeachersCollapsed ? <IoChevronDown /> : <IoChevronUp />}
-                                            </h3>
-                                        </button>
-                                        <div className={`teachersCurriculum ${isTeachersCollapsed ? 'collapsed' : ''}`}>
-                                            {newCurriculum.related_teachers.map((teacher, index) => (
-                                                <div key={index}>
-                                                    <input
-                                                        type="text"
-                                                        placeholder="ID вчителя"
-                                                        value={teacher.id}
-                                                        onChange={(e) => {
-                                                            const updatedTeachers = [...newCurriculum.related_teachers];
-                                                            updatedTeachers[index].id = e.target.value;
-                                                            setNewCurriculum({ ...newCurriculum, related_teachers: updatedTeachers });
-                                                        }}
-                                                    />
-                                                    <input
-                                                        type="number"
-                                                        placeholder="Заплановані лекції"
-                                                        min="0"
-                                                        value={teacher.planned_lectures === 0 ? '' : teacher.planned_lectures}
-                                                        onChange={(e) => {
-                                                            const updatedTeachers = [...newCurriculum.related_teachers];
-                                                            updatedTeachers[index].planned_lectures = parseInt(e.target.value);
-                                                            setNewCurriculum({ ...newCurriculum, related_teachers: updatedTeachers });
-                                                        }}
-                                                    />
-                                                    <input
-                                                        type="number"
-                                                        placeholder="Заплановані практики"
-                                                        min="0"
-                                                        value={teacher.planned_practicals === 0 ? '' : teacher.planned_practicals}
-                                                        onChange={(e) => {
-                                                            const updatedTeachers = [...newCurriculum.related_teachers];
-                                                            updatedTeachers[index].planned_practicals = parseInt(e.target.value);
-                                                            setNewCurriculum({ ...newCurriculum, related_teachers: updatedTeachers });
-                                                        }}
-                                                    />
-                                                    <input
-                                                        type="number"
-                                                        placeholder="Заплановані лабораторні"
-                                                        min="0"
-                                                        value={teacher.planned_labs === 0 ? '' : teacher.planned_labs}
-                                                        onChange={(e) => {
-                                                            const updatedTeachers = [...newCurriculum.related_teachers];
-                                                            updatedTeachers[index].planned_labs = parseInt(e.target.value);
-                                                            setNewCurriculum({ ...newCurriculum, related_teachers: updatedTeachers });
-                                                        }}
-                                                    />
-                                                    <button className='delete' onClick={() => removeTeacherFromCurriculum(index)}>
-                                                        <IoRemove /> Прибрати вчителя
-                                                    </button>
-                                                </div>
-                                            ))}
-                                            <button onClick={addTeacherToCurriculum}>
-                                                <IoAdd /> Додати вчителя
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <button className='setIsCollapsed' onClick={() => setIsGroupsCollapsed(!isGroupsCollapsed)}>
-                                            <h3>
-                                                Пов'язані групи {isGroupsCollapsed ? <IoChevronDown /> : <IoChevronUp />}
-                                            </h3>
-                                        </button>
-                                        <div className={`groupsCurriculum ${isGroupsCollapsed ? 'collapsed' : ''}`}>
-                                            {newCurriculum.related_groups.map((group, index) => (
-                                                <div key={index}>
-                                                    <input
-                                                        type="text"
-                                                        placeholder="Код групи"
-                                                        value={group.code}
-                                                        onChange={(e) => {
-                                                            const updatedGroups = [...newCurriculum.related_groups];
-                                                            updatedGroups[index].code = e.target.value;
-                                                            setNewCurriculum({ ...newCurriculum, related_groups: updatedGroups });
-                                                        }}
-                                                    />
-                                                    <input
-                                                        type="number"
-                                                        placeholder="Заплановані лекції"
-                                                        min="0"
-                                                        value={group.planned_lectures === 0 ? '' : group.planned_lectures}
-                                                        onChange={(e) => {
-                                                            const updatedGroups = [...newCurriculum.related_groups];
-                                                            updatedGroups[index].planned_lectures = parseInt(e.target.value);
-                                                            setNewCurriculum({ ...newCurriculum, related_groups: updatedGroups });
-                                                        }}
-                                                    />
-                                                    <input
-                                                        type="number"
-                                                        placeholder="Заплановані практики"
-                                                        min="0"
-                                                        value={group.planned_practicals === 0 ? '' : group.planned_practicals}
-                                                        onChange={(e) => {
-                                                            const updatedGroups = [...newCurriculum.related_groups];
-                                                            updatedGroups[index].planned_practicals = parseInt(e.target.value);
-                                                            setNewCurriculum({ ...newCurriculum, related_groups: updatedGroups });
-                                                        }}
-                                                    />
-                                                    <input
-                                                        type="number"
-                                                        placeholder="Заплановані лабораторні"
-                                                        min="0"
-                                                        value={group.planned_labs === 0 ? '' : group.planned_labs}
-                                                        onChange={(e) => {
-                                                            const updatedGroups = [...newCurriculum.related_groups];
-                                                            updatedGroups[index].planned_labs = parseInt(e.target.value);
-                                                            setNewCurriculum({ ...newCurriculum, related_groups: updatedGroups });
-                                                        }}
-                                                    />
-                                                    <button className='delete' onClick={() => removeGroupFromCurriculum(index)}>
-                                                        <IoRemove /> Прибрати групу
-                                                    </button>
-                                                </div>
-                                            ))}
-                                            <button onClick={addGroupToCurriculum}>
-                                                <IoAdd /> Додати групу
-                                            </button>
-                                        </div>
-                                    </div>
+                                    <button onClick={() => setActiveSection('teachersCurriculum')}>Перейти до вчителів</button>
+                                    <button onClick={() => setActiveSection('groupsCurriculum')}>Перейти до груп</button>
                                     {isEditingCurriculum ? (
                                         <button onClick={handleUpdateCurriculum}>Редагувати предмет</button>
                                     ) : (
@@ -752,6 +649,139 @@ const AdminTable: React.FC<Props> = ({ setIsAdmin }) => {
                                     {selectedCurriculum && (
                                         <button className='delete' onClick={() => handleDeleteCurriculum(selectedCurriculum.id)}>Видалити предмет</button>
                                     )}
+                                </div>
+                                <div id="teachersCurriculum" className={`section ${activeSection === 'teachersCurriculum' ? 'active' : ''}`}>
+                                    <h2>Пов'язані вчителі</h2>
+                                    {newCurriculum.related_teachers.map((teacher, index) => (
+                                        <div key={index}>
+                                            <label>Вчитель:</label>
+                                            <select
+                                                value={teacher.id}
+                                                onChange={(e) => {
+                                                    const updatedTeachers = [...newCurriculum.related_teachers];
+                                                    updatedTeachers[index].id = e.target.value;
+                                                    setNewCurriculum({ ...newCurriculum, related_teachers: updatedTeachers });
+                                                }}
+                                            >
+                                                <option value="">Оберіть вчителя</option>
+                                                {teachers
+                                                    .filter(t => t.full_name.toLowerCase().includes(filterTeacherNameCurriculum.toLowerCase()))
+                                                    .map(teacher => (
+                                                        <option key={teacher.id} value={teacher.id}>{getTeacherDisplayName(teacher)}</option>
+                                                    ))}
+                                            </select>
+                                            <input
+                                                type="text"
+                                                placeholder="Фільтр за іменем вчителя"
+                                                value={filterTeacherNameCurriculum}
+                                                onChange={(e) => setFilterTeacherNameCurriculum(e.target.value)}
+                                            />
+                                            <label>Заплановані лекції:</label>
+                                            <input
+                                                type="number"
+                                                placeholder="Введіть заплановані лекції"
+                                                min="0"
+                                                value={teacher.planned_lectures === 0 ? '' : teacher.planned_lectures}
+                                                onChange={(e) => {
+                                                    const updatedTeachers = [...newCurriculum.related_teachers];
+                                                    updatedTeachers[index].planned_lectures = parseInt(e.target.value);
+                                                    setNewCurriculum({ ...newCurriculum, related_teachers: updatedTeachers });
+                                                }}
+                                            />
+                                            <label>Заплановані практики:</label>
+                                            <input
+                                                type="number"
+                                                placeholder="Введіть заплановані практики"
+                                                min="0"
+                                                value={teacher.planned_practicals === 0 ? '' : teacher.planned_practicals}
+                                                onChange={(e) => {
+                                                    const updatedTeachers = [...newCurriculum.related_teachers];
+                                                    updatedTeachers[index].planned_practicals = parseInt(e.target.value);
+                                                    setNewCurriculum({ ...newCurriculum, related_teachers: updatedTeachers });
+                                                }}
+                                            />
+                                            <label>Заплановані лабораторні:</label>
+                                            <input
+                                                type="number"
+                                                placeholder="Введіть заплановані лабораторні"
+                                                min="0"
+                                                value={teacher.planned_labs === 0 ? '' : teacher.planned_labs}
+                                                onChange={(e) => {
+                                                    const updatedTeachers = [...newCurriculum.related_teachers];
+                                                    updatedTeachers[index].planned_labs = parseInt(e.target.value);
+                                                    setNewCurriculum({ ...newCurriculum, related_teachers: updatedTeachers });
+                                                }}
+                                            />
+                                            <button className='delete' onClick={() => removeTeacherFromCurriculum(index)}>
+                                                <IoRemove /> Прибрати вчителя
+                                            </button>
+                                        </div>
+                                    ))}
+                                    <button onClick={addTeacherToCurriculum}>
+                                        <IoAdd /> Додати вчителя
+                                    </button>
+                                    <button onClick={() => setActiveSection('objects')}><span className='back_icon'><IoChevronBack /></span>Назад</button>
+                                </div>
+                                <div id="groupsCurriculum" className={`section ${activeSection === 'groupsCurriculum' ? 'active' : ''}`}>
+                                    <h2>Пов'язані групи</h2>
+                                    {newCurriculum.related_groups.map((group, index) => (
+                                        <div key={index}>
+                                            <label>Код групи:</label>
+                                            <input
+                                                type="text"
+                                                placeholder="Введіть код групи"
+                                                value={group.code}
+                                                onChange={(e) => {
+                                                    const updatedGroups = [...newCurriculum.related_groups];
+                                                    updatedGroups[index].code = e.target.value;
+                                                    setNewCurriculum({ ...newCurriculum, related_groups: updatedGroups });
+                                                }}
+                                            />
+                                            <label>Заплановані лекції:</label>
+                                            <input
+                                                type="number"
+                                                placeholder="Введіть заплановані лекції"
+                                                min="0"
+                                                value={group.planned_lectures === 0 ? '' : group.planned_lectures}
+                                                onChange={(e) => {
+                                                    const updatedGroups = [...newCurriculum.related_groups];
+                                                    updatedGroups[index].planned_lectures = parseInt(e.target.value);
+                                                    setNewCurriculum({ ...newCurriculum, related_groups: updatedGroups });
+                                                }}
+                                            />
+                                            <label>Заплановані практики:</label>
+                                            <input
+                                                type="number"
+                                                placeholder="Введіть заплановані практики"
+                                                min="0"
+                                                value={group.planned_practicals === 0 ? '' : group.planned_practicals}
+                                                onChange={(e) => {
+                                                    const updatedGroups = [...newCurriculum.related_groups];
+                                                    updatedGroups[index].planned_practicals = parseInt(e.target.value);
+                                                    setNewCurriculum({ ...newCurriculum, related_groups: updatedGroups });
+                                                }}
+                                            />
+                                            <label>Заплановані лабораторні:</label>
+                                            <input
+                                                type="number"
+                                                placeholder="Введіть заплановані лабораторні"
+                                                min="0"
+                                                value={group.planned_labs === 0 ? '' : group.planned_labs}
+                                                onChange={(e) => {
+                                                    const updatedGroups = [...newCurriculum.related_groups];
+                                                    updatedGroups[index].planned_labs = parseInt(e.target.value);
+                                                    setNewCurriculum({ ...newCurriculum, related_groups: updatedGroups });
+                                                }}
+                                            />
+                                            <button className='delete' onClick={() => removeGroupFromCurriculum(index)}>
+                                                <IoRemove /> Прибрати групу
+                                            </button>
+                                        </div>
+                                    ))}
+                                    <button onClick={addGroupToCurriculum}>
+                                        <IoAdd /> Додати групу
+                                    </button>
+                                    <button onClick={() => setActiveSection('objects')}><span className='back_icon'><IoChevronBack /></span>Назад</button>
                                 </div>
                                 <div id="groups" className={`section ${activeSection === 'groups' ? 'active' : ''}`}>
                                     <h2>Групи</h2>
@@ -768,12 +798,14 @@ const AdminTable: React.FC<Props> = ({ setIsAdmin }) => {
                                         value={filterGroupName}
                                         onChange={(e) => setFilterGroupName(e.target.value)}
                                     />
+                                    <label>Ім'я групи:</label>
                                     <input
                                         type="text"
-                                        placeholder="Ім'я групи"
+                                        placeholder="Введіть ім'я групи"
                                         value={newGroup.group_code}
                                         onChange={(e) => setNewGroup({ ...newGroup, group_code: e.target.value })}
                                     />
+                                    <label>Спеціальність:</label>
                                     <select
                                         value={newGroup.specialty_id}
                                         onChange={(e) => setNewGroup({ ...newGroup, specialty_id: parseInt(e.target.value) })}
@@ -783,10 +815,11 @@ const AdminTable: React.FC<Props> = ({ setIsAdmin }) => {
                                             <option key={specialty.id} value={specialty.id}>{specialty.specialty_name}</option>
                                         ))}
                                     </select>
+                                    <label>Кількість студентів:</label>
                                     <input
                                         type="number"
                                         min="1"
-                                        placeholder="Кількість студентів"
+                                        placeholder="Введіть кількість студентів"
                                         value={newGroup.number_of_students === 0 ? '' : newGroup.number_of_students}
                                         onChange={(e) => setNewGroup({ ...newGroup, number_of_students: parseInt(e.target.value) || 0 })}
                                     />
@@ -814,18 +847,21 @@ const AdminTable: React.FC<Props> = ({ setIsAdmin }) => {
                                         value={filterTeacherName}
                                         onChange={(e) => setFilterTeacherName(e.target.value)}
                                     />
+                                    <label>Ім'я вчителя:</label>
                                     <input
                                         type="text"
-                                        placeholder="Ім'я вчителя"
+                                        placeholder="Введіть ім'я вчителя"
                                         value={newTeacher.full_name}
                                         onChange={(e) => setNewTeacher({ ...newTeacher, full_name: e.target.value })}
                                     />
+                                    <label>Факультет:</label>
                                     <input
                                         type="text"
-                                        placeholder="Факультет"
+                                        placeholder="Введіть факультет"
                                         value={newTeacher.department}
                                         onChange={(e) => setNewTeacher({ ...newTeacher, department: e.target.value })}
                                     />
+                                    <label>Посада:</label>
                                     <select
                                         value={newTeacher.post}
                                         onChange={(e) => setNewTeacher({ ...newTeacher, post: e.target.value })}
@@ -842,9 +878,9 @@ const AdminTable: React.FC<Props> = ({ setIsAdmin }) => {
                                     ) : (
                                         <button onClick={handleAddTeacher}>Додати вчителя</button>
                                     )}
-                                    {selectedTeacher && (
+                                    {selectedTeacher ? (
                                         <button className='delete' onClick={() => handleDeleteTeacher(selectedTeacher)}>Видалити вчителя</button>
-                                    )}
+                                    ) : (<></>)}
                                 </div>
                                 <div id="pair" className={`section ${activeSection === 'pair' ? 'active' : ''}`}>
                                     <h2>Пара</h2>
@@ -941,10 +977,6 @@ const AdminTable: React.FC<Props> = ({ setIsAdmin }) => {
                             </div>
                         </div>
                     )}
-
-
-
-
                     <div className={`sidebar ${isMenuCollapsed ? 'collapsed' : ''} ${isBlurred ? 'blurred' : ''}`}>
                         <button className="collapse-button" onClick={() => setIsMenuCollapsed(!isMenuCollapsed)} style={{ transform: `scaleY(${scale})`, transformOrigin: 'top left' }}>
                             {!isMenuCollapsed && <span className="admin-name" title={adminName}>{adminName}</span>}
@@ -984,7 +1016,7 @@ const AdminTable: React.FC<Props> = ({ setIsAdmin }) => {
                         onPairClick={handlePairClick}
                         pairsRef={pairsRef}
                     />
-                    
+
                     <ToastContainer style={{ transform: `scaleY(${scale})`, transformOrigin: 'top right', position: 'fixed', right: '10 px' }} />
                 </div>
             ) : (

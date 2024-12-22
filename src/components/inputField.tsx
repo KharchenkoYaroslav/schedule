@@ -114,7 +114,7 @@ const InputField = ({ find, setFind, isStudent, setIsStudent, groupsList, teache
                         onBlur={handleInputBlur}
                     />
                     <button className='back_to_start' type="button" onClick={toFalseInput}>
-                        <span id='back_icon'><IoChevronBack /></span> назад
+                        <span className='back_icon'><IoChevronBack /></span> назад
                     </button>
                     {isInputFocused && suggestions.length > 0 && (
                         <div className="suggestions" ref={suggestionRef}>

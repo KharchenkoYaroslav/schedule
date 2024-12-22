@@ -66,7 +66,7 @@ const Authentication: React.FC<Props> = ({ setIsAuthenticated, setIsAdmin }) => 
                 <button className="login-button" type="submit">увійти</button>
                 {error && <div className="error">{error}</div>}
                 <button className="back-button" onClick={() => setIsAdmin(false)}>
-                    <span id="back_icon"><IoChevronBack /></span> назад
+                    <span className="back_icon"><IoChevronBack /></span> назад
                 </button>
             </form>
         </div>
