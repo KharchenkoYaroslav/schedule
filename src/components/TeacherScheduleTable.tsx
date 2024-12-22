@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import Cell from './cell';
+import Cell from './Cell';
 import { TeacherSchedule, Weekday, TeacherPair, PairArray } from './structure';
 import axios from 'axios';
 import { toast } from 'react-toastify';
