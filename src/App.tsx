@@ -2,7 +2,7 @@ import React, { useLayoutEffect } from 'react';
 import './App.css';
 import Navigation from './components/navigation';
 import Schedules from './components/schedules';
-import AdminPanel from './components/adminPanel'; 
+import AdminPanel from './components/AdminPanel'; 
 import { FetchCombinedList } from './components/dataManagement';
 import useWindowResize from './components/useWindowResize';
 import useLocalStorage from './components/useLocalStorage';
