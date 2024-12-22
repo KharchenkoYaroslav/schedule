@@ -17,7 +17,7 @@ interface Props {
     setIsAdmin: React.Dispatch<React.SetStateAction<boolean>>; 
 }
 
-const InputField = ({ find, setFind, isStudent, setIsStudent, groupsList, teachersList, onValueFound, setIsAdmin }: Props) => {
+const Navigation = ({ find, setFind, isStudent, setIsStudent, groupsList, teachersList, onValueFound, setIsAdmin }: Props) => {
     const [isInputVisible, setIsInputVisible] =  useState<boolean>(false);
     const [suggestions, setSuggestions] = useState<string[]>([]); 
     const [isInputFocused, setIsInputFocused] = useState<boolean>(false);
@@ -135,4 +135,4 @@ const InputField = ({ find, setFind, isStudent, setIsStudent, groupsList, teache
     );
 };
 
-export default InputField;
+export default Navigation;

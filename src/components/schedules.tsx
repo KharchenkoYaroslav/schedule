@@ -26,7 +26,7 @@ interface Props {
     teachersList: TeacherData[];
 }
 
-const OutputTable: React.FC<Props> = ({ find, isStudent, setIsStudent, setFind, setIsValueFound, teachersList }) => {
+const Schedules: React.FC<Props> = ({ find, isStudent, setIsStudent, setFind, setIsValueFound, teachersList }) => {
     const [schedule, setSchedule] = useState<GroupSchedule | TeacherSchedule | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [scheduleManager, setScheduleManager] = useLocalStorage<ScheduleManager>('ScheduleManager', new ScheduleManager());
@@ -309,4 +309,4 @@ const OutputTable: React.FC<Props> = ({ find, isStudent, setIsStudent, setFind, 
     );
 };
 
-export default OutputTable;
+export default Schedules;

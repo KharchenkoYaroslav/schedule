@@ -1,8 +1,8 @@
 import React, { useLayoutEffect } from 'react';
 import './App.css';
-import InputField from './components/inputField';
-import OutputTable from './components/outputTable';
-import AdminPanel from './components/AdminPanel'; 
+import Navigation from './components/navigation';
+import Schedules from './components/schedules';
+import AdminPanel from './components/adminPanel'; 
 import { FetchCombinedList } from './components/dataManagement';
 import useWindowResize from './components/useWindowResize';
 import useLocalStorage from './components/useLocalStorage';
@@ -38,7 +38,7 @@ const App: React.FC = () => {
                 <span className="heading" style={{ transform: `scaleY(${scale})`, transformOrigin: 'top left' }}>Розклад занять у ВНЗ</span>
             )}
             {!isValueFound && !isAdmin &&(
-                    <InputField
+                    <Navigation
                     find={find}
                     setFind={setFind}
                     isStudent={isStudent}
@@ -50,7 +50,7 @@ const App: React.FC = () => {
                 />        
             )}
             {isValueFound && (
-                <OutputTable
+                <Schedules
                     find={find}
                     isStudent={isStudent}
                     setIsStudent={setIsStudent}

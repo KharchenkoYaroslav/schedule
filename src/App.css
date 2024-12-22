@@ -4,13 +4,13 @@
 body {
     background-color: CornflowerBlue;
     font-family: "Montserrat Alternates";
-    transition: background-color 0.3s ease; /* Плавний перехід кольору */
+    transition: background-color 0.3s ease; 
 
 
 }
 * {
-    scrollbar-color: snow rgba(0,0,0,0); /* Колір смуги прокрутки та фону */
-    scrollbar-gutter:round; /* Закруглені кути для смуги прокрутки */
+    scrollbar-color: snow rgba(0,0,0,0); 
+    scrollbar-gutter:round; 
     
 }
 
