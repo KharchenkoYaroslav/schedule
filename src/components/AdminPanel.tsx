@@ -66,8 +66,7 @@ const AdminTable: React.FC<Props> = ({ setIsAdmin }) => {
     });
     const [isEditingCurriculum, setIsEditingCurriculum] = useState<boolean>(false);
     const [filterCurriculumName, setFilterCurriculumName] = useState<string>('');
-    const [isTeachersCollapsed, setIsTeachersCollapsed] = useState<boolean>(false);
-    const [isGroupsCollapsed, setIsGroupsCollapsed] = useState<boolean>(false);
+
 
     const scale = useWindowResize();
     const sectionWindowRef = useRef<HTMLDivElement | null>(null);
@@ -82,16 +81,12 @@ const AdminTable: React.FC<Props> = ({ setIsAdmin }) => {
     const [pairs, setPairs] = useState<Pair[]>([]);
     const [mismatchedCurriculumsString, setMismatchedCurriculumsString] = useState<string>('');
     const [filterTeacherNameCurriculum, setFilterTeacherNameCurriculum] = useState<string>('');
-    const filteredTeachersCurriculum = teachers.filter(teacher =>
-        teacher.full_name.toLowerCase().includes(filterTeacherNameCurriculum.toLowerCase())
-    );
 
     const pairsRef = useRef<Pair[]>(pairs);
     useEffect(() => {
         pairsRef.current = pairs;
     }, [pairs]);
 
-    const [filteredCurriculumsPair, setFilteredCurriculumsPair] = useState<Curriculum[]>([]);
 
     const [nullGroupsString, setNullGroupsString] = useState<string>('');
 
@@ -163,9 +158,6 @@ const AdminTable: React.FC<Props> = ({ setIsAdmin }) => {
         fetchPairs();
     }, [selectedSemester, selectedGroups, selectedTeachers, pairParams]);
 
-    useEffect(() => {
-        setFilteredCurriculumsPair(getFilteredCurriculums(selectedGroup, selectedTeacher));
-    }, [selectedGroup, selectedTeacher, curriculums]);
 
     useEffect(() => {
         if (isAuthenticated) {
@@ -544,14 +536,6 @@ const AdminTable: React.FC<Props> = ({ setIsAdmin }) => {
         }
     };
 
-    const getFilteredCurriculums = (selectedGroup: string | null, selectedTeacher: number | null) => {
-        return curriculums.filter(curriculum => {
-            const relatedGroups = curriculum.related_groups.map(g => g.code);
-            const relatedTeachers = curriculum.related_teachers.map(t => parseInt(t.id));
-            return (selectedGroup && relatedGroups.includes(selectedGroup)) || (selectedTeacher && relatedTeachers.includes(selectedTeacher));
-        });
-    };
-
     const handleUpdateGroups = async (toNextYear: boolean) => {
         try {
             await updateGroups(toNextYear);
@@ -887,7 +871,7 @@ const AdminTable: React.FC<Props> = ({ setIsAdmin }) => {
                                     <div className="add-pair-section">
                                         <select value={selectedSubject || ''} onChange={(e) => setSelectedSubject(parseInt(e.target.value))}>
                                             <option value="">Оберіть предмет для додавання</option>
-                                            {filteredCurriculumsPair.map(curriculum => (
+                                            {filteredCurriculums.map(curriculum => (
                                                 <option key={curriculum.id} value={curriculum.id}>{curriculum.subject_name}</option>
                                             ))}
                                         </select>
